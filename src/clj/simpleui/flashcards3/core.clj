@@ -10,7 +10,8 @@
    [simpleui.flashcards3.web.handler]
 
     ;; Routes
-   [simpleui.flashcards3.web.routes.api])
+   [simpleui.flashcards3.web.routes.api] 
+    [simpleui.flashcards3.web.routes.ui])
   (:gen-class))
 
 ;; log uncaught exceptions in threads
