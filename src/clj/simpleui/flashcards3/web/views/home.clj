@@ -10,7 +10,7 @@
   [:div.p-2.text-2xl.flex.items-center
    [:a.text-clj-blue.mr-2 {:href (format "/edit/%s/" slideshow_id)}
     slideshow_name]
-   [:a {:href (format "/play/%s/0" slideshow_id)}
+   [:a {:href (format "/play/%s/0/" slideshow_id)}
     icons/play-circle]])
 
 (defcomponent ^:endpoint panel [req ^:prompt slideshow-name command]

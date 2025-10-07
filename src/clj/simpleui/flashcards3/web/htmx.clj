@@ -57,11 +57,16 @@
       [:link {:rel "stylesheet" :href (resource-cache/cache-suffix sheet)}])]
    [:body (render/walk-attrs body)]))
 
+(def optionals
+  '{slideshow_id [slideshow_id (Long/parseLong (:slideshow_id params))]
+    step [step (Long/parseLong (:step params))]})
+
 (defmacro defcomponent
   [name [req :as args] & body]
   (if-let [sym (simpleui/symbol-or-as req)]
     `(simpleui/defcomponent ~name ~args
       (let [{:keys [~'path-params ~'query-fn]} ~sym
-            ~'params (merge ~'params ~'path-params)]
+            ~'params (merge ~'params ~'path-params)
+            ~@(->> body flatten (mapcat optionals) distinct)]
         ~@body))
     (throw (Exception. "req ill defined"))))
