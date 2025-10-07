@@ -10,8 +10,10 @@
    [simpleui.flashcards3.web.handler]
 
     ;; Routes
-   [simpleui.flashcards3.web.routes.api] 
-    [simpleui.flashcards3.web.routes.ui])
+   [simpleui.flashcards3.web.routes.api]
+    [simpleui.flashcards3.web.routes.ui]
+    [kit.edge.db.sql.conman]
+    [simpleui.flashcards3.migratus])
   (:gen-class))
 
 ;; log uncaught exceptions in threads

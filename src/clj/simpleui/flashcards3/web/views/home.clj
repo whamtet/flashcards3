@@ -6,9 +6,10 @@
 (defcomponent ^:endpoint hello [req my-name]
   [:div#hello "Hello " my-name])
 
-(defn ui-routes [base-path]
+(defn ui-routes [{:keys [query-fn]}]
   (simpleui/make-routes
-   base-path
+   ""
+   [query-fn]
    (fn [req]
      (page-htmx
       {:css ["/output.css"]}
