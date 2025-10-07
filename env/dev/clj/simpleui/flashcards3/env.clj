@@ -12,3 +12,6 @@
                  (log/info "\n-=[flashcards3 has shut down successfully]=-"))
    :middleware wrap-dev
    :opts       {:profile       :dev}})
+
+(def dev? true)
+(def prod? false)

@@ -11,6 +11,7 @@
    base-path
    (fn [req]
      (page-htmx
+      {:css ["/output.css"]}
       [:label {:style "margin-right: 10px"}
        "What is your name?"]
       [:input {:type "text"
