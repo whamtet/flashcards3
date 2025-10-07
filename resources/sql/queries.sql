@@ -9,7 +9,7 @@ select * from slideshow;
 
 -- :name slideshow-name :execute
 update slideshow
-set slideshow_name = :slideshow-name
+set slideshow_name = :slideshow_name
 where slideshow_id = :slideshow_id
 
 -- :name slideshow-details :execute

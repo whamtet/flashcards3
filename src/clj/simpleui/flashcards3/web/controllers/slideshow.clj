@@ -8,10 +8,10 @@
 
 (defn get-slideshows [query-fn]
   (map #(update % :details read-string-safe)
-       (query-fn :get-slideshow {})))
+       (query-fn :get-slideshows {})))
 
-(defn slideshow-name [query-fn slideshow_id slideshow-name]
-  (query-fn :slideshow-name {:slideshow_id slideshow_id :slideshow-name slideshow-name}))
+(defn slideshow-name [query-fn slideshow_id slideshow_name]
+  (query-fn :slideshow-name {:slideshow_id slideshow_id :slideshow_name slideshow_name}))
 
 (defn slideshow-details [query-fn slideshow_id details]
   (query-fn :slideshow-details {:slideshow_id slideshow_id :details (pr-str details)}))

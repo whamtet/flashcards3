@@ -23,7 +23,7 @@
            io.github.kit-clj/kit-core {:mvn/version "1.0.9"}
            io.github.kit-clj/kit-undertow {:mvn/version "1.0.9"}
            simpleui/simpleui {:git/url "https://github.com/whamtet/simpleui",
-                              :git/sha "16a2be3a643188fb9d42054ba1bb38f9e7a123af"}
+                              :git/sha "d0ff399a27ac022c2d29b132b0add71c13306884"}
            io.github.kit-clj/kit-sql-conman {:mvn/version "1.10.4"}
            io.github.kit-clj/kit-sql-migratus {:mvn/version "1.0.4"}
            ring-basic-authentication/ring-basic-authentication {:mvn/version "1.2.0"}
