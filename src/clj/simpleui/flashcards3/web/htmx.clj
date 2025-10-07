@@ -61,8 +61,7 @@
   [name [req :as args] & body]
   (if-let [sym (simpleui/symbol-or-as req)]
     `(simpleui/defcomponent ~name ~args
-      (let [{:keys [~'session ~'path-params ~'query-fn]} ~sym
-            ~'params (merge ~'params ~'path-params)
-            {:keys [~'id]} ~'session]
+      (let [{:keys [~'path-params ~'query-fn]} ~sym
+            ~'params (merge ~'params ~'path-params)]
         ~@body))
     (throw (Exception. "req ill defined"))))

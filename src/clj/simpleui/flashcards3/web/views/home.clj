@@ -1,7 +1,7 @@
 (ns simpleui.flashcards3.web.views.home
     (:require
-      [simpleui.core :as simpleui :refer [defcomponent]]
-      [simpleui.flashcards3.web.htmx :refer [page-htmx]]))
+      [simpleui.core :as simpleui]
+      [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]]))
 
 (defcomponent ^:endpoint hello [req my-name]
   [:div#hello "Hello " my-name])
