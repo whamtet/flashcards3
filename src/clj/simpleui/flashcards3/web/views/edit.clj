@@ -1,6 +1,7 @@
 (ns simpleui.flashcards3.web.views.edit
     (:require
       [simpleui.core :as simpleui]
+      [simpleui.flashcards3.web.controllers.img-search :as img-search]
       [simpleui.flashcards3.web.controllers.slideshow :as slideshow]
       [simpleui.flashcards3.web.views.components :as components]
       [simpleui.flashcards3.web.views.icons :as icons]
@@ -24,11 +25,25 @@
               :hx-confirm (format "Delete %s?" slideshow-name)}
         (components/button-warning "Delete")]])))
 
+(defcomponent ^:endpoint image-search [req q]
+  [:div {:class "p-2"
+         :hx-target "this"}
+   (when q
+     [:div.flex.overflow-x-auto
+      (for [[medium large] (img-search/get-pics q)]
+        [:img {:class "mr-1"
+               :src medium}])])
+   [:form {:hx-get "image-search"}
+    [:input {:class "p-2 rounded-md border"
+             :placeholder "Search and hit enter..."
+             :name "q"}]]])
+
 (defcomponent ^:endpoint panel [req ^:prompt slideshow-name command]
   (case command
     [:div.p-2
      (name-editor req)
-     [:hr.border-top]]))
+     [:hr.border-top]
+     (image-search req)]))
 
 (defn ui-routes [{:keys [query-fn]}]
   (simpleui/make-routes
