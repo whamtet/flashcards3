@@ -13,6 +13,8 @@
                "../../.."
                (format "../../../play/%s/%s/" slideshow_id (inc step)))]
     [:a {:href href}
+     (when (-> slides count (> 1))
+       [:script (format "addListener(%s, %s)" (count slides) step)])
      (if (empty? slides)
        [:div.p-6.text-xl "Empty"]
        [:img {:src (-> step slides second)}])]))
@@ -23,5 +25,6 @@
    [query-fn]
    (fn [req]
      (page-htmx
-      {:css ["/output.css"]}
+      {:css ["/output.css"]
+       :js ["/random.js"]}
       (-> req (assoc :query-fn query-fn) panel)))))
