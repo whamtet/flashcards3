@@ -6,10 +6,16 @@
       [simpleui.flashcards3.web.views.icons :as icons]
       [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]]))
 
-(defcomponent ^:endpoint panel [req ^:prompt slideshow-name command]
-  (case command
-    [:div.p-2
-     slideshow_id " " step]))
+(defcomponent panel [req]
+  (let [slides (slideshow/get-slideshow-details query-fn slideshow_id)
+        last? (-> slides count dec (= step))
+        href (if (or (empty? slides) last?)
+               "/"
+               (format "/play/%s/%s/" slideshow_id (inc step)))]
+    [:a {:href href}
+     (if (empty? slides)
+       [:div.p-6.text-xl "Empty"]
+       [:img {:src (-> step slides second)}])]))
 
 (defn ui-routes [{:keys [query-fn]}]
   (simpleui/make-routes

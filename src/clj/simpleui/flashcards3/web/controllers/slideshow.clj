@@ -41,8 +41,15 @@
   (-> v
       (assoc (dec i) (v i))
       (assoc i (v (dec i)))))
+(defn- del-v [v i]
+  (vec
+   (concat
+    (subvec v 0 i)
+    (subvec v (inc i)))))
 
 (defn up-slideshow [query-fn slideshow_id i]
   (update-slideshow query-fn slideshow_id move-up-v i))
 (defn down-slideshow [query-fn slideshow_id i]
   (update-slideshow query-fn slideshow_id move-up-v (inc i)))
+(defn delete-slide [query-fn slideshow_id i]
+  (update-slideshow query-fn slideshow_id del-v i))

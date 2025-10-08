@@ -32,25 +32,33 @@
     "conj" (slideshow/conj-slideshow query-fn slideshow_id [medium large])
     "up" (slideshow/up-slideshow query-fn slideshow_id i)
     "down" (slideshow/down-slideshow query-fn slideshow_id i)
+    "del" (slideshow/delete-slide query-fn slideshow_id i)
     nil)
   [:div#images
    (util/map-first-last
     (fn [i first? last? [medium]]
       [:div.flex.items-center.mb-1
        (when-not first?
-         [:div {:class "cursor-pointer border rounded-md mr-2"
+         [:div {:class "cursor-pointer border rounded-md mr-2 p-2"
                 :hx-post "image-order:up"
                 :hx-target "#images"
                 :hx-vals {:i i}}
           icons/arrow-up])
        (when-not last?
-         [:div {:class "cursor-pointer border rounded-md mr-2"
+         [:div {:class "cursor-pointer border rounded-md mr-2 p-2"
                 :hx-post "image-order:down"
                 :hx-target "#images"
                 :hx-vals {:i i}}
           icons/arrow-down])
-       [:a {:href (format "/play/%s/%s/" slideshow_id i)}
-        [:img {:src medium}]]])
+       [:a {:class "mr-2"
+            :href (format "/play/%s/%s/" slideshow_id i)}
+        [:img {:src medium}]]
+       [:div {:class "cursor-pointer border rounded-md p-2"
+              :hx-post "image-order:del"
+              :hx-target "#images"
+              :hx-confirm "Delete pic?"
+              :hx-vals {:i i}}
+        icons/trash]])
     (slideshow/get-slideshow-details query-fn slideshow_id))])
 
 (defcomponent ^:endpoint image-search [req q]
