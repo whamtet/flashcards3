@@ -18,7 +18,7 @@
                {:hx-redirect "/"})
     (let [slideshow-name (slideshow/get-slideshow-name query-fn slideshow_id)]
       [:div.p-2.flex.items-center
-       [:a.mr-2 {:href "/"} icons/home]
+       [:a.mr-2 {:href "../.."} icons/home]
        [:input {:class "p-2 rounded-md border mr-2"
                 :hx-post "name-editor:update"
                 :name "new-name"
@@ -51,7 +51,7 @@
                 :hx-vals {:i i}}
           icons/arrow-down])
        [:a {:class "mr-2"
-            :href (format "/play/%s/%s/" slideshow_id i)}
+            :href (format "../../play/%s/%s/" slideshow_id i)}
         [:img {:src medium}]]
        [:div {:class "cursor-pointer border rounded-md p-2"
               :hx-post "image-order:del"

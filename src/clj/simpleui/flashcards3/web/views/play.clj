@@ -10,8 +10,8 @@
   (let [slides (slideshow/get-slideshow-details query-fn slideshow_id)
         last? (-> slides count dec (= step))
         href (if (or (empty? slides) last?)
-               "/"
-               (format "/play/%s/%s/" slideshow_id (inc step)))]
+               "../../.."
+               (format "../../../play/%s/%s/" slideshow_id (inc step)))]
     [:a {:href href}
      (if (empty? slides)
        [:div.p-6.text-xl "Empty"]
