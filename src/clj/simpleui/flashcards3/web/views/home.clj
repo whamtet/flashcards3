@@ -31,5 +31,5 @@
    [query-fn]
    (fn [req]
      (page-htmx
-      {:css ["/output.css"]}
+      {:css ["output.css"]}
       (-> req (assoc :query-fn query-fn) panel)))))

@@ -25,6 +25,6 @@
    [query-fn]
    (fn [req]
      (page-htmx
-      {:css ["/output.css"]
-       :js ["/random.js"]}
+      {:css ["../../../output.css"]
+       :js ["../../../random.js"]}
       (-> req (assoc :query-fn query-fn) panel)))))

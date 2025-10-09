@@ -6,8 +6,9 @@
 (def hash-resource
   ((if dev? identity memoize)
    (fn [src]
-     (->> src
-          (str "public")
+     (->> (.split src "/")
+          last
+          (str "public/")
           io/resource
           slurp
           hash))))
