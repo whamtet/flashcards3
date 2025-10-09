@@ -34,9 +34,10 @@
     img))
 
 (defn- img-el [[_ url]]
-  [:image
-   {}
-   (rotate-if-needed (slurp-img url))])
+  (when-let [img (slurp-img url)]
+    [:image
+     {}
+     (rotate-if-needed img)]))
 
 (defn- pdf [details]
   (let [out (ByteArrayOutputStream.)]

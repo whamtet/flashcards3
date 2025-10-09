@@ -5,8 +5,8 @@
 
 (def api-key (System/getenv "IMG_API_KEY"))
 
-(defn- get-src [{{:keys [medium large2x]} :src}]
-  [medium large2x])
+(defn- get-src [{{:keys [medium large]} :src}]
+  [medium large])
 
 (defm-dev get-pics [q]
   (->>
