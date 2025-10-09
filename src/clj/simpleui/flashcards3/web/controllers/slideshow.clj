@@ -9,8 +9,9 @@
     []))
 
 (defn get-slideshows [query-fn]
-  (map #(update % :details read-details)
-       (query-fn :get-slideshows {})))
+  (->> (query-fn :get-slideshows {})
+       (sort-by :slideshow_name)
+       (map #(update % :details read-details))))
 
 (defn get-slideshow-details [query-fn slideshow_id]
   (-> (query-fn :get-slideshow {:slideshow_id slideshow_id})
