@@ -44,6 +44,7 @@
    (util/map-first-last
     (fn [i first? last? [medium]]
       [:div.flex.items-center.mb-1
+       [:span.text-xl.mr-1 (format "%s)" (inc i))]
        (when-not first?
          [:div {:class "cursor-pointer border rounded-md mr-2 p-2"
                 :hx-post "image-order:up"
