@@ -23,9 +23,13 @@
                 :hx-post "name-editor:update"
                 :name "new-name"
                 :value slideshow-name}]
-       [:div {:hx-delete "name-editor:delete"
+       [:div {:class "mr-2"
+              :hx-delete "name-editor:delete"
               :hx-confirm (format "Delete %s?" slideshow-name)}
-        (components/button-warning "Delete")]])))
+        (components/button-warning "Delete")]
+       [:a {:href (format "../../api/pdf/%s" slideshow_id)
+            :target "_blank"}
+        (components/button "Download PDF")]])))
 
 (defcomponent ^:endpoint image-order [req command medium large ^:long i]
   (case command

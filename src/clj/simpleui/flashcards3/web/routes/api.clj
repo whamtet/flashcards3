@@ -1,6 +1,7 @@
 (ns simpleui.flashcards3.web.routes.api
   (:require
     [simpleui.flashcards3.web.controllers.health :as health]
+    [simpleui.flashcards3.web.controllers.pdf :as pdf]
     [simpleui.flashcards3.web.middleware.exception :as exception]
     [simpleui.flashcards3.web.middleware.formats :as formats]
     [integrant.core :as ig]
@@ -32,11 +33,20 @@
                 exception/wrap-exception]})
 
 ;; Routes
-(defn api-routes [_opts]
+(defn api-routes [{:keys [query-fn]}]
   [["/swagger.json"
     {:get {:no-doc  true
            :swagger {:info {:title "simpleui.flashcards3 API"}}
            :handler (swagger/create-swagger-handler)}}]
+   ["/pdf/:slideshow_id"
+    (fn [req]
+      {:status 200
+       :headers {"Content-Type" "application/pdf"}
+       :body (->> req
+                  :path-params
+                  :slideshow_id
+                  Long/parseLong
+                  (pdf/get-pdf query-fn))})]
    ["/health"
     ;; note that use of the var is necessary
     ;; for reitit to reload routes without
