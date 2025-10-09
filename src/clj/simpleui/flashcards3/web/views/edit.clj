@@ -29,12 +29,18 @@
 
 (defcomponent ^:endpoint image-order [req command medium large ^:long i]
   (case command
-    "conj" (slideshow/conj-slideshow query-fn slideshow_id [medium large])
+    "conj" (slideshow/conj-slideshow query-fn slideshow_id [(or medium large) large])
     "up" (slideshow/up-slideshow query-fn slideshow_id i)
     "down" (slideshow/down-slideshow query-fn slideshow_id i)
     "del" (slideshow/delete-slide query-fn slideshow_id i)
     nil)
   [:div#images
+   [:form {:class "flex m-2"
+           :hx-post "image-order:conj"
+           :hx-target "#images"}
+    [:input {:class "p-2 rounded-md border mr-2 w-96"
+             :placeholder "Direct URL"
+             :name "large"}]]
    (util/map-first-last
     (fn [i first? last? [medium]]
       [:div.flex.items-center.mb-1
@@ -52,7 +58,8 @@
           icons/arrow-down])
        [:a {:class "mr-2"
             :href (format "../../play/%s/%s/" slideshow_id i)}
-        [:img {:src medium}]]
+        [:img {:class "max-h-96"
+               :src medium}]]
        [:div {:class "cursor-pointer border rounded-md p-2"
               :hx-post "image-order:del"
               :hx-target "#images"
