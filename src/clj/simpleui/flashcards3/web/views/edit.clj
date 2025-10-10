@@ -15,7 +15,7 @@
                nil)
     "delete" (do
                (slideshow/delete-slideshow query-fn slideshow_id)
-               {:hx-redirect "/"})
+               {:hx-redirect "../.."})
     (let [slideshow-name (slideshow/get-slideshow-name query-fn slideshow_id)]
       [:div.p-2.flex.items-center
        [:a.mr-2 {:href "../.."} icons/home]
