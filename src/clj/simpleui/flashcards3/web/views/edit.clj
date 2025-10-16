@@ -90,13 +90,27 @@
              :placeholder "Search and hit enter..."
              :name "q"}]]])
 
+(defcomponent ^:endpoint notes [req notes command]
+  (case command
+    "update" (do
+               (slideshow/update-slideshow-notes query-fn slideshow_id notes)
+               nil)
+    [:textarea {:class "w-4/5 ml-2 mt-2 p-2 rounded-md border"
+                :placeholder "Notes..."
+                :name "notes"
+                :rows 10
+                :hx-post "notes:update"}
+     (slideshow/get-slideshow-notes query-fn slideshow_id)]))
+
 (defcomponent ^:endpoint panel [req ^:prompt slideshow-name command]
   (case command
     [:div.p-2
      (name-editor req)
      [:hr.border-top]
      (image-order req)
-     (image-search req)]))
+     (image-search req)
+     [:hr.border-top]
+     (notes req)]))
 
 (defn ui-routes [{:keys [query-fn]}]
   (simpleui/make-routes

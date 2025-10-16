@@ -14,7 +14,7 @@
        (sort-by :slideshow_name)
        (map #(update % :details read-details))))
 
-(defn- get-slideshow-details [query-fn slideshow_id]
+(defn get-slideshow-details [query-fn slideshow_id]
   (-> (query-fn :get-slideshow {:slideshow_id slideshow_id})
       :details
       read-details))
@@ -24,6 +24,9 @@
 
 (defn get-slideshow-name [query-fn slideshow_id]
   (:slideshow_name (query-fn :get-slideshow {:slideshow_id slideshow_id})))
+(defn get-slideshow-notes [query-fn slideshow_id]
+  (:notes
+    (get-slideshow-details query-fn slideshow_id)))
 
 (defn update-slideshow-name [query-fn slideshow_id slideshow_name]
   (query-fn :slideshow-name {:slideshow_id slideshow_id :slideshow_name slideshow_name}))
@@ -37,6 +40,10 @@
 (defn- update-slides [query-fn slideshow_id f & args]
   (as-> (get-slideshow-details query-fn slideshow_id) $
         (update $ :slides #(apply f % args))
+        (slideshow-details query-fn slideshow_id $)))
+(defn update-slideshow-notes [query-fn slideshow_id notes]
+  (as-> (get-slideshow-details query-fn slideshow_id) $
+        (assoc $ :notes notes)
         (slideshow-details query-fn slideshow_id $)))
 
 (defn conj-slideshow [query-fn slideshow_id x]

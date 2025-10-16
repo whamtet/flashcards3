@@ -2,6 +2,7 @@
   (:require
     [clj-pdf.core :as pdf]
     [clojure.java.io :as io]
+    [clojure.string :as string]
     [clj-http.lite.client :as client]
     [simpleui.flashcards3.web.controllers.slideshow :as slideshow])
   (:import
@@ -39,15 +40,21 @@
      {}
      (rotate-if-needed img)]))
 
-(defn- pdf [details]
+(defn- trim-lines [s]
+  (->> (.split s "\n")
+       (remove #(-> % .trim empty?))
+       (string/join "\n")))
+
+(defn- pdf [{:keys [notes slides]}]
   (let [out (ByteArrayOutputStream.)]
     (pdf/pdf
       [{}
-       (map img-el details)]
+       (map img-el slides)
+       [:paragraph (trim-lines notes)]]
      out)
     (-> out .toByteArray ByteArrayInputStream.)))
 
 (defn get-pdf [query-fn slideshow_id]
   (->> slideshow_id
-       (slideshow/get-slideshow-slides query-fn)
+       (slideshow/get-slideshow-details query-fn)
        pdf))
