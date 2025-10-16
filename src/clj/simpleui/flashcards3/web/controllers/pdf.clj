@@ -57,7 +57,6 @@
   (let [out (ByteArrayOutputStream.)]
     (pdf/pdf
       [{}
-       [:pagebreak]
        [:paragraph (trim-lines notes)]
        (pmap img-el slides)]
      out)

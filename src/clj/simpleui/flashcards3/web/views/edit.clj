@@ -87,7 +87,24 @@
                }])])
    [:form {:hx-get "image-search"}
     [:input {:class "p-2 rounded-md border"
-             :placeholder "Search and hit enter..."
+             :placeholder "Search photos..."
+             :name "q"}]]])
+
+(defcomponent ^:endpoint icon-search [req q]
+  [:div {:class "p-2"
+         :hx-target "this"}
+   (when q
+     [:div.flex.overflow-x-auto.mb-2
+      (for [[medium large] (img-search/get-icons q)]
+        [:img {:class "mr-1 cursor-pointer"
+               :src medium
+               :hx-post "image-order:conj"
+               :hx-target "#images"
+               :hx-vals {:medium medium :large large}
+               }])])
+   [:form {:hx-get "icon-search"}
+    [:input {:class "p-2 rounded-md border"
+             :placeholder "Search icons..."
              :name "q"}]]])
 
 (defcomponent ^:endpoint notes [req notes command]
@@ -109,6 +126,7 @@
      [:hr.border-top]
      (image-order req)
      (image-search req)
+     (icon-search req)
      [:hr.border-top]
      (notes req)]))
 

@@ -3,18 +3,32 @@
     [clj-http.lite.client :as client]
     [simpleui.flashcards3.util :as util :refer [defm-dev]]))
 
-(def api-key (System/getenv "IMG_API_KEY"))
+(def pexels-api-key (System/getenv "PEXELS_API_KEY"))
+(def pixabay-api-key (System/getenv "PIXABAY_API_KEY"))
 
-(defn- get-src [{{:keys [medium large]} :src}]
+(defn- get-src-pexels [{{:keys [medium large]} :src}]
   [medium large])
+(defn- get-src-pixabay [{:keys [previewURL webformatURL]}]
+  [previewURL webformatURL])
 
 (defm-dev get-pics [q]
   (->>
    (client/get "https://api.pexels.com/v1/search"
                {:query-params {:query q}
-                :headers {"Authorization" api-key}})
+                :headers {"Authorization" pexels-api-key}})
    :body
     util/read-str
    :photos
-    (map get-src)))
+    (map get-src-pexels)))
+
+(defm-dev get-icons [q]
+  (->>
+   (client/get "https://pixabay.com/api/"
+               {:query-params {:key pixabay-api-key
+                               :q q
+                               :image_type "illustration"}})
+   :body
+   util/read-str
+   :hits
+   (map get-src-pixabay)))
 
