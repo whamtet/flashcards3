@@ -8,6 +8,7 @@
   (:import
     javax.imageio.ImageIO
     java.awt.geom.AffineTransform
+    java.awt.image.AffineTransformOp
     java.awt.image.BufferedImage
     java.io.ByteArrayOutputStream
     java.io.ByteArrayInputStream))
@@ -19,26 +20,33 @@
    :body
    ImageIO/read))
 
-(defn- rot90 [img]
-  (let [rotated (BufferedImage. (.getHeight img) (.getWidth img) (.getType img))
-        transform (doto (AffineTransform.)
-                        (.translate (.getHeight img) 0)
-                        (.rotate (Math/toRadians 90)))
-        g2d (.createGraphics rotated)]
-    (.drawImage g2d img transform nil)
-    (.dispose g2d)
-    rotated))
-
-(defn- rotate-if-needed [img]
-  (if (> (.getWidth img) (.getHeight img))
-    (rot90 img)
-    img))
+(def max-width 500)
+(def max-height 842)
+(defn- rot-scale [img]
+  (let [rotate? (> (.getWidth img) (.getHeight img))
+        short-dim (min (.getWidth img) (.getHeight img))
+        long-dim (max (.getWidth img) (.getHeight img))
+        x-scale (/ max-width short-dim)
+        y-scale (/ max-height long-dim)
+        scale (min x-scale y-scale)]
+    (if (and (= 1 scale) (not rotate?))
+      img
+      (let [scale (double scale)
+            out (BufferedImage.
+                  (-> short-dim (* scale) long)
+                  (-> long-dim (* scale) long)
+                  (.getType img))
+            transform (if rotate?
+                        (AffineTransform. 0. scale scale 0. 0. 0.)
+                        (AffineTransform. scale 0. 0. scale 0. 0.))]
+        (-> (AffineTransformOp. transform AffineTransformOp/TYPE_BICUBIC)
+            (.filter img out))
+        out))))
 
 (defn- img-el [[_ url]]
   (when-let [img (slurp-img url)]
     [:image
-     {}
-     (rotate-if-needed img)]))
+     (rot-scale img)]))
 
 (defn- trim-lines [s]
   (->> (.split s "\n")
@@ -49,8 +57,9 @@
   (let [out (ByteArrayOutputStream.)]
     (pdf/pdf
       [{}
-       (map img-el slides)
-       [:paragraph (trim-lines notes)]]
+       [:pagebreak]
+       [:paragraph (trim-lines notes)]
+       (pmap img-el slides)]
      out)
     (-> out .toByteArray ByteArrayInputStream.)))
 
