@@ -71,7 +71,7 @@
               :hx-confirm "Delete pic?"
               :hx-vals {:i i}}
         icons/trash]])
-    (slideshow/get-slideshow-details query-fn slideshow_id))])
+    (slideshow/get-slideshow-slides query-fn slideshow_id))])
 
 (defcomponent ^:endpoint image-search [req q]
   [:div {:class "p-2"

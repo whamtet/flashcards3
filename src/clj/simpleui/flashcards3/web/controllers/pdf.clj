@@ -49,5 +49,5 @@
 
 (defn get-pdf [query-fn slideshow_id]
   (->> slideshow_id
-       (slideshow/get-slideshow-details query-fn)
+       (slideshow/get-slideshow-slides query-fn)
        pdf))

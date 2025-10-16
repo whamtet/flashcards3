@@ -7,7 +7,7 @@
       [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]]))
 
 (defcomponent panel [req]
-  (let [slides (slideshow/get-slideshow-details query-fn slideshow_id)
+  (let [slides (slideshow/get-slideshow-slides query-fn slideshow_id)
         last? (-> slides count dec (= step))
         href (if (or (empty? slides) last?)
                "../../.."
