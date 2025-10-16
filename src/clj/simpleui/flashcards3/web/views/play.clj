@@ -6,18 +6,43 @@
       [simpleui.flashcards3.web.views.icons :as icons]
       [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]]))
 
-(defcomponent panel [req]
+(defn- other-random [curr max]
+  (let [r (rand-int (dec max))]
+    (if (< r curr) r (inc r))))
+
+[:div.grid-rows-2.grid-cols-2]
+[:div.grid-rows-3.grid-cols-3]
+[:div.grid-rows-4.grid-cols-4]
+(defcomponent panel [req ^:long grid]
   (let [slides (slideshow/get-slideshow-slides query-fn slideshow_id)
+        slides (if grid
+                 (partition-all (* grid grid) slides)
+                 slides)
         last? (-> slides count dec (= step))
-        href (if (or (empty? slides) last?)
-               "../../.."
-               (format "../../../play/%s/%s/" slideshow_id (inc step)))]
-    [:a {:href href}
-     (when (-> slides count (> 1))
-       [:script (format "addListener(%s, %s)" (count slides) step)])
-     (if (empty? slides)
-       [:div.p-6.text-xl "Empty"]
-       [:img {:src (-> step slides second)}])]))
+        next-href (if (or (empty? slides) last?)
+                    "../../.."
+                    (format "../../../play/%s/%s/%s"
+                            slideshow_id
+                            (inc step)
+                            (if grid (str "?grid=" grid) "")))
+        random-href (when (> (count slides) 1)
+                      (format "../../../play/%s/%s/%s"
+                              slideshow_id
+                              (other-random step (count slides))
+                              (if grid (str "?grid=" grid) "")))]
+    [:div
+     [:a#randomLink.hidden {:href random-href}]
+     [:a {:href next-href}
+      (cond
+        (empty? slides)
+        [:div.p-6.text-xl "Empty"]
+        grid
+        [:div {:class (format "grid grid-rows-%s grid-cols-%s" grid grid)}
+         (for [[_ src] (nth slides step)]
+           [:img {:src src}])]
+        :else
+        [:div.flex.justify-center
+         [:img {:src (-> step slides second)}]])]]))
 
 (defn ui-routes [{:keys [query-fn]}]
   (simpleui/make-routes
