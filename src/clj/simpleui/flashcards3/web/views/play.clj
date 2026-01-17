@@ -25,6 +25,7 @@
                             slideshow_id
                             (inc step)
                             (if grid (str "?grid=" grid) "")))
+        edit-href (format "../../../edit/%s/" slideshow_id)
         random-href (when (> (count slides) 1)
                       (format "../../../play/%s/%s/%s"
                               slideshow_id
@@ -32,6 +33,7 @@
                               (if grid (str "?grid=" grid) "")))]
     [:div
      [:a#randomLink.hidden {:href random-href}]
+     [:a#editLink.hidden {:href edit-href}]
      [:a {:href next-href}
       (cond
         (empty? slides)
