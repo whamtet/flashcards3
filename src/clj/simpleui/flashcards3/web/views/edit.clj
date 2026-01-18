@@ -31,20 +31,28 @@
             :target "_blank"}
         (components/button "Download PDF")]])))
 
-(defcomponent ^:endpoint image-order [req command medium large ^:long i]
+(defcomponent ^:endpoint image-order [req command medium large ^:long i images]
   (case command
+    "concat" (slideshow/concat-slideshow query-fn slideshow_id images)
     "conj" (slideshow/conj-slideshow query-fn slideshow_id [(or medium large) large])
     "up" (slideshow/up-slideshow query-fn slideshow_id i)
     "down" (slideshow/down-slideshow query-fn slideshow_id i)
     "del" (slideshow/delete-slide query-fn slideshow_id i)
     nil)
   [:div#images
-   [:form {:class "flex m-2"
-           :hx-post "image-order:conj"
-           :hx-target "#images"}
-    [:input {:class "p-2 rounded-md border mr-2 w-96"
-             :placeholder "Direct URL"
-             :name "large"}]]
+   [:div.flex.m-2
+    [:form {:hx-post "image-order:conj"
+            :hx-target "#images"}
+     [:input {:class "p-2 rounded-md border mr-2 w-96"
+              :placeholder "Direct URL"
+              :name "large"}]]
+    [:input {:hx-post "image-order:concat"
+             :hx-encoding "multipart/form-data"
+             :hx-target "#images"
+             :type "file"
+             :accept ".png"
+             :multiple true
+             :name "images"}]]
    (util/map-first-last
     (fn [i first? last? [medium]]
       [:div.flex.items-center.mb-1

@@ -1,4 +1,6 @@
-(ns simpleui.flashcards3.web.controllers.slideshow)
+(ns simpleui.flashcards3.web.controllers.slideshow
+  (:require
+    [simpleui.flashcards3.web.controllers.local :as local]))
 
 (defn add-slideshow [query-fn slideshow_name]
   (query-fn :insert-slideshow {:slideshow_name slideshow_name}))
@@ -48,6 +50,9 @@
 
 (defn conj-slideshow [query-fn slideshow_id x]
   (update-slides query-fn slideshow_id conj x))
+
+(defn concat-slideshow [query-fn slideshow_id images]
+  (update-slides query-fn slideshow_id concat (local/convert images)))
 
 (defn- move-up-v [v i]
   (assert (pos? i))
