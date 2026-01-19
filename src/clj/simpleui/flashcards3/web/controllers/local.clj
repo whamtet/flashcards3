@@ -1,4 +1,6 @@
 (ns simpleui.flashcards3.web.controllers.local
+  (:require
+    [clojure.java.io :as io])
   (:import
     [java.io File]
     [javax.imageio ImageIO]
@@ -31,3 +33,6 @@
 
 (defn convert [files]
   (map png->jpg files))
+
+(defn input-stream [local_id]
+  (io/input-stream (format "local/%03d.jpg" local_id)))

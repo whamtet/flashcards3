@@ -31,6 +31,11 @@
             :target "_blank"}
         (components/button "Download PDF")]])))
 
+(defn- get-src [x]
+  (if (string? x)
+    x
+    (format "../../api/local/%s" x)))
+
 (defcomponent ^:endpoint image-order [req command medium large ^:long i images]
   (case command
     "concat" (slideshow/concat-slideshow query-fn slideshow_id images)
@@ -72,7 +77,7 @@
        [:a {:class "mr-2"
             :href (format "../../play/%s/%s/" slideshow_id i)}
         [:img {:class "max-h-96"
-               :src medium}]]
+               :src (get-src medium)}]]
        [:div {:class "cursor-pointer border rounded-md p-2"
               :hx-post "image-order:del"
               :hx-target "#images"

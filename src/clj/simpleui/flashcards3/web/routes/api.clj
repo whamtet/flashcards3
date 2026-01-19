@@ -1,6 +1,7 @@
 (ns simpleui.flashcards3.web.routes.api
   (:require
     [simpleui.flashcards3.web.controllers.health :as health]
+    [simpleui.flashcards3.web.controllers.local :as local]
     [simpleui.flashcards3.web.controllers.pdf :as pdf]
     [simpleui.flashcards3.web.middleware.exception :as exception]
     [simpleui.flashcards3.web.middleware.formats :as formats]
@@ -47,6 +48,15 @@
                   :slideshow_id
                   Long/parseLong
                   (pdf/get-pdf query-fn))})]
+   ["/local/:local_id"
+    (fn [req]
+      {:status 200
+       :headers {"Content-Type" "image/jpeg"}
+       :body (->> req
+                  :path-params
+                  :local_id
+                  Long/parseLong
+                  local/input-stream)})]
    ["/health"
     ;; note that use of the var is necessary
     ;; for reitit to reload routes without
