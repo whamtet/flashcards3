@@ -23,7 +23,7 @@
            io.github.kit-clj/kit-core {:mvn/version "1.0.9"}
            io.github.kit-clj/kit-undertow {:mvn/version "1.0.9"}
            simpleui/simpleui {:git/url "https://github.com/whamtet/simpleui",
-                              :git/sha "cc8d3beff9ab9d26a3ccf61b6f60891fbb17709f"}
+                              :git/sha "53bde9b1df333a52eb3745d411a916142bc937c0"}
            org.clj-commons/clj-http-lite {:mvn/version "1.0.13"}
            clj-pdf/clj-pdf {:mvn/version "2.7.4"}
            io.github.kit-clj/kit-sql-conman {:mvn/version "1.10.4"}

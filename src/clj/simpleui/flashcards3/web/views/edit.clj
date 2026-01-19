@@ -36,7 +36,7 @@
     x
     (format "../../api/local/%s" x)))
 
-(defcomponent ^:endpoint image-order [req command medium large ^:long i images]
+(defcomponent ^:endpoint image-order [req command medium large ^:long i ^:array images]
   (case command
     "concat" (slideshow/concat-slideshow query-fn slideshow_id images)
     "conj" (slideshow/conj-slideshow query-fn slideshow_id [(or medium large) large])
