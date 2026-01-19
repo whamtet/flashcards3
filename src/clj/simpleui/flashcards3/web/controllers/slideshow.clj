@@ -52,7 +52,7 @@
   (update-slides query-fn slideshow_id conj x))
 
 (defn concat-slideshow [query-fn slideshow_id images]
-  (update-slides query-fn slideshow_id concat (local/convert images)))
+  (update-slides query-fn slideshow_id into (local/convert images)))
 
 (defn- move-up-v [v i]
   (assert (pos? i))

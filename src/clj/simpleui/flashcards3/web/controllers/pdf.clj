@@ -1,7 +1,7 @@
 (ns simpleui.flashcards3.web.controllers.pdf
   (:require
     [clj-pdf.core :as pdf]
-    [clojure.java.io :as io]
+    [simpleui.flashcards3.web.controllers.local :as local]
     [clojure.string :as string]
     [clj-http.lite.client :as client]
     [simpleui.flashcards3.web.controllers.slideshow :as slideshow])
@@ -14,11 +14,12 @@
     java.io.ByteArrayInputStream))
 
 (defn- slurp-img [url]
-  (->
-   (client/get url {:headers {"User-Agent" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"}
-                    :as :stream})
-   :body
-   ImageIO/read))
+  (ImageIO/read
+   (if (string? url)
+     (:body
+       (client/get url {:headers {"User-Agent" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"}
+                        :as :stream}))
+     (local/input-stream url))))
 
 (def max-width 500)
 (def max-height 842)

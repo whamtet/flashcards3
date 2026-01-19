@@ -10,6 +10,11 @@
   (let [r (rand-int (dec max))]
     (if (< r curr) r (inc r))))
 
+(defn- get-src [x]
+  (if (string? x)
+    x
+    (format "../../../api/local/%s" x)))
+
 [:div.grid-rows-2.grid-cols-2]
 [:div.grid-rows-3.grid-cols-3]
 [:div.grid-rows-4.grid-cols-4]
@@ -44,7 +49,7 @@
            [:img {:src src}])]
         :else
         [:div.flex.justify-center
-         [:img {:src (-> step slides second)}]])]]))
+         [:img {:src (-> step slides second get-src)}]])]]))
 
 (defn ui-routes [{:keys [query-fn]}]
   (simpleui/make-routes
