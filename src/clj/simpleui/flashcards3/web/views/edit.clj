@@ -55,7 +55,8 @@
              :hx-encoding "multipart/form-data"
              :hx-target "#images"
              :type "file"
-             :accept ".png"
+             ;; corresponds to java 21
+             :accept "image/vnd.wap.wbmp, image/png, image/x-png, image/jpeg, image/tiff, image/bmp, image/gif"
              :multiple true
              :name "images"}]]
    (util/map-first-last
