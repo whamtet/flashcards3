@@ -1,8 +1,10 @@
 (ns simpleui.flashcards3.web.views.edit
     (:require
+      [clojure.string :as string]
       [simpleui.core :as simpleui]
       [simpleui.flashcards3.web.controllers.img-search :as img-search]
       [simpleui.flashcards3.web.controllers.slideshow :as slideshow]
+      [simpleui.flashcards3.web.controllers.local :as local]
       [simpleui.flashcards3.web.views.components :as components]
       [simpleui.flashcards3.web.views.icons :as icons]
       [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]]
@@ -56,7 +58,7 @@
              :hx-target "#images"
              :type "file"
              ;; corresponds to java 21
-             :accept "image/vnd.wap.wbmp, image/png, image/x-png, image/jpeg, image/tiff, image/bmp, image/gif"
+             :accept (string/join ", " local/supported-types)
              :multiple true
              :name "images"}]]
    (util/map-first-last

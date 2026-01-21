@@ -36,3 +36,5 @@
 
 (defn input-stream [local_id]
   (io/input-stream (format "local/%03d.jpg" local_id)))
+
+(def supported-types (ImageIO/getReaderMIMETypes))
