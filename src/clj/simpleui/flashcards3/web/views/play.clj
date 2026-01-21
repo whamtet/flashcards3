@@ -46,7 +46,7 @@
         grid
         [:div {:class (format "grid grid-rows-%s grid-cols-%s" grid grid)}
          (for [[_ src] (nth slides step)]
-           [:img {:src src}])]
+           [:img {:src (get-src src)}])]
         :else
         [:div.flex.justify-center
          [:img {:src (-> step slides second get-src)}]])]]))
