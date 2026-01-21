@@ -21,6 +21,12 @@
                         :as :stream}))
      (local/input-stream url))))
 
+(defn- rotate-scale [scale translate]
+  (doto (AffineTransform.)
+        (.translate translate 0.)
+        (.scale scale scale)
+        (.rotate (* 0.5 Math/PI))))
+
 (def max-width 500)
 (def max-height 842)
 (defn- rot-scale [img]
@@ -38,7 +44,7 @@
                   (-> long-dim (* scale) long)
                   (.getType img))
             transform (if rotate?
-                        (AffineTransform. 0. scale scale 0. 0. 0.)
+                        (rotate-scale scale (* short-dim scale))
                         (AffineTransform. scale 0. 0. scale 0. 0.))]
         (-> (AffineTransformOp. transform AffineTransformOp/TYPE_BICUBIC)
             (.filter img out))
