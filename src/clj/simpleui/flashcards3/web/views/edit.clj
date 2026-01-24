@@ -33,7 +33,7 @@
             :href (format "../../api/pdf/%s" slideshow_id)
             :target "_blank"}
         (components/button "Download PDF")]
-       [:a {:href (format "../../grid/%s" slideshow_id)
+       [:a {:href (format "../../grid/%s/" slideshow_id)
             :target "_blank"}
         (components/button "Grid Printout")]])))
 
