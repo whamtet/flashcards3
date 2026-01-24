@@ -29,9 +29,13 @@
               :hx-delete "name-editor:delete"
               :hx-confirm (format "Delete %s?" slideshow-name)}
         (components/button-warning "Delete")]
-       [:a {:href (format "../../api/pdf/%s" slideshow_id)
+       [:a {:class "mr-2"
+            :href (format "../../api/pdf/%s" slideshow_id)
             :target "_blank"}
-        (components/button "Download PDF")]])))
+        (components/button "Download PDF")]
+       [:a {:href (format "../../grid/%s" slideshow_id)
+            :target "_blank"}
+        (components/button "Grid Printout")]])))
 
 (defn- get-src [x]
   (if (string? x)
