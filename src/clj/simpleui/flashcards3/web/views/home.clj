@@ -10,7 +10,9 @@
   [:div.p-2.text-2xl.flex.items-center
    [:a.text-clj-blue.mr-2 {:href (format "edit/%s/" slideshow_id)}
     slideshow_name]
-   [:a {:href (format "play/%s/0/" slideshow_id)}
+   [:a.mr-2 {:href (format "play/%s/0/" slideshow_id)}
+    icons/play-circle]
+   [:a.text-red-500 {:href (format "play/%s/0/?grid=2" slideshow_id)}
     icons/play-circle]])
 
 (defcomponent ^:endpoint panel [req ^:prompt slideshow-name command]
@@ -23,6 +25,9 @@
             :hx-post "panel:new"
             :hx-prompt "New Slideshow Name"}
       (components/button "New Slideshow")]
+     [:div {:class "right-2 top-2 absolute"}
+      [:a {:href "white.html" :target "_blank"}
+       (components/button "White Screen")]]
      (map slideshow-disp (slideshow/get-slideshows query-fn))]))
 
 (defn ui-routes [{:keys [query-fn]}]
