@@ -9,7 +9,7 @@
 (defn- get-src [x]
   (if (string? x)
     x
-    (format "../../../api/local/%s" x)))
+    (format "../../api/local/%s" x)))
 
 (defcomponent panel [req ^:long rows]
   (let [slides (slideshow/get-slideshow-slides query-fn slideshow_id)
