@@ -11,15 +11,16 @@
     x
     (format "../../../api/local/%s" x)))
 
-(defcomponent panel [req]
-  (let [slides (slideshow/get-slideshow-slides query-fn slideshow_id)]
+(defcomponent panel [req ^:long rows]
+  (let [slides (slideshow/get-slideshow-slides query-fn slideshow_id)
+        rows (or rows 1)]
     (if (empty? slides)
       "Empty"
       [:div.grid.grid-cols-2
        (for [[_ src] slides]
-         [:div
+         [:div.pb-3
           [:img {:src (get-src src)}]
-          [:hr.mt-12.mb-3 {:class "border border-black ml-3 w-4/5"}]])])))
+          (repeat rows [:hr {:class "mt-12 border border-black ml-3 w-4/5"}])])])))
 
 (defn ui-routes [{:keys [query-fn]}]
   (simpleui/make-routes
