@@ -37,6 +37,9 @@
   (query-fn :slideshow-details {:slideshow_id slideshow_id :details (pr-str details)}))
 
 (defn delete-slideshow [query-fn slideshow_id]
+  (doseq [[slide] (get-slideshow-slides query-fn slideshow_id)]
+    (when (number? slide)
+      (local/delete slide)))
   (query-fn :slideshow-delete {:slideshow_id slideshow_id}))
 
 (defn- update-slides [query-fn slideshow_id f & args]

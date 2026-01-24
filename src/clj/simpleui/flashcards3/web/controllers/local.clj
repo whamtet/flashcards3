@@ -31,6 +31,12 @@
     (ImageIO/write jpg-img "jpg" jpg-file)
     [local-count local-count]))
 
+(defn delete [index]
+  (->> index
+       (format "%03d.jpg")
+       (File. local-dir)
+       .delete))
+
 (defn convert [files]
   (map png->jpg files))
 
