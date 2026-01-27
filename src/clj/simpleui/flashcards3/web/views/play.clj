@@ -25,7 +25,7 @@
                  slides)
         last? (-> slides count dec (= step))
         next-href (if (or (empty? slides) last?)
-                    "../../.."
+                    (format "../../../edit/%s/" slideshow_id)
                     (format "../../../play/%s/%s/%s"
                             slideshow_id
                             (inc step)
