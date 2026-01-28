@@ -6,6 +6,12 @@
              :class "bg-clj-blue py-1.5 px-3 rounded-lg text-white"}
     label]])
 
+(defn submit [label]
+  [:span.p-1
+   [:input {:type "submit"
+            :value label
+            :class "bg-clj-blue py-1.5 px-3 rounded-lg text-white"}]])
+
 (defn button-warning [label] ;; see also warning below
   [:span.p-1
    [:button {:type "button"

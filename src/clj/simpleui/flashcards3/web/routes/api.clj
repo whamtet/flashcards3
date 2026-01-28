@@ -3,6 +3,7 @@
     [simpleui.flashcards3.web.controllers.health :as health]
     [simpleui.flashcards3.web.controllers.local :as local]
     [simpleui.flashcards3.web.controllers.pdf :as pdf]
+    [simpleui.flashcards3.web.controllers.students :as students]
     [simpleui.flashcards3.web.middleware.exception :as exception]
     [simpleui.flashcards3.web.middleware.formats :as formats]
     [integrant.core :as ig]
@@ -57,6 +58,11 @@
                   :local_id
                   Long/parseLong
                   local/input-stream)})]
+   ["/students"
+    (fn [req]
+      {:status 200
+       :headers {"Content-Type" "text/plain"}
+       :body (-> req :params :text students/parse)})]
    ["/health"
     ;; note that use of the var is necessary
     ;; for reitit to reload routes without

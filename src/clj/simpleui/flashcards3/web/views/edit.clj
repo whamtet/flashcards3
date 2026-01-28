@@ -33,9 +33,13 @@
             :href (format "../../api/pdf/%s" slideshow_id)
             :target "_blank"}
         (components/button "Download PDF")]
-       [:a {:href (format "../../grid/%s/" slideshow_id)
+       [:a {:class "mr-2"
+            :href (format "../../grid/%s/" slideshow_id)
             :target "_blank"}
-        (components/button "Grid Printout")]])))
+        (components/button "Grid Printout")]
+       [:a {:href "../../white.html"
+            :target "_blank"}
+        (components/button "White Screen")]])))
 
 (defn- get-src [x]
   (if (string? x)

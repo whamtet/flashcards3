@@ -21,10 +21,14 @@
             (slideshow/add-slideshow query-fn slideshow-name)
             :refresh)
     [:div.p-2
-     [:div {:class "my-1"
-            :hx-post "panel:new"
-            :hx-prompt "New Slideshow Name"}
-      (components/button "New Slideshow")]
+     [:div.flex.items-center
+      [:div {:class "my-1 mr-2"
+             :hx-post "panel:new"
+             :hx-prompt "New Slideshow Name"}
+       (components/button "New Slideshow")]
+      [:a {:href "students/"
+           :target "_blank"}
+       (components/button "Students")]]
      [:div {:class "right-2 top-2 absolute"}
       [:a {:href "white.html" :target "_blank"}
        (components/button "White Screen")]]
