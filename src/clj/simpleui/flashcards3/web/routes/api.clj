@@ -60,9 +60,7 @@
                   local/input-stream)})]
    ["/students"
     (fn [req]
-      {:status 200
-       :headers {"Content-Type" "text/plain"}
-       :body (-> req :params :text students/parse)})]
+      (-> req :params students/parse))]
    ["/health"
     ;; note that use of the var is necessary
     ;; for reitit to reload routes without
