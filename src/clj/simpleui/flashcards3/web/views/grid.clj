@@ -11,16 +11,21 @@
     x
     (format "../../api/local/%s" x)))
 
-(defcomponent panel [req ^:long rows ^:long drop]
-  (let [slides (slideshow/get-slideshow-slides query-fn slideshow_id)
-        rows (or rows 1)]
+(defn- drop-cycle [d cycle slides]
+  (as-> slides $
+        (drop d $)
+        (repeat cycle $)
+        (apply concat $)))
+
+(defcomponent panel [req ^:long lines ^:long drop ^:long cycle]
+  (let [slides (slideshow/get-slideshow-slides query-fn slideshow_id)]
     (if (empty? slides)
       "Empty"
       [:div.grid.grid-cols-2
-       (for [[_ src] (clojure.core/drop (or drop 0) slides)]
+       (for [[_ src] (drop-cycle (or drop 0) (or cycle 1) slides)]
          [:div.pb-3
           [:img {:src (get-src src)}]
-          (repeat rows [:hr {:class "mt-12 border border-black ml-3 w-4/5"}])])])))
+          (repeat (or lines 1) [:hr {:class "mt-12 border border-black ml-3 w-4/5"}])])])))
 
 (defn ui-routes [{:keys [query-fn]}]
   (simpleui/make-routes
