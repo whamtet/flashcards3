@@ -42,7 +42,7 @@
             out (BufferedImage.
                   (-> short-dim (* scale) long)
                   (-> long-dim (* scale) long)
-                  (.getType img))
+                  BufferedImage/TYPE_INT_ARGB)
             transform (if rotate?
                         (rotate-scale scale (* short-dim scale))
                         (AffineTransform. scale 0. 0. scale 0. 0.))]
