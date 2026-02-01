@@ -42,9 +42,8 @@
   (-> questions .trim (.split "\n")))
 
 (defn parse [{:keys [questions students]}]
-  (->>
-   (after students "Note")
-   (re-seq r)
-   (map #(-> % second .trim))
-   (disp (parse-questions questions))))
+  (let [students (->> (after students "Note")
+                      (re-seq r)
+                      (map #(-> % second .trim)))]
+    (disp (parse-questions questions) (concat students ["&nbsp;" "&nbsp;" "&nbsp;" "&nbsp;"]))))
 
