@@ -18,11 +18,10 @@
 [:div.grid-rows-2.grid-cols-2]
 [:div.grid-rows-3.grid-cols-3]
 [:div.grid-rows-4.grid-cols-4]
-(defcomponent panel [req ^:long grid]
-  (let [slides (slideshow/get-slideshow-slides query-fn slideshow_id)
-        slides (if grid
-                 (partition-all (* grid grid) slides)
-                 slides)
+(defcomponent panel [req ^:long grid ^:long drop]
+  (let [slides (cond->> (slideshow/get-slideshow-slides query-fn slideshow_id)
+                 drop (clojure.core/drop drop)
+                 grid (partition-all (* grid grid)))
         last? (-> slides count dec (= step))
         next-href (if (or (empty? slides) last?)
                     (format "../../../edit/%s/" slideshow_id)
@@ -49,7 +48,7 @@
            [:img {:src (get-src src)}])]
         :else
         [:div.flex.justify-center
-         [:img {:src (-> step slides second get-src)}]])]]))
+         [:img {:src (-> slides (nth step) second get-src)}]])]]))
 
 (defn ui-routes [{:keys [query-fn]}]
   (simpleui/make-routes
