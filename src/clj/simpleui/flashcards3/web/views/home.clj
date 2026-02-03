@@ -26,9 +26,13 @@
              :hx-post "panel:new"
              :hx-prompt "New Slideshow Name"}
        (components/button "New Slideshow")]
-      [:a {:href "students/"
+      [:a {:class "my-1 mr-2"
+           :href "students/"
            :target "_blank"}
-       (components/button "Students")]]
+       (components/button "Students")]
+      [:a {:href "https://www.theschoolsignshop.co.uk/wp-content/uploads/2020/09/PHONICS-1-A3.png"
+           :target "_blank"}
+       (components/button "ABC")]]
      [:div {:class "right-2 top-2 absolute"}
       [:a {:href "white.html" :target "_blank"}
        (components/button "White Screen")]]
