@@ -14,7 +14,7 @@
     icons/play-circle]
    [:a.mr-2.text-red-500 {:href (format "play/%s/0/?grid=2" slideshow_id)}
     icons/play-circle]
-   [:a.text-green-500 {:href (format "play/%s/0?grid=3" slideshow_id)}
+   [:a.text-green-500 {:href (format "play/%s/0/?grid=3" slideshow_id)}
     icons/play-circle]])
 
 (defcomponent ^:endpoint panel [req ^:prompt slideshow-name command]
