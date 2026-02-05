@@ -1,17 +1,20 @@
 (ns simpleui.flashcards3.web.views.fill
   (:require
     [simpleui.core :as simpleui]
+    [simpleui.flashcards3.env :refer [prod?]]
     [simpleui.flashcards3.web.views.components :as components]
     [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]]))
 
 (defcomponent ^:endpoint select [req text]
   [:form {:class "p-2"
-          :hx-post "edit"}
+          :hx-post "edit"
+          :hx-confirm (when prod? "Back to Edit?")}
    (components/submit "Edit")
    [:input {:type "hidden"
             :name "text"
             :value text}]
-   [:p text]])
+   [:pre#text-disp.mt-4 text]
+   [:script "listenTextDisp();"]])
 
 (defcomponent ^:endpoint edit [req text]
   select
@@ -29,5 +32,6 @@
    [query-fn]
    (fn [req]
      (page-htmx
-      {:css ["../output.css"]}
+      {:css ["../output.css"]
+       :js ["../fill.js"]}
       (edit req)))))
