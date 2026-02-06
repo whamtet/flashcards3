@@ -17,17 +17,21 @@ function getSelectionOffsets(container) {
     const start = preRange.toString().length;
     const end = start + range.toString().length;
 
-    return { start, end };
+    return [start, end];
 }
+
+const $ = x => document.querySelector(x);
 
 function listenTextDisp() {
     const div = document.getElementById("text-disp");
-    console.log('div', div);
 
     div.addEventListener("mouseup", () => {
         const offsets = getSelectionOffsets(div);
         if (offsets) {
-            console.log(offsets.start, offsets.end);
+            $('#i1').value = offsets[0];
+            $('#i2').value = offsets[1];
         }
+        console.log(offsets);
+        $('#append').click();
     });
 }

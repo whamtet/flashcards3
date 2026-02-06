@@ -1,5 +1,13 @@
 (ns simpleui.flashcards3.web.views.components)
 
+(defn hiddens [& args]
+  (for [[k v] (partition 2 args)
+        v (if (coll? v) v [v])]
+    [:input {:type "hidden"
+             :id (when (= "id" v) k)
+             :name k
+             :value v}]))
+
 (defn button [label]
   [:span.p-1
    [:button {:type "button"
@@ -11,6 +19,9 @@
    [:input {:type "submit"
             :value label
             :class "bg-clj-blue py-1.5 px-3 rounded-lg text-white"}]])
+
+(defn submit-hidden [id]
+  [:input {:id id :type "submit"}])
 
 (defn button-warning [label] ;; see also warning below
   [:span.p-1

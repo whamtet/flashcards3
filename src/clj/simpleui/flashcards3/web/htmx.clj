@@ -24,7 +24,7 @@
     s))
 
 (defn- scripts [js hyperscript? stripe?]
-  (cond-> js
+  (cond-> (map resource-cache/cache-suffix js)
           hyperscript? (conj (unminify "https://unpkg.com/hyperscript.org@0.9.12/dist/_hyperscript.min.js"))
           stripe? (conj (resource-cache/cache-suffix "/checkout.js")
                         "https://js.stripe.com/v3/")))
