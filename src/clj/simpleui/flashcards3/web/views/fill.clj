@@ -31,15 +31,18 @@
   (string/join (repeat i "_")))
 
 (defn- white-out-string [s offsets]
-  (reduce
-   (fn [[superscript i1 i2] s]
-     (str
-      (.substring s 0 i1)
-      superscript
-      (_ (- i2 i1))
-      (when (< i2 (count s)) (.substring s i2))))
-   s
-   (map list superscripts (take-nth 2 offsets) (take-nth 2 (rest offsets)))))
+  (->> offsets
+       (partition 2)
+       (sort-by first)
+       (map list superscripts)
+       (reduce
+        (fn [s [superscript [i1 i2]]]
+          (str
+           (.substring s 0 i1)
+           superscript
+           (_ (- i2 i1))
+           (when (< i2 (count s)) (.substring s i2))))
+        s)))
 
 (defcomponent ^:endpoint select [req text ^:longs offsets ^:long i1 ^:long i2 command]
   (let [offsets
@@ -58,6 +61,10 @@
                           "i1" "id"
                           "i2" "id")
       (components/submit-hidden "append")]
+     [:form.hidden {:hx-post "select:drop"}
+      (components/hiddens "text" text
+                          "offsets" offsets)
+      (components/submit-hidden "drop")]
      [:pre#text-disp.mt-4 (white-out-string text offsets)]
      [:script "listenTextDisp();"]]))
 

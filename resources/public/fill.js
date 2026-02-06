@@ -35,3 +35,9 @@ function listenTextDisp() {
         $('#append').click();
     });
 }
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'z') {
+        $('#drop').click();
+    }
+});
