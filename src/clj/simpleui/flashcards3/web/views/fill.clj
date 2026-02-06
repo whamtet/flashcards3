@@ -25,27 +25,33 @@
 (defn- drop-offset [offsets]
   (drop 2 offsets))
 
-(def superscripts ["¹" "²" "³" "⁴" "⁵" "⁶" "⁷" "⁸" "⁹" "¹⁰"])
+(def superscripts ["¹" "²" "³" "⁴" "⁵" "⁶" "⁷" "⁸" "⁹"])
 
-(defn- _ [i]
-  (string/join (repeat i "_")))
+(defn- _ [superscript i]
+  (apply str superscript (repeat i "_")))
 
 (defn- white-out-string [s offsets]
-  (->> offsets
-       (partition 2)
-       (sort-by first)
-       (map list superscripts)
-       (reduce
-        (fn [s [superscript [i1 i2]]]
-          (str
-           (.substring s 0 i1)
-           superscript
-           (_ (- i2 i1))
-           (when (< i2 (count s)) (.substring s i2))))
-        s)))
+  (let [sorted (->> offsets (partition 2) (sort-by first) (apply concat))
+        padded (concat [0] sorted [(count s)])]
+    (string/join
+     (map
+      (fn [i a b]
+        (when (< a b)
+          (if (even? i)
+            (.substring s a b)
+            (_ (-> i (* 0.5) long superscripts) (- b a 1)))))
+      (range)
+      padded
+      (rest padded)))))
+
+(defn- bind [a b]
+  (when a
+    (-> a (max 0) (min b))))
 
 (defcomponent ^:endpoint select [req text ^:longs offsets ^:long i1 ^:long i2 command]
-  (let [offsets
+  (let [i1 (bind i1 (count text))
+        i2 (bind i2 (count text))
+        offsets
         (case command
           "append" (append-offset offsets i1 i2)
           "drop" (drop-offset offsets)
@@ -65,7 +71,8 @@
       (components/hiddens "text" text
                           "offsets" offsets)
       (components/submit-hidden "drop")]
-     [:pre#text-disp.mt-4 (white-out-string text offsets)]
+     (repeat 10
+             [:pre#text-disp.mt-4 (white-out-string text offsets)])
      [:script "listenTextDisp();"]]))
 
 (defcomponent ^:endpoint edit [req text]
