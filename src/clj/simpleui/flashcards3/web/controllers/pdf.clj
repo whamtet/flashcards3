@@ -14,12 +14,15 @@
     java.io.ByteArrayInputStream))
 
 (defn- slurp-img [url]
-  (ImageIO/read
-   (if (string? url)
-     (:body
-       (client/get url {:headers {"User-Agent" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"}
-                        :as :stream}))
-     (local/input-stream url))))
+  (try
+    (ImageIO/read
+     (if (string? url)
+       (:body
+         (client/get url {:headers {"User-Agent" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"}
+                          :as :stream}))
+       (local/input-stream url)))
+    (catch clojure.lang.ExceptionInfo e
+      (-> e ex-data :status))))
 
 (defn- rotate-scale [scale translate]
   (doto (AffineTransform.)
@@ -51,9 +54,10 @@
         out))))
 
 (defn- img-el [[_ url]]
-  (when-let [img (slurp-img url)]
-    [:image
-     (rot-scale img)]))
+  (let [img (slurp-img url)]
+    (if (or (number? img) (nil? img))
+      [:paragraph (format "Error: %s for %s" img url)]
+      [:image (rot-scale img)])))
 
 (defn- trim-lines [s]
   (->> (.split s "\n")
