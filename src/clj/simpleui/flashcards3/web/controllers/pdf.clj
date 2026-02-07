@@ -13,16 +13,22 @@
     java.io.ByteArrayOutputStream
     java.io.ByteArrayInputStream))
 
-(defn- slurp-img [url]
+(defn- slurp-img* [url]
+  (ImageIO/read
+   (if (string? url)
+     (:body
+       (client/get url {:headers {"User-Agent" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"}
+                        :as :stream}))
+     (local/input-stream url))))
+
+(defn- slurp-img [[url2 url1]]
   (try
-    (ImageIO/read
-     (if (string? url)
-       (:body
-         (client/get url {:headers {"User-Agent" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"}
-                          :as :stream}))
-       (local/input-stream url)))
+    (slurp-img* url1)
     (catch clojure.lang.ExceptionInfo e
-      (-> e ex-data :status))))
+      (try
+        (slurp-img* url2)
+        (catch clojure.lang.ExceptionInfo e
+          (-> e ex-data :status))))))
 
 (defn- rotate-scale [scale translate]
   (doto (AffineTransform.)
@@ -53,10 +59,10 @@
             (.filter img out))
         out))))
 
-(defn- img-el [[_ url]]
-  (let [img (slurp-img url)]
+(defn- img-el [x]
+  (let [img (slurp-img x)]
     (if (or (number? img) (nil? img))
-      [:paragraph (format "Error: %s for %s" img url)]
+      [:paragraph (format "Error: %s for %s" img x)]
       [:image (rot-scale img)])))
 
 (defn- trim-lines [s]
@@ -67,9 +73,9 @@
 (defn- pdf [{:keys [notes slides]}]
   (let [out (ByteArrayOutputStream.)]
     (pdf/pdf
-      [{}
-       [:paragraph (trim-lines notes)]
-       (pmap img-el slides)]
+     [{}
+      [:paragraph (trim-lines notes)]
+      (pmap img-el slides)]
      out)
     (-> out .toByteArray ByteArrayInputStream.)))
 
