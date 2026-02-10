@@ -6,6 +6,7 @@
    [simpleui.flashcards3.web.views.grid :as grid]
    [simpleui.flashcards3.web.views.home :as home]
    [simpleui.flashcards3.web.views.play :as play]
+   [simpleui.flashcards3.web.views.play-drop :as play-drop]
    [simpleui.flashcards3.web.views.fill :as fill]
    [simpleui.flashcards3.web.views.students :as students]
    [integrant.core :as ig]
@@ -34,4 +35,5 @@
    ["/students" (route-data opts) (students/ui-routes opts)]
    ["/edit/:slideshow_id" (route-data opts) (edit/ui-routes opts)]
    ["/grid/:slideshow_id" (route-data opts) (grid/ui-routes opts)]
-   ["/play/:slideshow_id/:step" (route-data opts) (play/ui-routes opts)]])
+   ["/play/:slideshow_id/:step" (route-data opts) (play/ui-routes opts)]
+   ["/play-drop/:slideshow_id" (route-data opts) (play-drop/ui-routes opts)]])
