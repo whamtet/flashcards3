@@ -9,7 +9,7 @@
 (defn- get-src [x]
   (if (string? x)
     x
-    (format "../../../api/local/%s" x)))
+    (format "../../api/local/%s" x)))
 
 [:div.grid-rows-2.grid-cols-2]
 [:div.grid-rows-3.grid-cols-3]
