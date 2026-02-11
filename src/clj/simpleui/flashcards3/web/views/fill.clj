@@ -72,7 +72,9 @@
                           "offsets" offsets)
       (components/submit-hidden "drop")]
      (repeat 10
-             [:pre#text-disp.my-4 (white-out-string text offsets)])
+             (list
+              [:pre#text-disp (white-out-string text offsets)]
+              [:hr.my-8]))
      [:script "listenTextDisp();"]]))
 
 (defcomponent ^:endpoint edit [req text]
