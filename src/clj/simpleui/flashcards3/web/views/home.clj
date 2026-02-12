@@ -38,9 +38,13 @@
            :href "fill/"
            :target "_blank"}
        (components/button "Fill")]
-      [:a {:href "https://www.theschoolsignshop.co.uk/wp-content/uploads/2020/09/PHONICS-1-A3.png"
+      [:a {:class "my-1 mr-2"
+           :href "https://www.theschoolsignshop.co.uk/wp-content/uploads/2020/09/PHONICS-1-A3.png"
            :target "_blank"}
-       (components/button "ABC")]]
+       (components/button "ABC")]
+      [:a {:href "upbeat.mp3"
+           :target "_blank"}
+       (components/button "Music")]]
      [:div {:class "right-2 top-2 absolute"}
       [:a {:href "white.html" :target "_blank"}
        (components/button "White Screen")]]
