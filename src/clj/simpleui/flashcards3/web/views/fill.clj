@@ -73,7 +73,7 @@
       (components/submit-hidden "drop")]
      (repeat 10
              (list
-              [:pre#text-disp (white-out-string text offsets)]
+              [:pre#text-disp.whitespace-pre-wrap (white-out-string text offsets)]
               [:hr.my-8]))
      [:script "listenTextDisp();"]]))
 
@@ -85,9 +85,7 @@
    [:textarea {:class "w-full rounded-md border mt-2 p-2 update"
                :style {:height "80vh"}
                :name "text"}
-    "The quick brown fox droppped over the lazy brown dog
-
-    ABCDEFGHIJKLMNOP"]])
+    text]])
 
 (defn ui-routes [{:keys [query-fn]}]
   (simpleui/make-routes

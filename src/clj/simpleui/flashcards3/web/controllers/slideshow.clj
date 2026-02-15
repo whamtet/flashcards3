@@ -3,7 +3,8 @@
     [simpleui.flashcards3.web.controllers.local :as local]))
 
 (defn add-slideshow [query-fn slideshow_name]
-  (query-fn :insert-slideshow {:slideshow_name slideshow_name}))
+  (when-not (query-fn :get-slideshow-name {:slideshow_name slideshow_name})
+    (query-fn :insert-slideshow {:slideshow_name slideshow_name})))
 
 (defn- read-details [s]
   (if s

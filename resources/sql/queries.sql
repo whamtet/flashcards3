@@ -8,6 +8,8 @@ returning slideshow_id;
 select * from slideshow;
 -- :name get-slideshow :query :one
 select * from slideshow where slideshow_id = :slideshow_id
+-- :name get-slideshow-name :query :one
+select * from slideshow where slideshow_name = :slideshow_name
 
 -- :name slideshow-name :execute
 update slideshow
