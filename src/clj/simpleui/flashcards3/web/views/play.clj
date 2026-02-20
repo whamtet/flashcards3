@@ -6,9 +6,12 @@
       [simpleui.flashcards3.web.views.icons :as icons]
       [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]]))
 
-(defn- other-random [curr max]
-  (let [r (rand-int (dec max))]
-    (if (< r curr) r (inc r))))
+(defn- other-randoms [curr max]
+  (let [x (range max)]
+    (shuffle
+     (concat
+      (take curr x)
+      (drop (inc curr) x)))))
 
 (defn- get-src [x]
   (if (string? x)
@@ -18,7 +21,7 @@
 [:div.grid-rows-2.grid-cols-2]
 [:div.grid-rows-3.grid-cols-3]
 [:div.grid-rows-4.grid-cols-4]
-(defcomponent panel [req ^:long grid ^:long drop]
+(defcomponent panel [req ^:long grid ^:long drop ^:longs randoms]
   (let [slides (cond->> (slideshow/get-slideshow-slides query-fn slideshow_id)
                  drop (clojure.core/drop drop)
                  grid (partition-all (* grid grid)))
@@ -30,13 +33,20 @@
                             (inc step)
                             (if grid (str "?grid=" grid) "")))
         edit-href (format "../../../edit/%s/" slideshow_id)
+        [random & randoms] (if (empty? randoms)
+                             (other-randoms step (count slides))
+                             randoms)
         random-href (when (> (count slides) 1)
                       (format "../../../play/%s/%s/%s"
                               slideshow_id
-                              (other-random step (count slides))
+                              random
                               (if grid (str "?grid=" grid) "")))]
-    [:div
-     [:a#randomLink.hidden {:href random-href}]
+    [:div#parent
+     [:form.hidden {:hx-get random-href
+                    :hx-target "#parent"}
+      (for [random randoms]
+        [:input {:name "randoms" :value random}])
+      [:input#randomLink {:type "submit"}]]
      [:a#editLink.hidden {:href edit-href}]
      [:a {:href next-href}
       (cond
