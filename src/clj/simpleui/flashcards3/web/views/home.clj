@@ -1,22 +1,28 @@
 (ns simpleui.flashcards3.web.views.home
     (:require
       [simpleui.core :as simpleui]
+      [simpleui.flashcards3.env :refer [prod?]]
       [simpleui.flashcards3.web.controllers.slideshow :as slideshow]
       [simpleui.flashcards3.web.views.components :as components]
       [simpleui.flashcards3.web.views.icons :as icons]
       [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]]))
 
+(defn- href [href]
+  (if prod?
+    {:href href :target "_blank"}
+    {:href href}))
+
 (defn- slideshow-disp [{:keys [slideshow_id slideshow_name]}]
   [:div.p-2.text-2xl.flex.items-center
    [:a.text-clj-blue.mr-2 {:href (format "edit/%s/" slideshow_id)}
     slideshow_name]
-   [:a.mr-2 {:href (format "play/%s/0/" slideshow_id) :target "_blank"}
+   [:a.mr-2 (href (format "play/%s/0/" slideshow_id))
     icons/play-circle]
-   [:a.mr-2.text-red-500 {:href (format "play/%s/0/?grid=2" slideshow_id) :target "_blank"}
+   [:a.mr-2.text-red-500 (href (format "play/%s/0/?grid=2" slideshow_id))
     icons/play-circle]
-   [:a.mr-2.text-green-500 {:href (format "play/%s/0/?grid=3" slideshow_id) :target "_blank"}
+   [:a.mr-2.text-green-500 (href (format "play/%s/0/?grid=3" slideshow_id))
     icons/play-circle]
-   [:a.text-yellow-500 {:href (format "play-drop/%s/?grid=3" slideshow_id) :target "_blank"}
+   [:a.text-yellow-500 (href (format "play-drop/%s/?grid=3" slideshow_id))
     icons/play-circle]])
 
 (defcomponent ^:endpoint panel [req ^:prompt slideshow-name command]

@@ -54,11 +54,16 @@
         [:div.p-6.text-xl "Empty"]
         grid
         [:div {:class (format "grid grid-rows-%s grid-cols-%s" grid grid)}
-         (for [[_ src] (nth slides step)]
-           [:img {:src (get-src src)}])]
+         (for [[src2 src] (nth slides step)]
+           [:img {:src (get-src src)
+                  :src2 (get-src src2)
+                  :onerror "fixSrc(event.target)"}])]
         :else
-        [:div.flex.justify-center
-         [:img {:src (-> slides (nth step) second get-src)}]])]]))
+        (let [[src2 src] (nth slides step)]
+          [:div.flex.justify-center
+           [:img {:src (get-src src)
+                  :src2 (get-src src2)
+                  :onerror "fixSrc(event.target)"}]]))]]))
 
 (defn ui-routes [{:keys [query-fn]}]
   (simpleui/make-routes

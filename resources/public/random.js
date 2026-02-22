@@ -6,3 +6,7 @@ document.addEventListener('keydown', (event) => {
         document.querySelector('#editLink').click();
     }
 });
+
+function fixSrc(target) {
+    target.src = target.getAttribute('src2');
+}
