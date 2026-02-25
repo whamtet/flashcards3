@@ -4,6 +4,7 @@
     [simpleui.flashcards3.web.controllers.local :as local]
     [simpleui.flashcards3.web.controllers.pdf :as pdf]
     [simpleui.flashcards3.web.controllers.students :as students]
+    [simpleui.flashcards3.web.middleware.auth :as auth]
     [simpleui.flashcards3.web.middleware.exception :as exception]
     [simpleui.flashcards3.web.middleware.formats :as formats]
     [integrant.core :as ig]
@@ -17,21 +18,22 @@
   {:coercion   malli/coercion
    :muuntaja   formats/instance
    :swagger    {:id ::api}
-   :middleware [;; query-params & form-params
+   :middleware [auth/wrap-auth
+                ;; query-params & form-params
                 parameters/parameters-middleware
-                  ;; content-negotiation
+                ;; content-negotiation
                 muuntaja/format-negotiate-middleware
-                  ;; encoding response body
+                ;; encoding response body
                 muuntaja/format-response-middleware
-                  ;; exception handling
+                ;; exception handling
                 coercion/coerce-exceptions-middleware
-                  ;; decoding request body
+                ;; decoding request body
                 muuntaja/format-request-middleware
-                  ;; coercing response bodys
+                ;; coercing response bodys
                 coercion/coerce-response-middleware
-                  ;; coercing request parameters
+                ;; coercing request parameters
                 coercion/coerce-request-middleware
-                  ;; exception handling
+                ;; exception handling
                 exception/wrap-exception]})
 
 ;; Routes
@@ -58,9 +60,6 @@
                   :local_id
                   Long/parseLong
                   local/input-stream)})]
-   ["/students"
-    (fn [req]
-      (-> req :params students/parse))]
    ["/health"
     ;; note that use of the var is necessary
     ;; for reitit to reload routes without

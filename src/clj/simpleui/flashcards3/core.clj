@@ -1,17 +1,19 @@
 (ns simpleui.flashcards3.core
   (:require
-   [clojure.tools.logging :as log]
-   [integrant.core :as ig]
-   [simpleui.flashcards3.config :as config]
-   [simpleui.flashcards3.env :refer [defaults]]
+    [clojure.tools.logging :as log]
+    [integrant.core :as ig]
+    [simpleui.flashcards3.config :as config]
+    [simpleui.flashcards3.env :refer [defaults]]
 
     ;; Edges
-   [kit.edge.server.undertow]
-   [simpleui.flashcards3.web.handler]
+    [kit.edge.server.undertow]
+    [simpleui.flashcards3.web.handler]
 
     ;; Routes
-   [simpleui.flashcards3.web.routes.api]
+    [simpleui.flashcards3.web.routes.api]
     [simpleui.flashcards3.web.routes.ui]
+    [simpleui.flashcards3.web.routes.open]
+
     [kit.edge.db.sql.conman]
     [simpleui.flashcards3.migratus])
   (:gen-class))
