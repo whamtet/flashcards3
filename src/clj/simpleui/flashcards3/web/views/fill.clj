@@ -73,7 +73,9 @@
       (components/submit-hidden "drop")]
      (repeat 10
              (list
-              [:pre#text-disp.whitespace-pre-wrap (white-out-string text offsets)]
+              [:pre#text-disp.whitespace-pre-wrap
+               {:style "font-size: 1.5em"}
+               (white-out-string text offsets)]
               [:hr.my-8]))
      [:script "listenTextDisp();"]]))
 
