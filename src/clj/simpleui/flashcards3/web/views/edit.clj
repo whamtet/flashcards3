@@ -65,7 +65,6 @@
              :hx-encoding "multipart/form-data"
              :hx-target "#images"
              :type "file"
-             ;; corresponds to java 21
              :accept (string/join ", " local/supported-types)
              :multiple true
              :name "images"}]]
@@ -131,18 +130,6 @@
              :placeholder "Search icons..."
              :name "q"}]]])
 
-(defcomponent ^:endpoint notes [req notes command]
-  (case command
-    "update" (do
-               (slideshow/update-slideshow-notes query-fn slideshow_id notes)
-               nil)
-    [:textarea {:class "w-4/5 ml-2 mt-2 p-2 rounded-md border"
-                :placeholder "Notes..."
-                :name "notes"
-                :rows 10
-                :hx-post "notes:update"}
-     (slideshow/get-slideshow-notes query-fn slideshow_id)]))
-
 (defcomponent ^:endpoint panel [req ^:prompt slideshow-name command]
   (case command
     [:div.p-2
@@ -150,9 +137,7 @@
      [:hr.border-top]
      (image-order req)
      (image-search req)
-     (icon-search req)
-     [:hr.border-top]
-     (notes req)]))
+     (icon-search req)]))
 
 (defn ui-routes [{:keys [query-fn]}]
   (simpleui/make-routes

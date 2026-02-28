@@ -8,9 +8,9 @@
 
 (defn- read-details [s]
   (if s
-    (read-string s)
+    (-> s read-string (update :notes #(if (vector? %) % [])))
     {:slides []
-     :notes ""}))
+     :notes []}))
 
 (defn get-slideshows [query-fn]
   (->> (query-fn :get-slideshows {})
@@ -27,7 +27,7 @@
 
 (defn get-slideshow-name [query-fn slideshow_id]
   (:slideshow_name (query-fn :get-slideshow {:slideshow_id slideshow_id})))
-(defn get-slideshow-notes [query-fn slideshow_id]
+#_(defn get-slideshow-notes [query-fn slideshow_id]
   (:notes
     (get-slideshow-details query-fn slideshow_id)))
 
@@ -47,7 +47,7 @@
   (as-> (get-slideshow-details query-fn slideshow_id) $
         (update $ :slides #(apply f % args))
         (slideshow-details query-fn slideshow_id $)))
-(defn update-slideshow-notes [query-fn slideshow_id notes]
+#_(defn update-slideshow-notes [query-fn slideshow_id notes]
   (as-> (get-slideshow-details query-fn slideshow_id) $
         (assoc $ :notes notes)
         (slideshow-details query-fn slideshow_id $)))

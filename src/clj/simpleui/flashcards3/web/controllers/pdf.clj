@@ -70,11 +70,10 @@
        (remove #(-> % .trim empty?))
        (string/join "\n")))
 
-(defn- pdf [{:keys [notes slides]}]
+(defn- pdf [{:keys [slides]}]
   (let [out (ByteArrayOutputStream.)]
     (pdf/pdf
      [{}
-      [:paragraph (trim-lines notes)]
       (pmap img-el slides)]
      out)
     (-> out .toByteArray ByteArrayInputStream.)))
