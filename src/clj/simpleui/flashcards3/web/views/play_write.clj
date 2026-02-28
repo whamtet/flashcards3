@@ -31,7 +31,8 @@
                    :src2 (get-src src2)
                    :onerror "fixSrc(event.target)"}]
             [:div.text-center note]])
-         slides)])]))
+         slides)])
+     [:div {:style {:height "500px"}}]]))
 
 (defn ui-routes [{:keys [query-fn]}]
   (simpleui/make-routes
