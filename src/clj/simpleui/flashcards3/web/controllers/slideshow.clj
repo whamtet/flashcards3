@@ -29,6 +29,9 @@
 (defn get-slideshow-slides-edit [query-fn slideshow_id]
   (let [{:keys [slides notes]} (get-slideshow-details query-fn slideshow_id)]
     (map (fn [[medium] note] [medium note]) slides notes)))
+(defn get-slideshow-slides-notes [query-fn slideshow_id]
+  (let [{:keys [slides notes]} (get-slideshow-details query-fn slideshow_id)]
+    (map list slides notes)))
 
 (defn get-slideshow-name [query-fn slideshow_id]
   (:slideshow_name (query-fn :get-slideshow {:slideshow_id slideshow_id})))

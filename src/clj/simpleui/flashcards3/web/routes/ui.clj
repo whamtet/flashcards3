@@ -8,6 +8,7 @@
     [simpleui.flashcards3.web.views.home :as home]
     [simpleui.flashcards3.web.views.play :as play]
     [simpleui.flashcards3.web.views.play-drop :as play-drop]
+    [simpleui.flashcards3.web.views.play-write :as play-write]
     [integrant.core :as ig]
     [reitit.ring.middleware.muuntaja :as muuntaja]
     [reitit.ring.middleware.parameters :as parameters]))
@@ -33,4 +34,5 @@
    ["/edit/:slideshow_id" (route-data opts) (edit/ui-routes opts)]
    ["/grid/:slideshow_id" (route-data opts) (grid/ui-routes opts)]
    ["/play/:slideshow_id/:step" (route-data opts) (play/ui-routes opts)]
-   ["/play-drop/:slideshow_id" (route-data opts) (play-drop/ui-routes opts)]])
+   ["/play-drop/:slideshow_id" (route-data opts) (play-drop/ui-routes opts)]
+   ["/play-write/:slideshow_id" (route-data opts) (play-write/ui-routes opts)]])
