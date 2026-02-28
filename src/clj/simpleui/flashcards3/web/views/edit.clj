@@ -1,14 +1,14 @@
 (ns simpleui.flashcards3.web.views.edit
-    (:require
-      [clojure.string :as string]
-      [simpleui.core :as simpleui]
-      [simpleui.flashcards3.web.controllers.img-search :as img-search]
-      [simpleui.flashcards3.web.controllers.slideshow :as slideshow]
-      [simpleui.flashcards3.web.controllers.local :as local]
-      [simpleui.flashcards3.web.views.components :as components]
-      [simpleui.flashcards3.web.views.icons :as icons]
-      [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]]
-      [simpleui.flashcards3.util :as util]))
+  (:require
+    [clojure.string :as string]
+    [simpleui.core :as simpleui]
+    [simpleui.flashcards3.web.controllers.img-search :as img-search]
+    [simpleui.flashcards3.web.controllers.slideshow :as slideshow]
+    [simpleui.flashcards3.web.controllers.local :as local]
+    [simpleui.flashcards3.web.views.components :as components]
+    [simpleui.flashcards3.web.views.icons :as icons]
+    [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]]
+    [simpleui.flashcards3.util :as util]))
 
 (defcomponent ^:endpoint name-editor [req new-name command]
   (case command
@@ -46,7 +46,17 @@
     x
     (format "../../api/local/%s" x)))
 
-(defcomponent ^:endpoint image-order [req command medium large ^:long i ^:array images]
+(defcomponent ^:endpoint image-note [req ^:long i note]
+  (slideshow/slideshow-note query-fn slideshow_id i note)
+  nil)
+
+(defcomponent ^:endpoint image-order [req
+                                      command
+                                      medium
+                                      large
+                                      ^:long i
+                                      ^:array images]
+  image-note
   (case command
     "concat" (slideshow/concat-slideshow query-fn slideshow_id images)
     "conj" (slideshow/conj-slideshow query-fn slideshow_id [(or medium large) large])
@@ -69,32 +79,39 @@
              :multiple true
              :name "images"}]]
    (util/map-first-last
-    (fn [i first? last? [medium]]
-      [:div.flex.items-center.mb-1
-       [:span.text-xl.mr-1 (format "%s)" (inc i))]
-       (when-not first?
-         [:div {:class "cursor-pointer border rounded-md mr-2 p-2"
-                :hx-post "image-order:up"
-                :hx-target "#images"
-                :hx-vals {:i i}}
-          icons/arrow-up])
-       (when-not last?
-         [:div {:class "cursor-pointer border rounded-md mr-2 p-2"
-                :hx-post "image-order:down"
-                :hx-target "#images"
-                :hx-vals {:i i}}
-          icons/arrow-down])
-       [:a {:class "mr-2"
-            :href (format "../../play/%s/%s/" slideshow_id i)}
-        [:img {:class "max-h-96"
-               :src (get-src medium)}]]
-       [:div {:class "cursor-pointer border rounded-md p-2"
-              :hx-post "image-order:del"
-              :hx-target "#images"
-              :hx-confirm "Delete pic?"
-              :hx-vals {:i i}}
-        icons/trash]])
-    (slideshow/get-slideshow-slides query-fn slideshow_id))])
+    (fn [i first? last? [medium note]]
+      [:div
+       [:div.flex.items-center.mb-1
+        [:span.text-xl.mr-1 (format "%s)" (inc i))]
+        (when-not first?
+          [:div {:class "cursor-pointer border rounded-md mr-2 p-2"
+                 :hx-post "image-order:up"
+                 :hx-target "#images"
+                 :hx-vals {:i i}}
+           icons/arrow-up])
+        (when-not last?
+          [:div {:class "cursor-pointer border rounded-md mr-2 p-2"
+                 :hx-post "image-order:down"
+                 :hx-target "#images"
+                 :hx-vals {:i i}}
+           icons/arrow-down])
+        [:a {:class "mr-2"
+             :href (format "../../play/%s/%s/" slideshow_id i)}
+         [:img {:class "max-h-96"
+                :src (get-src medium)}]]
+        [:div {:class "cursor-pointer border rounded-md p-2"
+               :hx-post "image-order:del"
+               :hx-target "#images"
+               :hx-confirm "Delete pic?"
+               :hx-vals {:i i}}
+         icons/trash]]
+       [:input {:class "border rounded-md p-2 mt-1 mb-4 ml-20"
+                :style {:width "500px"}
+                :hx-post "image-note"
+                :hx-vals {:i i}
+                :value note
+                :name "note"}]])
+    (slideshow/get-slideshow-slides-edit query-fn slideshow_id))])
 
 (defcomponent ^:endpoint image-search [req q]
   [:div {:class "p-2"

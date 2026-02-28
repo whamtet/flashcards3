@@ -8,7 +8,9 @@
 
 (defn- read-details [s]
   (if s
-    (-> s read-string (update :notes #(if (vector? %) % [])))
+    (let [{:keys [slides notes]} (read-string s)]
+      {:slides slides
+       :notes (if (vector? notes) notes (mapv (constantly "") slides))})
     {:slides []
      :notes []}))
 
@@ -24,12 +26,12 @@
 (defn get-slideshow-slides [query-fn slideshow_id]
   (:slides
     (get-slideshow-details query-fn slideshow_id)))
+(defn get-slideshow-slides-edit [query-fn slideshow_id]
+  (let [{:keys [slides notes]} (get-slideshow-details query-fn slideshow_id)]
+    (map (fn [[medium] note] [medium note]) slides notes)))
 
 (defn get-slideshow-name [query-fn slideshow_id]
   (:slideshow_name (query-fn :get-slideshow {:slideshow_id slideshow_id})))
-#_(defn get-slideshow-notes [query-fn slideshow_id]
-  (:notes
-    (get-slideshow-details query-fn slideshow_id)))
 
 (defn update-slideshow-name [query-fn slideshow_id slideshow_name]
   (query-fn :slideshow-name {:slideshow_id slideshow_id :slideshow_name slideshow_name}))
@@ -46,17 +48,25 @@
 (defn- update-slides [query-fn slideshow_id f & args]
   (as-> (get-slideshow-details query-fn slideshow_id) $
         (update $ :slides #(apply f % args))
-        (slideshow-details query-fn slideshow_id $)))
-#_(defn update-slideshow-notes [query-fn slideshow_id notes]
-  (as-> (get-slideshow-details query-fn slideshow_id) $
-        (assoc $ :notes notes)
+        (update $ :notes #(apply f % args))
         (slideshow-details query-fn slideshow_id $)))
 
 (defn conj-slideshow [query-fn slideshow_id x]
-  (update-slides query-fn slideshow_id conj x))
+  (as-> (get-slideshow-details query-fn slideshow_id) $
+        (update $ :slides conj x)
+        (update $ :notes conj "")
+        (slideshow-details query-fn slideshow_id $)))
 
 (defn concat-slideshow [query-fn slideshow_id images]
-  (update-slides query-fn slideshow_id into (local/convert images)))
+  (as-> (get-slideshow-details query-fn slideshow_id) $
+        (update $ :slides into (local/convert images))
+        (update $ :notes into (repeat (count images) ""))
+        (slideshow-details query-fn slideshow_id $)))
+
+(defn slideshow-note [query-fn slideshow_id i note]
+  (as-> (get-slideshow-details query-fn slideshow_id) $
+        (update $ :notes assoc i note)
+        (slideshow-details query-fn slideshow_id $)))
 
 (defn- move-up-v [v i]
   (assert (pos? i))
