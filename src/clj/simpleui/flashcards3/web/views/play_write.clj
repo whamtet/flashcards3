@@ -30,7 +30,8 @@
             [:img {:src (get-src src)
                    :src2 (get-src src2)
                    :onerror "fixSrc(event.target)"}]
-            [:div.text-center note]])
+            [:div.text-center.tracking-wider
+             {:style {:font-size "1.1em"}} note]])
          slides)])
      [:div {:style {:height "500px"}}]]))
 
