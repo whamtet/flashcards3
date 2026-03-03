@@ -25,6 +25,7 @@
            simpleui/simpleui {:git/url "https://github.com/whamtet/simpleui",
                               :git/sha "53bde9b1df333a52eb3745d411a916142bc937c0"}
            org.clj-commons/clj-http-lite {:mvn/version "1.0.13"}
+           clojure.java-time/clojure.java-time {:mvn/version "1.4.3"}
            clj-pdf/clj-pdf {:mvn/version "2.7.4"}
            io.github.kit-clj/kit-sql-conman {:mvn/version "1.10.4"}
            io.github.kit-clj/kit-sql-migratus {:mvn/version "1.0.4"}

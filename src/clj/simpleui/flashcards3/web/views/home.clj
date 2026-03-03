@@ -45,6 +45,10 @@
            :target "_blank"}
        (components/button "Fill")]
       [:a {:class "my-1 mr-2"
+           :href "hours/"
+           :target "_blank"}
+       (components/button "Hours")]
+      [:a {:class "my-1 mr-2"
            :href "phonics.png"
            :target "_blank"}
        (components/button "ABC")]

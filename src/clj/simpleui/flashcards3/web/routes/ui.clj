@@ -6,6 +6,7 @@
     [simpleui.flashcards3.web.views.edit :as edit]
     [simpleui.flashcards3.web.views.grid :as grid]
     [simpleui.flashcards3.web.views.home :as home]
+    [simpleui.flashcards3.web.views.hours :as hours]
     [simpleui.flashcards3.web.views.play :as play]
     [simpleui.flashcards3.web.views.play-drop :as play-drop]
     [simpleui.flashcards3.web.views.play-write :as play-write]
@@ -31,6 +32,7 @@
 (defmethod ig/init-key :reitit.routes/ui
   [_ opts]
   [["" (route-data opts) (home/ui-routes opts)]
+   ["/hours" (route-data opts) (hours/ui-routes opts)]
    ["/edit/:slideshow_id" (route-data opts) (edit/ui-routes opts)]
    ["/grid/:slideshow_id" (route-data opts) (grid/ui-routes opts)]
    ["/play/:slideshow_id/:step" (route-data opts) (play/ui-routes opts)]
