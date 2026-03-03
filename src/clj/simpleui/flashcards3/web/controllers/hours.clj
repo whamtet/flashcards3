@@ -41,7 +41,7 @@
 (defn- get-date [date-str start-time]
   (->
    (jt/local-date-time "d MMMM yyyy H:mm" (str date-str " " start-time))
-   (jt/zoned-date-time "Etc/UTC")
+   (jt/zoned-date-time "Asia/Bangkok")
    jt/java-date))
 
 (defn parse-hours* [s]

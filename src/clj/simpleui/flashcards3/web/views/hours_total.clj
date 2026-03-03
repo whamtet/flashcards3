@@ -1,4 +1,4 @@
-(ns simpleui.flashcards3.web.views.hours
+(ns simpleui.flashcards3.web.views.hours-total
   (:require
     [simpleui.core :as simpleui]
     [simpleui.flashcards3.env :refer [prod?]]
