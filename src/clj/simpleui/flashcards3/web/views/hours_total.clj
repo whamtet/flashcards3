@@ -6,31 +6,46 @@
     [simpleui.flashcards3.web.views.components :as components]
     [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]]))
 
-(defcomponent ^:endpoint hours [req command new-hours ^:date time]
-  (case command
-    "add" (hours/parse-hours new-hours)
-    "del" (hours/delete-hour time)
-    nil)
-  [:div.p-3 {:hx-target "this"}
-   [:a.mt-2 {:href "../hours-total/"}
-    (components/button "Summary")]
-   (for [[time class] (hours/get-hours)]
-     [:div.flex.items-center.p-2
-      time
-      class
-      [:div {:class "ml-2"
-             :hx-delete "hours:del"
-             :hx-vals {:time time}
-             :hx-confirm (when prod? (format "Delete %s?" time))}
-       (components/button "Delete")]])
-   [:form {:class "mt-2"
-           :hx-post "hours:add"}
-    (components/submit "Add")
-    [:textarea {:class "w-full rounded-md border mt-2 p-2"
-                :style {:height "50vh"}
-                :required true
-                :placeholder "New Hours"
-                :name "new-hours"}]]])
+(defn- table-row [[course count hours]]
+  [:tr {:class "hover:bg-gray-50"}
+   [:td {:class "px-4 py-2 text-sm text-gray-800"} course]
+   [:td {:class "px-4 py-2 text-sm text-gray-800"} count]
+   [:td {:class "px-4 py-2 text-sm text-gray-800"} hours]])
+
+(defcomponent ^:endpoint report [req ^:long year ^:long month]
+  (let [current (hours/year-month)
+        ym (if year (hours/year-month year month) current)
+        previous (hours/dec-month ym)
+        next (hours/inc-month ym)
+        {:keys [table total]} (hours/ym-table ym)]
+    [:div.p-3 {:hx-target "this"}
+     [:div.flex.items-center
+      [:div {:hx-get "report"
+             :hx-vals {:year (.getYear previous)
+                       :month (.getMonthValue previous)}}
+       (components/button "Previous Month")]
+      ym
+      (when (not= current ym)
+        [:div {:hx-get "report"
+               :hx-vals {:year (.getYear next)
+                         :month (.getMonthValue next)}}
+         (components/button "Next Month")])]
+     [:div {:class "overflow-x-auto mt-4"}
+      [:table {:class "min-w-full border border-gray-200 rounded-lg shadow-sm"}
+       [:thead {:class "bg-gray-100"}
+        [:tr
+         [:th {:class "px-4 py-2 text-left text-sm font-semibold text-gray-700 border-b"}
+          "Course Code"]
+         [:th {:class "px-4 py-2 text-left text-sm font-semibold text-gray-700 border-b"}
+          "Count"]
+         [:th {:class "px-4 py-2 text-left text-sm font-semibold text-gray-700 border-b"}
+          "Total Hours"]]]
+       [:tbody {:class "divide-y divide-gray-200 bg-white"}
+        (map table-row table)
+        [:tr {:class "hover:bg-gray-50 font-semibold"}
+         [:td {:class "px-4 py-2 text-sm text-gray-800"}]
+         [:td {:class "px-4 py-2 text-sm text-gray-800"}]
+         [:td {:class "px-4 py-2 text-sm text-gray-800"} total]]]]]]))
 
 (defn ui-routes [{:keys [query-fn]}]
   (simpleui/make-routes
@@ -39,4 +54,4 @@
    (fn [req]
      (page-htmx
       {:css ["../output.css"]}
-      (hours req)))))
+      (report req)))))

@@ -2,9 +2,12 @@
   (:require
     [java-time.api :as jt])
   (:import
-    java.io.File))
+    java.io.File
+    java.util.Date
+    java.time.YearMonth))
 
 (def f (File. "hours.edn"))
+(def tz "Asia/Bangkok")
 
 (defn- slurp-hours []
   (if (.exists f)
@@ -41,7 +44,7 @@
 (defn- get-date [date-str start-time]
   (->
    (jt/local-date-time "d MMMM yyyy H:mm" (str date-str " " start-time))
-   (jt/zoned-date-time "Asia/Bangkok")
+   (jt/zoned-date-time tz)
    jt/java-date))
 
 (defn parse-hours* [s]
@@ -59,3 +62,41 @@
 
 (defn parse-hours [s]
   (assoc-hours (parse-hours* s)))
+
+(def year-month jt/year-month)
+(def inc-month #(jt/plus % (jt/months 1)))
+(def dec-month #(jt/plus % (jt/months -1)))
+
+(defn- ym->zdt [^YearMonth ym]
+  (jt/zoned-date-time
+   (.getYear ym)
+   (.getMonthValue ym)
+   24
+   0
+   0
+   0
+   0
+   tz))
+
+(defn- jd->zdt [^Date d]
+  (-> d jt/instant (jt/zoned-date-time "Asia/Bangkok")))
+
+(defn- ym-frequencies [^YearMonth ym]
+  (let [upper (ym->zdt ym)
+        lower (dec-month upper)]
+    (->> (get-hours)
+         (map #(update % 0 jd->zdt))
+         (drop-while #(-> % first (jt/< lower)))
+         (take-while #(-> % first (jt/< upper)))
+         (map second)
+         frequencies)))
+
+(defn ym-table [^YearMonth ym]
+  (let [table
+        (for [[course frequency] (ym-frequencies ym)]
+          [course
+           frequency
+           (* frequency
+              (if (.startsWith course "HK") 1.5 2))])]
+    {:table table
+     :total (->> table (map last) (apply +))}))
