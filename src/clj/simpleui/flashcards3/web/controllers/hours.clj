@@ -26,6 +26,9 @@
 (defn get-hours []
   (sort-by first (slurp-hours)))
 
+(defn delete-hour [date]
+  (update-hours dissoc date))
+
 (def days ["Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "Sunday"])
 (defn- day-line? [line]
   (some

@@ -2,18 +2,28 @@
   (:require
     [clojure.string :as string]
     [simpleui.core :as simpleui]
+    [simpleui.flashcards3.env :refer [prod?]]
     [simpleui.flashcards3.web.controllers.hours :as hours]
     [simpleui.flashcards3.web.views.components :as components]
     [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]]))
 
-(defcomponent ^:endpoint hours [req command new-hours]
+(defcomponent ^:endpoint hours [req command new-hours ^:date time]
   (case command
     "add" (hours/parse-hours new-hours)
+    "del" (hours/delete-hour time)
     nil)
-  [:div.p-2 {:hx-target "this"}
+  [:div.p-3 {:hx-target "this"}
    (for [[time class] (hours/get-hours)]
-     [:div.flex.items-center time class])
-   [:form {:hx-post "hours:add"}
+     [:div.flex.items-center.p-2
+      time
+      class
+      [:div {:class "ml-2"
+             :hx-delete "hours:del"
+             :hx-vals {:time time}
+             :hx-confirm (when prod? (format "Delete %s?" time))}
+       (components/button "Delete")]])
+   [:form {:class "mt-2"
+           :hx-post "hours:add"}
     (components/submit "Add")
     [:textarea {:class "w-full rounded-md border mt-2 p-2"
                 :style {:height "50vh"}
