@@ -7,7 +7,7 @@
     java.time.YearMonth))
 
 (def f (File. "hours.edn"))
-(def tz "Asia/Bangkok")
+(def tz "Asia/Ho_Chi_Minh")
 
 (defn- slurp-hours []
   (if (.exists f)
@@ -100,3 +100,16 @@
               (if (.startsWith course "HK") 1.5 2))])]
     {:table table
      :total (->> table (map last) (apply +))}))
+
+(defn- week [[jd]]
+  (let [zdt (jd->zdt jd)
+        to-subtract (-> zdt .getDayOfWeek .getValue dec)
+        start (jt/minus zdt (jt/days to-subtract))
+        end (jt/plus start (jt/days 6))]
+    (str
+     (jt/format "d MMM" start)
+     " - "
+     (jt/format "d MMM uuuu" end))))
+
+(defn weeks []
+  (->> (get-hours) (map week) frequencies))

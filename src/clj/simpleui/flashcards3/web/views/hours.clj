@@ -12,8 +12,12 @@
     "del" (hours/delete-hour time)
     nil)
   [:div.p-3 {:hx-target "this"}
-   [:a.mt-2 {:href "../hours-total/"}
+   [:a {:href "../hours-total/"}
     (components/button "Summary")]
+   [:div.mt-3
+    (for [[week frequency] (hours/weeks)]
+      [:div.flex.items-center.p-2
+       week ": " [:b.bold.ml-2 frequency]])]
    (for [[time class] (hours/get-hours)]
      [:div.flex.items-center.p-2
       time
