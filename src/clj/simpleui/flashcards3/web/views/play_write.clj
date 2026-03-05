@@ -11,16 +11,20 @@
     x
     (format "../../api/local/%s" x)))
 
+(defn- inc-mod [x]
+  (mod (inc x) 3))
+
 [:div.grid-rows-2.grid-cols-2]
 [:div.grid-cols-3]
 [:div.grid-cols-4]
 [:div.grid-cols-5]
 [:div.grid-cols-6]
 [:div.grid-cols-7]
-(defcomponent ^:endpoint panel [req]
+(defcomponent ^:endpoint panel [req ^:long enlargement]
   (let [slides (slideshow/get-slideshow-slides-notes query-fn slideshow_id)
-        n (-> slides count (/ 2) long)]
-    [:div
+        n (-> slides count (/ 2) long)
+        enlargement (or enlargement 0)]
+    [:div {:hx-target "this"}
      (if (empty? slides)
        [:div.p-6.text-xl "Empty"]
        [:div {:class (format "grid grid-rows-2 grid-cols-%s" n)}
@@ -29,9 +33,11 @@
            [:div
             [:img {:src (get-src src)
                    :src2 (get-src src2)
-                   :onerror "fixSrc(event.target)"}]
+                   :onerror "fixSrc(event.target)"
+                   :hx-get "panel"
+                   :hx-vals {:enlargement (inc-mod enlargement)}}]
             [:div.text-center.tracking-wider
-             {:style {:font-size "1.1em"}} note]])
+             {:style {:font-size (str (inc enlargement) "em")}} note]])
          slides)])
      [:div {:style {:height "500px"}}]]))
 

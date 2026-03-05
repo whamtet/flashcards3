@@ -12,40 +12,69 @@
    [:td {:class "px-4 py-2 text-sm text-gray-800"} count]
    [:td {:class "px-4 py-2 text-sm text-gray-800"} hours]])
 
-(defcomponent ^:endpoint report [req ^:long year ^:long month]
+(defn- default [ym]
+  (let [{:keys [table total]} (hours/ym-table ym)]
+    [:div {:class "overflow-x-auto mt-4"}
+     [:table {:class "min-w-full border border-gray-200 rounded-lg shadow-sm"}
+      [:thead {:class "bg-gray-100"}
+       [:tr
+        [:th {:class "px-4 py-2 text-left text-sm font-semibold text-gray-700 border-b"}
+         "Course Code"]
+        [:th {:class "px-4 py-2 text-left text-sm font-semibold text-gray-700 border-b"}
+         "Count"]
+        [:th {:class "px-4 py-2 text-left text-sm font-semibold text-gray-700 border-b"}
+         "Total Hours"]]]
+      [:tbody {:class "divide-y divide-gray-200 bg-white"}
+       (map table-row table)
+       [:tr {:class "hover:bg-gray-50 font-semibold"}
+        [:td {:class "px-4 py-2 text-sm text-gray-800"}]
+        [:td {:class "px-4 py-2 text-sm text-gray-800"}]
+        [:td {:class "px-4 py-2 text-sm text-gray-800"} total]]]]]))
+
+(defn- table-row2 [[course count]]
+  [:tr {:class "hover:bg-gray-50"}
+   [:td {:class "px-4 py-2 text-sm text-gray-800"} course]
+   [:td {:class "px-4 py-2 text-sm text-gray-800"} count]])
+
+(defn- missing [ym reported]
+  [:div {:class "overflow-x-auto mt-4"}
+   [:table {:class "min-w-full border border-gray-200 rounded-lg shadow-sm"}
+    [:thead {:class "bg-gray-100"}
+     [:tr
+      [:th {:class "px-4 py-2 text-left text-sm font-semibold text-gray-700 border-b"}
+       "Course Code"]
+      [:th {:class "px-4 py-2 text-left text-sm font-semibold text-gray-700 border-b"}
+       "Count"]]]
+    [:tbody {:class "divide-y divide-gray-200 bg-white"}
+     (map table-row2 (hours/remainders ym reported))]]])
+
+(defcomponent ^:endpoint report [req ^:long year ^:long month reported]
   (let [current (hours/year-month)
         ym (if year (hours/year-month year month) current)
         previous (hours/dec-month ym)
         next (hours/inc-month ym)
-        {:keys [table total]} (hours/ym-table ym)]
+        {:keys [table total]} (hours/ym-table ym)
+        previous-href (format ".?year=%s&month=%s" (.getYear previous) (.getMonthValue previous))
+        next-href (format ".?year=%s&month=%s" (.getYear next) (.getMonthValue next))]
     [:div.p-3 {:hx-target "this"}
      [:div.flex.items-center
-      [:div {:hx-get "report"
-             :hx-vals {:year (.getYear previous)
-                       :month (.getMonthValue previous)}}
+      [:a {:href previous-href}
        (components/button "Previous Month")]
       ym
       (when (not= current ym)
-        [:div {:hx-get "report"
-               :hx-vals {:year (.getYear next)
-                         :month (.getMonthValue next)}}
+        [:a {:href next-href}
          (components/button "Next Month")])]
-     [:div {:class "overflow-x-auto mt-4"}
-      [:table {:class "min-w-full border border-gray-200 rounded-lg shadow-sm"}
-       [:thead {:class "bg-gray-100"}
-        [:tr
-         [:th {:class "px-4 py-2 text-left text-sm font-semibold text-gray-700 border-b"}
-          "Course Code"]
-         [:th {:class "px-4 py-2 text-left text-sm font-semibold text-gray-700 border-b"}
-          "Count"]
-         [:th {:class "px-4 py-2 text-left text-sm font-semibold text-gray-700 border-b"}
-          "Total Hours"]]]
-       [:tbody {:class "divide-y divide-gray-200 bg-white"}
-        (map table-row table)
-        [:tr {:class "hover:bg-gray-50 font-semibold"}
-         [:td {:class "px-4 py-2 text-sm text-gray-800"}]
-         [:td {:class "px-4 py-2 text-sm text-gray-800"}]
-         [:td {:class "px-4 py-2 text-sm text-gray-800"} total]]]]]]))
+     (if reported
+       (missing ym reported)
+       (default ym))
+     [:form {:class "mt-2"
+             :hx-post "report"}
+      (components/submit "Add")
+      [:textarea {:class "w-full rounded-md border mt-2 p-2"
+                  :style {:height "50vh"}
+                  :required true
+                  :placeholder "VUS Reported"
+                  :name "reported"}]]]))
 
 (defn ui-routes [{:keys [query-fn]}]
   (simpleui/make-routes

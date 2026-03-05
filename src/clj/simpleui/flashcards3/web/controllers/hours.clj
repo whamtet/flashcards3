@@ -113,3 +113,23 @@
 
 (defn weeks []
   (->> (get-hours) (map week) frequencies))
+
+(defn- parse-row [line]
+  (when (re-find #"^\d" line)
+    (let [cols (.split line "\t")]
+      [(second cols)
+       (Long/parseLong (nth cols (- (count cols) 2)))])))
+
+(defn- parse-vus-hours [s]
+  (->> (.split s "\n")
+       (drop-while #(not (.startsWith % "Course Code")))
+       rest
+       (keep parse-row)
+       (into {})))
+
+(defn remainders [ym s]
+  (let [vus-subtraction (parse-vus-hours s)]
+    (for [[course frequency] (ym-frequencies ym)
+          :let [reduced (- frequency (vus-subtraction course 0))]
+          :when (not= 0 reduced)]
+      [course reduced])))
