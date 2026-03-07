@@ -21,7 +21,7 @@
    (for [[time class] (hours/get-hours)]
      [:div.flex.items-center.p-2
       time
-      class
+      [:div.ml-2 class]
       [:div {:class "ml-2"
              :hx-delete "hours:del"
              :hx-vals {:time time}

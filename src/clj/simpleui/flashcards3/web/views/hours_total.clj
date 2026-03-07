@@ -68,13 +68,15 @@
        (missing ym reported)
        (default ym))
      [:form {:class "mt-2"
-             :hx-post "report"}
-      (components/submit "Add")
+             :hx-post "report"
+             :hx-vals {:year year :month month}}
+      (components/submit "Analyze")
       [:textarea {:class "w-full rounded-md border mt-2 p-2"
                   :style {:height "50vh"}
                   :required true
                   :placeholder "VUS Reported"
-                  :name "reported"}]]]))
+                  :name "reported"}
+       reported]]]))
 
 (defn ui-routes [{:keys [query-fn]}]
   (simpleui/make-routes

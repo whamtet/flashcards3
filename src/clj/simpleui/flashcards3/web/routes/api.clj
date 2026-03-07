@@ -52,7 +52,7 @@
                   :slideshow_id
                   Long/parseLong
                   (pdf/get-pdf query-fn))})]
-   ["/cache"
+   #_["/cache"
     (fn [req]
       {:status 200
        :headers {}
