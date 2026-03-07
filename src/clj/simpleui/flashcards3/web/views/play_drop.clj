@@ -8,7 +8,7 @@
 
 (defn- get-src [x]
   (if (string? x)
-    x
+    (str "../../api/cache?src=" x)
     (format "../../api/local/%s" x)))
 
 [:div.grid-rows-2.grid-cols-2]

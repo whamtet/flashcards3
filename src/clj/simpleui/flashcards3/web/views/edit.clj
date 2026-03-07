@@ -43,7 +43,7 @@
 
 (defn- get-src [x]
   (if (string? x)
-    x
+    (str "../../api/cache?src=" x)
     (format "../../api/local/%s" x)))
 
 (defcomponent ^:endpoint image-note [req ^:long i note]

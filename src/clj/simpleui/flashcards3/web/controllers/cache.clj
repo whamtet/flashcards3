@@ -1,16 +1,17 @@
-;; WIP - seems unneeded for now
 (ns simpleui.flashcards3.web.controllers.cache
   (:require
     [clojure.java.io :as io]
     [clj-http.lite.client :as client])
   (:import
-    java.io.File))
+    java.io.File
+    java.net.URL))
 
 (def cache-dir (File. "cache"))
 (.mkdir cache-dir)
 
 (defn- cache-file [src]
-  (File. cache-dir src))
+  (let [path (-> src URL. .getPath (.replace "/" "-"))]
+    (File. cache-dir path)))
 
 (defn- web-stream [url]
   (:body
@@ -23,6 +24,5 @@
       (io/input-stream f)
       (do
         (with-open [in (web-stream src)]
-          (prn 'in in)
           (io/copy in f))
         (io/input-stream f)))))
