@@ -1,5 +1,6 @@
 (ns simpleui.flashcards3.web.routes.api
   (:require
+    [simpleui.flashcards3.web.controllers.cache :as cache]
     [simpleui.flashcards3.web.controllers.health :as health]
     [simpleui.flashcards3.web.controllers.local :as local]
     [simpleui.flashcards3.web.controllers.pdf :as pdf]
@@ -51,6 +52,14 @@
                   :slideshow_id
                   Long/parseLong
                   (pdf/get-pdf query-fn))})]
+   ["/cache"
+    (fn [req]
+      {:status 200
+       :headers {}
+       :body (-> req
+                 :params
+                 :src
+                 cache/cache)})]
    ["/local/:local_id"
     (fn [req]
       {:status 200
