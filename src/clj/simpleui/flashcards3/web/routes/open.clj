@@ -4,6 +4,7 @@
     [simpleui.flashcards3.web.middleware.formats :as formats]
     [simpleui.flashcards3.web.views.fill :as fill]
     [simpleui.flashcards3.web.views.students :as students]
+    [simpleui.flashcards3.web.views.intro :as intro]
     [simpleui.flashcards3.web.controllers.students :as controllers.students]
     [integrant.core :as ig]
     [reitit.ring.middleware.muuntaja :as muuntaja]
@@ -25,7 +26,8 @@
 
 (defmethod ig/init-key :reitit.routes/open
   [_ opts]
-  [["/fill" (route-data opts) (fill/ui-routes opts)]
+  [["" (route-data opts) (intro/ui-routes opts)]
+   ["/fill" (route-data opts) (fill/ui-routes opts)]
    ["/api/students"
     (fn [req]
       (-> req :params controllers.students/parse))]
