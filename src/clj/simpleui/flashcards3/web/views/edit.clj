@@ -96,9 +96,9 @@
                  :hx-vals {:i i}}
            icons/arrow-down])
         [:a {:class "mr-2"
+             :tabindex -1
              :href (format "../../play/%s/%s/" slideshow_id i)}
          [:img {:class "max-h-96"
-                :tabindex -1
                 :src (get-src medium)}]]
         [:div {:class "cursor-pointer border rounded-md p-2"
                :hx-post "image-order:del"
