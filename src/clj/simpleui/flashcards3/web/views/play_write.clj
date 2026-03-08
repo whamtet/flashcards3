@@ -12,7 +12,9 @@
     (format "../../api/local/%s" x)))
 
 (defn- inc-mod [x]
-  (mod (inc x) 3))
+  (mod (inc x) 4))
+(defn- font-size [x]
+  (str (if (zero? x) 0.5 x) "em"))
 
 [:div.grid-rows-2.grid-cols-2]
 [:div.grid-cols-3]
@@ -42,7 +44,7 @@
                    :hx-get "panel"
                    :hx-vals {:enlargement (inc-mod enlargement)}}]
             [:div.text-center.tracking-wider
-             {:style {:font-size (str (inc enlargement) "em")}} note]])
+             {:style {:font-size (font-size enlargement)}} note]])
          slides)])
      [:div {:style {:height "500px"}}]]))
 
