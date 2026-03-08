@@ -11,11 +11,11 @@
    (components/submit "Parse")
    [:textarea {:class "w-full rounded-md border mt-2 p-2"
                :style {:height "30vh"}
-               :placeholder "Questions"
+               :placeholder "Questions - one per line"
                :name "questions"}]
    [:textarea {:class "w-full rounded-md border mt-2 p-2"
                :style {:height "60vh"}
-               :placeholder "Students"
+               :placeholder "Students - copy from VUS attendance form"
                :required true
                :name "students"}]])
 

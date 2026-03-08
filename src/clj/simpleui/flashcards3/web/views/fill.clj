@@ -57,10 +57,11 @@
           "drop" (drop-offset offsets)
           offsets)]
     [:div.p-2 {:hx-target "this"}
-     [:form {:hx-post "edit"
+     [:form.flex.items-center.mb-2 {:hx-post "edit"
              :hx-confirm (when prod? "Back to Edit?")}
       (components/hiddens "text" text)
-      (components/submit "Edit")]
+      (components/submit "Edit")
+      [:div.text-gray-500.ml-4 "Drag over words to blank them out (max 9 words).  Press z to undo."]]
      [:form.hidden {:hx-post "select:append"}
       (components/hiddens "text" text
                           "offsets" offsets
@@ -86,6 +87,7 @@
    (components/submit "Highlight")
    [:textarea {:class "w-full rounded-md border mt-2 p-2 update"
                :style {:height "80vh"}
+               :required true
                :name "text"}
     text]])
 
