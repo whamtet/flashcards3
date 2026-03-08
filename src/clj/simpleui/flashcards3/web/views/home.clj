@@ -14,15 +14,15 @@
 
 (defn- slideshow-disp [{:keys [slideshow_id slideshow_name]}]
   [:div.p-2.text-2xl.flex.items-center
-   [:a.text-clj-blue.mr-2 {:href (format "edit/%s/" slideshow_id)}
+   [:a.text-clj-blue.mr-2 {:href (format "../edit/%s/" slideshow_id)}
     slideshow_name]
-   [:a.mr-2 (href (format "play/%s/0/" slideshow_id))
+   [:a.mr-2 (href (format "../play/%s/0/" slideshow_id))
     icons/play-circle]
-   [:a.mr-2.text-green-500 (href (format "play/%s/0/?grid=3" slideshow_id))
+   [:a.mr-2.text-green-500 (href (format "../play/%s/0/?grid=3" slideshow_id))
     icons/play-circle]
-   [:a.mr-2.text-yellow-500 (href (format "play-drop/%s/?grid=3" slideshow_id))
+   [:a.mr-2.text-yellow-500 (href (format "../play-drop/%s/?grid=3" slideshow_id))
     icons/play-circle]
-   [:a.text-red-500 (href (format "play-write/%s/" slideshow_id))
+   [:a.text-red-500 (href (format "../play-write/%s/" slideshow_id))
     icons/play-circle]])
 
 (defcomponent ^:endpoint panel [req ^:prompt slideshow-name command]
@@ -37,26 +37,26 @@
              :hx-prompt "New Slideshow Name"}
        (components/button "New Slideshow")]
       [:a {:class "my-1 mr-2"
-           :href "students/"
+           :href "../students/"
            :target "_blank"}
        (components/button "Students")]
       [:a {:class "my-1 mr-2"
-           :href "fill/"
+           :href "../fill/"
            :target "_blank"}
        (components/button "Fill")]
       [:a {:class "my-1 mr-2"
-           :href "hours/"
+           :href "../hours/"
            :target "_blank"}
        (components/button "Hours")]
       [:a {:class "my-1 mr-2"
-           :href "phonics.png"
+           :href "../phonics.png"
            :target "_blank"}
        (components/button "ABC")]
-      [:a {:href "upbeat.mp3"
+      [:a {:href "../upbeat.mp3"
            :target "_blank"}
        (components/button "Music")]]
      [:div {:class "right-2 top-2 absolute"}
-      [:a {:href "white.html" :target "_blank"}
+      [:a {:href "../white.html" :target "_blank"}
        (components/button "White Screen")]]
      (map slideshow-disp (slideshow/get-slideshows query-fn))]))
 
@@ -66,5 +66,5 @@
    [query-fn]
    (fn [req]
      (page-htmx
-      {:css ["output.css"]}
+      {:css ["../output.css"]}
       (-> req (assoc :query-fn query-fn) panel)))))
