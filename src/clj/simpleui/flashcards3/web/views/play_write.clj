@@ -20,11 +20,16 @@
 [:div.grid-cols-5]
 [:div.grid-cols-6]
 [:div.grid-cols-7]
-(defcomponent ^:endpoint panel [req ^:long enlargement]
+(defcomponent ^:endpoint panel [req ^:long enlargement ^:boolean shuff]
   (let [slides (slideshow/get-slideshow-slides-notes query-fn slideshow_id)
+        slides (if shuff (shuffle slides) slides)
         n (-> slides count (/ 2) long)
         enlargement (or enlargement 0)]
     [:div {:hx-target "this"}
+     [:div#shuffle.hidden
+      {:hx-get "panel"
+       :hx-vals {:enlargement enlargement
+                 :shuff true}}]
      (if (empty? slides)
        [:div.p-6.text-xl "Empty"]
        [:div {:class (format "grid grid-rows-2 grid-cols-%s" n)}
@@ -48,5 +53,5 @@
    (fn [req]
      (page-htmx
       {:css ["../../output.css"]
-       :js ["../../drop.js"]}
+       :js ["../../play-write.js"]}
       (-> req (assoc :query-fn query-fn) panel)))))
