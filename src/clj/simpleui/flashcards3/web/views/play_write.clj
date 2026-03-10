@@ -42,6 +42,7 @@
                    :src2 (get-src src2)
                    :onerror "fixSrc(event.target)"
                    :hx-get "panel"
+                   :class "max-w-full max-h-full object-contain"
                    :hx-vals {:enlargement (inc-mod enlargement)}}]
             [:div.text-center.tracking-wider
              {:style {:font-size (font-size enlargement)}} note]])
