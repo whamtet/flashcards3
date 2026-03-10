@@ -10,7 +10,16 @@
      "Student Questionnaire"]]
    [:div.text-blue-500.p-4
     [:a {:href "fill/" :target "_blank"}
-     "Gap Fill"]]])
+     "Gap Fill"]]
+   [:div.text-blue-500.p-4
+    [:a {:href "phonics.png" :target "_blank"}
+     "ABC"]]
+   [:div.text-blue-500.p-4
+    [:a {:href "upbeat.mp3" :target "_blank"}
+     "Music"]]
+   [:div.text-blue-500.p-4
+    [:a {:href "white.html" :target "_blank"}
+     "White Screen"]]])
 
 (defn ui-routes [{:keys [query-fn]}]
   (simpleui/make-routes
