@@ -25,7 +25,7 @@
 (defcomponent ^:endpoint panel [req ^:long enlargement ^:boolean shuff]
   (let [slides (slideshow/get-slideshow-slides-notes query-fn slideshow_id)
         slides (if shuff (shuffle slides) slides)
-        n (-> slides count (/ 2) long)
+        n (-> slides count (/ 2) Math/ceil long)
         enlargement (or enlargement 0)]
     [:div {:hx-target "this"}
      [:div#shuffle.hidden
@@ -42,7 +42,6 @@
                    :src2 (get-src src2)
                    :onerror "fixSrc(event.target)"
                    :hx-get "panel"
-                   :class "max-w-full max-h-full object-contain"
                    :hx-vals {:enlargement (inc-mod enlargement)}}]
             [:div.text-center.tracking-wider
              {:style {:font-size (font-size enlargement)}} note]])
