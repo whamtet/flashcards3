@@ -63,7 +63,7 @@
           [:div.flex.justify-center
            [:img {:src (get-src src)
                   :src2 (get-src src2)
-                  :class "w-2/3"
+                  :class "max-w-2/3"
                   :onerror "fixSrc(event.target)"}]]))]]))
 
 (defn ui-routes [{:keys [query-fn]}]
