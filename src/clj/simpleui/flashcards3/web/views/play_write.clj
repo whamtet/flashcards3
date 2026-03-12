@@ -12,9 +12,9 @@
     (format "../../api/local/%s" x)))
 
 (defn- inc-mod [x]
-  (mod (inc x) 4))
+  (mod (inc x) 5))
 (defn- font-size [x]
-  (str (if (zero? x) 0.5 x) "em"))
+  (str (max 0.5 (dec x)) "em"))
 
 [:div.grid-rows-2.grid-cols-2]
 [:div.grid-cols-3]
@@ -26,7 +26,7 @@
   (let [slides (slideshow/get-slideshow-slides-notes query-fn slideshow_id)
         slides (if shuff (shuffle slides) slides)
         n (-> slides count (/ 2) Math/ceil long)
-        enlargement (or enlargement 0)]
+        enlargement (or enlargement 1)]
     [:div {:hx-target "this"}
      [:div#shuffle.hidden
       {:hx-get "panel"
@@ -43,8 +43,9 @@
                    :onerror "fixSrc(event.target)"
                    :hx-get "panel"
                    :hx-vals {:enlargement (inc-mod enlargement)}}]
-            [:div.text-center.tracking-wider
-             {:style {:font-size (font-size enlargement)}} note]])
+            (when (pos? enlargement)
+              [:div.text-center.tracking-wider
+               {:style {:font-size (font-size enlargement)}} note])])
          slides)])
      [:div {:style {:height "500px"}}]]))
 
