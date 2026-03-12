@@ -20,7 +20,7 @@
                {:hx-redirect "../.."})
     (let [slideshow-name (slideshow/get-slideshow-name query-fn slideshow_id)]
       [:div.p-2.flex.items-center
-       [:a.mr-2 {:href "../home/"} icons/home]
+       [:a.mr-2 {:href "../../home/"} icons/home]
        [:input {:class "p-2 rounded-md border mr-2"
                 :hx-post "name-editor:update"
                 :name "new-name"
