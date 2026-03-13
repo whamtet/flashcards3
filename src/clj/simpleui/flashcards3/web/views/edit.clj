@@ -120,7 +120,7 @@
    (when q
      [:div.flex.overflow-x-auto.mb-2
       (for [[medium large] (img-search/get-pics q)]
-        [:img {:class "mr-1 cursor-pointer"
+        [:img {:class "mr-1 cursor-pointer w-96"
                :src (get-src medium)
                :hx-post "image-order:conj"
                :hx-target "#images"
