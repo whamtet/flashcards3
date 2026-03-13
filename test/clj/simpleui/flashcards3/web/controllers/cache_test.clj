@@ -5,8 +5,8 @@
 
 (deftest cache-file-test []
   (testing "cache-file"
-           (is (-> "https://www.google.com/search?hi=ok&old=man"
+           (is (-> "https://www.google.com/search.png?hi=ok&old=man"
                    cache/cache-file
                    .getName
-                   (= "searchhiokoldman")))))
+                   (= "searchhiokoldman.png")))))
 

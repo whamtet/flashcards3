@@ -1,6 +1,7 @@
 (ns simpleui.flashcards3.web.controllers.cache
   (:require
     [clojure.java.io :as io]
+    [clojure.string :as string]
     [clj-http.lite.client :as client])
   (:import
     java.io.File
@@ -9,14 +10,21 @@
 (def cache-dir (File. "cache"))
 (.mkdir cache-dir)
 
+(defn- split-suffix [path]
+  (let [split (.split path "\\.")]
+    [(string/join "." (butlast split))
+     (last split)]))
+
 (defn cache-file [src]
-  (-> src
-      (.substring (->> src URL. .getPath (.indexOf src)))
-      (.replace "/" "")
-      (.replace "?" "")
-      (.replace "&" "")
-      (.replace "=" "")
-      (->> (File. cache-dir))))
+  (let [u (URL. src)
+        [path suffix] (-> u .getPath split-suffix)]
+    (-> (str path (.getQuery u))
+        (.replace "/" "")
+        (.replace "?" "")
+        (.replace "&" "")
+        (.replace "=" "")
+        (str "." suffix)
+        (->> (File. cache-dir)))))
 
 (defn- web-stream [url]
   (:body
