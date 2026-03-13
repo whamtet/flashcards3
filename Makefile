@@ -10,6 +10,9 @@ repl:
 test:
 	clj -M:test
 
+testrepl:
+	clj -M:test:nrepl
+
 uberjar:
 	pkill java && npm run tailwind && clj -T:build all
 

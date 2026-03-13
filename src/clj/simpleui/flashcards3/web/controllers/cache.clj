@@ -9,9 +9,14 @@
 (def cache-dir (File. "cache"))
 (.mkdir cache-dir)
 
-(defn- cache-file [src]
-  (let [path (-> src URL. .getPath (.replace "/" "-"))]
-    (File. cache-dir path)))
+(defn cache-file [src]
+  (-> src
+      (.substring (->> src URL. .getPath (.indexOf src)))
+      (.replace "/" "")
+      (.replace "?" "")
+      (.replace "&" "")
+      (.replace "=" "")
+      (->> (File. cache-dir))))
 
 (defn- web-stream [url]
   (:body
