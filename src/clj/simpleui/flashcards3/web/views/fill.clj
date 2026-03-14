@@ -57,7 +57,8 @@
           "drop" (drop-offset offsets)
           offsets)]
     [:div.p-2 {:hx-target "this"}
-     [:form.flex.items-center.mb-2 {:hx-post "edit"
+     [:form {:class "flex items-center mb-2 print:hidden"
+             :hx-post "edit"
              :hx-confirm (when prod? "Back to Edit?")}
       (components/hiddens "text" text)
       (components/submit "Edit")
