@@ -6,21 +6,37 @@
     [simpleui.flashcards3.web.views.components :as components]
     [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]]))
 
-(defn- append-offset [offsets i1 i2]
+(def extension 2)
+
+(defn- subtract-extension [x ending]
+  (if (< x (+ ending extension))
+    (min x ending)
+    (- x extension)))
+
+(defn- append-offset* [offsets i1 i2]
   (loop [[[t1 t2] & todo] (partition 2 offsets)
          i1 i1
          i2 i2]
     (if t1 ;; still have to check
       (let [i2 (if (<= i2 t2)
+                 ;; move top down
                  (min i2 (dec t1))
                  i2)
             i1 (if (<= t1 i1)
+                 ;; move bottom up
                  (max i1 (inc t2))
                  i1)]
         (recur todo i1 i2))
       (if (< i1 i2)
         (conj offsets i2 i1)
         offsets))))
+
+(defn- append-offset [offsets i1 i2]
+  (let [endings (->> offsets rest (take-nth 2) sort reverse)]
+    (append-offset*
+     offsets
+     (reduce subtract-extension i1 endings)
+     (reduce subtract-extension i2 endings))))
 
 (defn- drop-offset [offsets]
   (drop 2 offsets))
@@ -39,7 +55,7 @@
         (when (< a b)
           (if (even? i)
             (.substring s a b)
-            (_ (-> i (* 0.5) long superscripts) (- b a 1)))))
+            (_ (-> i (* 0.5) long superscripts) (+ b extension (- a) -1)))))
       (range)
       padded
       (rest padded)))))
@@ -49,8 +65,10 @@
     (-> a (max 0) (min b))))
 
 (defcomponent ^:endpoint select [req text ^:longs offsets ^:long i1 ^:long i2 command]
-  (let [i1 (bind i1 (count text))
-        i2 (bind i2 (count text))
+  (let [num-offsets (-> offsets count (* 0.5) long)
+        extended-text (+ (count text) (* extension num-offsets))
+        i1 (bind i1 extended-text)
+        i2 (bind i2 extended-text)
         offsets
         (case command
           "append" (append-offset offsets i1 i2)
