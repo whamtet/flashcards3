@@ -9,6 +9,9 @@
           :action "../api/students"
           :method "POST"}
    (components/submit "Parse")
+   [:input {:class "rounded-md border mt-2 p-2"
+            :name "stars"
+            :placeholder "Stars (optional)"}]
    [:textarea {:class "w-full rounded-md border mt-2 p-2"
                :style {:height "30vh"}
                :placeholder "Questions - one per line"
