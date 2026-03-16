@@ -26,7 +26,7 @@
   (let [slides (slideshow/get-slideshow-slides-notes query-fn slideshow_id)
         slides (if shuff (shuffle slides) slides)
         n (-> slides count (/ 2) Math/ceil long)
-        enlargement (or enlargement 1)]
+        enlargement (or enlargement 0)]
     [:div {:hx-target "this"}
      [:div#shuffle.hidden
       {:hx-get "panel"
