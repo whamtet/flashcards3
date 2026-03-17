@@ -28,7 +28,5 @@
   [_ opts]
   [["" (route-data opts) (intro/ui-routes opts)]
    ["/fill" (route-data opts) (fill/ui-routes opts)]
-   ["/api/students"
-    (fn [req]
-      (-> req :params controllers.students/parse))]
+   ["/api/students" controllers.students/parse]
    ["/students" (route-data opts) (students/ui-routes opts)]])

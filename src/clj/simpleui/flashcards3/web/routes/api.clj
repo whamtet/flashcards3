@@ -60,6 +60,7 @@
                  :params
                  :src
                  cache/cache)})]
+   ["/studentss" students/parse]
    ["/local/:local_id"
     (fn [req]
       {:status 200

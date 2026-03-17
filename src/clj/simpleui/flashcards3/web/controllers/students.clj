@@ -1,6 +1,7 @@
 (ns simpleui.flashcards3.web.controllers.students
   (:require
     [clojure.string :as string]
+    [simpleui.flashcards3.web.controllers.students-persist :as students-persist]
     [simpleui.flashcards3.web.htmx :refer [page-htmx]]
     [simpleui.flashcards3.web.views.icons :as icons]))
 
@@ -53,11 +54,15 @@
 (defn- parse-questions [questions]
   (-> questions .trim (.split "\n")))
 
-(defn parse [{:keys [questions students stars]}]
+(defn parse [{{:keys [questions students stars url]} :params
+              auth? :basic-authentication}]
   (let [students (->> (after students "Note")
                       (re-seq r)
                       (map #(-> % second .trim)))
-        stars (when (not-empty stars) (Long/parseLong stars))]
+        stars (when (not-empty stars) (Long/parseLong stars))
+        url (when url (.trim url))]
+    (when (and auth? (not-empty url))
+      (students-persist/assoc-students url students))
     (disp
      (parse-questions questions)
      (concat students ["&nbsp;" "&nbsp;" "&nbsp;" "&nbsp;"])
