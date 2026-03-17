@@ -54,11 +54,16 @@
 (defn- parse-questions [questions]
   (-> questions .trim (.split "\n")))
 
-(defn parse [{{:keys [questions students stars url]} :params
+(defn- get-students [auth? students class]
+  (if (and auth? (not-empty class))
+    (students-persist/get-students class)
+    (->> (after students "Note")
+         (re-seq r)
+         (map #(-> % second .trim)))))
+
+(defn parse [{{:keys [questions students stars url class]} :params
               auth? :basic-authentication}]
-  (let [students (->> (after students "Note")
-                      (re-seq r)
-                      (map #(-> % second .trim)))
+  (let [students (get-students auth? students class)
         stars (when (not-empty stars) (Long/parseLong stars))
         url (when url (.trim url))]
     (when (and auth? (not-empty url))

@@ -1,14 +1,29 @@
 (ns simpleui.flashcards3.web.views.students
   (:require
     [simpleui.core :as simpleui]
+    [simpleui.flashcards3.web.controllers.students-persist :as students-persist]
     [simpleui.flashcards3.web.views.components :as components]
-    [simpleui.flashcards3.web.htmx :refer [page-htmx]]))
+    [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]]))
 
-(defn- form [req]
-  [:form {:class "p-2"
-          :action (if (:basic-authentication req) "../api/studentss" "../api/students")
-          :method "POST"}
-   (components/submit "Parse")
+(defn- quick-submit [class]
+  (format "on click set #class.value to '%s' then call #my-form.submit()
+  on contextmenu halt the event then set #class.value to '%s' then call #del.click()" class class))
+
+(defcomponent ^:endpoint form [req command class]
+  (when (:basic-authentication req)
+    (case command
+      "del" (students-persist/delete-class class)
+      nil))
+  [:form#my-form
+   {:class "p-2"
+    :action (if (:basic-authentication req) "../api/studentss" "../api/students")
+    :method "POST"
+    :hx-target "this"}
+   [:span.p-1
+    [:input {:type "submit"
+             :id "parse"
+             :value "Parse"
+             :class "bg-clj-blue py-1.5 px-3 rounded-lg text-white"}]]
    [:input {:class "rounded-md border mt-2 p-2"
             :name "stars"
             :placeholder "Stars (optional)"}]
@@ -17,13 +32,19 @@
                :placeholder "Questions - one per line"
                :name "questions"}]
    (when (:basic-authentication req)
-     [:input {:class "rounded-md border mt-2 p-2 w-full"
-              :name "url"
-              :placeholder "URL"}])
+     (let [classes (students-persist/get-classes)]
+       [:div
+        [:div#del.hidden {:hx-delete "form:del" :hx-include "#class"}]
+        [:div.flex.mt-2.gap-2
+         (for [class classes]
+           [:div {:_ (quick-submit class)} (components/button class)])]
+        [:input {:class "rounded-md border mt-2 p-2 w-full"
+                 :name "url"
+                 :placeholder "URL"}]
+        [:input#class {:type "hidden" :name "class"}]]))
    [:textarea {:class "w-full rounded-md border mt-2 p-2"
                :style {:height "60vh"}
                :placeholder "Students - copy from VUS attendance form"
-               :required true
                :name "students"}]])
 
 (defn ui-routes [{:keys [query-fn]}]
@@ -32,5 +53,6 @@
    [query-fn]
    (fn [req]
      (page-htmx
-      {:css ["../output.css"]}
+      {:css ["../output.css"]
+       :hyperscript? (:basic-authentication req)}
       (form req)))))
