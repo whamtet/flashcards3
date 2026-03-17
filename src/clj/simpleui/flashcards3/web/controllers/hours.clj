@@ -101,18 +101,26 @@
     {:table table
      :total (->> table (map last) (apply +))}))
 
-(defn- week [[jd]]
+(defn- week-start [[jd]]
   (let [zdt (jd->zdt jd)
         to-subtract (-> zdt .getDayOfWeek .getValue dec)
-        start (jt/minus zdt (jt/days to-subtract))
-        end (jt/plus start (jt/days 6))]
-    (str
-     (jt/format "d MMM" start)
-     " - "
-     (jt/format "d MMM uuuu" end))))
+        start (jt/minus zdt (jt/days to-subtract))]
+    (jt/truncate-to start :days)))
+
+(defn- week-disp [[start frequency]]
+  (let [end (jt/plus start (jt/days 6))]
+    [(str
+      (jt/format "d MMM" start)
+      " - "
+      (jt/format "d MMM uuuu" end))
+     frequency]))
 
 (defn weeks []
-  (->> (get-hours) (map week) frequencies))
+  (->> (get-hours)
+       (map week-start)
+       frequencies
+       (sort-by first)
+       (map week-disp)))
 
 (defn- parse-row [line]
   (when (re-find #"^\d" line)
