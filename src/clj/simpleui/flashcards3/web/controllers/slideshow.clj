@@ -72,10 +72,19 @@
         (slideshow-details query-fn slideshow_id $)))
 
 (defn- move-up-v [v i]
-  (assert (pos? i))
-  (-> v
-      (assoc (dec i) (v i))
-      (assoc i (v (dec i)))))
+  (if (pos? i)
+    (-> v
+        (assoc (dec i) (v i))
+        (assoc i (v (dec i))))
+    (conj (subvec v 1) (v 0))))
+(defn- move-down-v [v i]
+  (if (< i (dec (count v)))
+    (-> v
+        (assoc i (v (inc i)))
+        (assoc (inc i) (v i)))
+    (vec
+     (conj (butlast v) (peek v)))))
+
 (defn- del-v [v i]
   (vec
    (concat
@@ -85,6 +94,6 @@
 (defn up-slideshow [query-fn slideshow_id i]
   (update-slides query-fn slideshow_id move-up-v i))
 (defn down-slideshow [query-fn slideshow_id i]
-  (update-slides query-fn slideshow_id move-up-v (inc i)))
+  (update-slides query-fn slideshow_id move-down-v i))
 (defn delete-slide [query-fn slideshow_id i]
   (update-slides query-fn slideshow_id del-v i))

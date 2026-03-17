@@ -78,23 +78,21 @@
              :accept (string/join ", " local/supported-types)
              :multiple true
              :name "images"}]]
-   (util/map-first-last
-    (fn [i first? last? [medium note]]
+   (map-indexed
+    (fn [i [medium note]]
       [:div
        [:div.flex.items-center.mb-1
         [:span.text-xl.mr-1 (format "%s)" (inc i))]
-        (when-not first?
-          [:div {:class "cursor-pointer border rounded-md mr-2 p-2"
-                 :hx-post "image-order:up"
-                 :hx-target "#images"
-                 :hx-vals {:i i}}
-           icons/arrow-up])
-        (when-not last?
-          [:div {:class "cursor-pointer border rounded-md mr-2 p-2"
-                 :hx-post "image-order:down"
-                 :hx-target "#images"
-                 :hx-vals {:i i}}
-           icons/arrow-down])
+        [:div {:class "cursor-pointer border rounded-md mr-2 p-2"
+               :hx-post "image-order:up"
+               :hx-target "#images"
+               :hx-vals {:i i}}
+         icons/arrow-up]
+        [:div {:class "cursor-pointer border rounded-md mr-2 p-2"
+               :hx-post "image-order:down"
+               :hx-target "#images"
+               :hx-vals {:i i}}
+         icons/arrow-down]
         [:a {:class "mr-2"
              :tabindex -1
              :href (format "../../play/%s/%s/" slideshow_id i)}
