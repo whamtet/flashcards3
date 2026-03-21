@@ -25,13 +25,15 @@
    (re-find #"course_name=([^&]+)" s)))
 
 (defn- local-date-time [s]
-  (->> (re-find #"start_date_time=([^&]+)" s)
-       second
-       (jt/local-date-time "ddMMyyyyHHmm")
-       (jt/format "EEE HH:mm")))
+  (when-let [match (re-find #"start_date_time=([^&]+)" s)]
+    (->> match
+         second
+         (jt/local-date-time "ddMMyyyyHHmm")
+         (jt/format "EEE HH:mm"))))
 
 (defn- disp [s]
-  (str (course-name s) " " (local-date-time s)))
+  (.trim
+    (str (course-name s) " " (local-date-time s))))
 
 (defn assoc-students [url students]
   (update-students assoc (disp url) students))

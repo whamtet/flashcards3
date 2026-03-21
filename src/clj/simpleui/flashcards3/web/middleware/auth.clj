@@ -1,6 +1,5 @@
 (ns simpleui.flashcards3.web.middleware.auth
   (:require
-    [simpleui.flashcards3.env :as env :refer [prod?]]
     [ring.middleware.basic-authentication
      :refer [wrap-basic-authentication]]))
 
@@ -9,5 +8,5 @@
        (= pass (System/getenv "SLIDESHOW_PASS"))))
 
 (defn wrap-auth [handler]
-  (cond-> handler
-    prod? (wrap-basic-authentication authenticated?)))
+  ;; always wrap for studentss etc
+  (wrap-basic-authentication handler authenticated?))

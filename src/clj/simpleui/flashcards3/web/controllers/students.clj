@@ -21,6 +21,11 @@
    [:td {:class "border border-gray-300 px-4 py-2"
          :colspan colspan}]])
 
+(defn- star-disp [stars]
+  (if (= 2 stars)
+    [icons/check icons/x-mark]
+    (repeat stars icons/star)))
+
 (defn s-row2 [student colspan stars]
   [:tr
    [:td {:class "border border-gray-300 px-2 py-2 whitespace-nowrap"}
@@ -28,7 +33,7 @@
    (for [i (range colspan)]
      [:td {:class "border border-gray-300 px-4 py-2"}
       [:div.flex
-       (interpose " " (repeat stars icons/star))]])])
+       (interpose " " (star-disp stars))]])])
 
 (defn- disp2 [questions students stars]
   [:table {:class "table-fixed min-w-full border border-gray-300"}
