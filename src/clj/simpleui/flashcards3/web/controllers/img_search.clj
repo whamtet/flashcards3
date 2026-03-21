@@ -6,8 +6,8 @@
 (def pexels-api-key (System/getenv "PEXELS_API_KEY"))
 (def pixabay-api-key (System/getenv "PIXABAY_API_KEY"))
 
-(defn- get-src-pexels [{{:keys [medium large]} :src}]
-  [medium large])
+(defn- get-src-pexels [{{:keys [medium small]} :src :as x}]
+  [small medium])
 (defn- get-src-pixabay [{:keys [previewURL webformatURL]}]
   [previewURL webformatURL])
 
