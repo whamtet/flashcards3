@@ -23,8 +23,8 @@
 
 (defn- star-disp [stars]
   (if (= 2 stars)
-    [icons/check icons/x-mark]
-    (repeat stars icons/star)))
+    (list icons/check "&nbsp;&nbsp;" icons/x-mark)
+    (interpose " " (repeat stars icons/star))))
 
 (defn s-row2 [student colspan stars]
   [:tr
@@ -32,8 +32,7 @@
     student]
    (for [i (range colspan)]
      [:td {:class "border border-gray-300 px-4 py-2"}
-      [:div.flex
-       (interpose " " (star-disp stars))]])])
+      [:div.flex (star-disp stars)]])])
 
 (defn- disp2 [questions students stars]
   [:table {:class "table-fixed min-w-full border border-gray-300"}
