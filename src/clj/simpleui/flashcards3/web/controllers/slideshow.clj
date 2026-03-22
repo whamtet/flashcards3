@@ -42,6 +42,12 @@
 (defn- slideshow-details [query-fn slideshow_id details]
   (query-fn :slideshow-details {:slideshow_id slideshow_id :details (pr-str details)}))
 
+(defn duplicate-slideshow [query-fn slideshow_id]
+  (when-let [{:keys [slideshow_name details]} (query-fn :get-slideshow {:slideshow_id slideshow_id})]
+    (let [[{:keys [slideshow_id]}] (query-fn :insert-slideshow {:slideshow_name (str slideshow_name " Copy")})]
+      (query-fn :slideshow-details {:slideshow_id slideshow_id :details details})
+      slideshow_id)))
+
 (defn delete-slideshow [query-fn slideshow_id]
   (doseq [[slide] (get-slideshow-slides query-fn slideshow_id)]
     (when (number? slide)

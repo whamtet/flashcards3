@@ -2,6 +2,7 @@
   (:require
     [clojure.string :as string]
     [simpleui.core :as simpleui]
+    [simpleui.response :as response]
     [simpleui.flashcards3.web.controllers.img-search :as img-search]
     [simpleui.flashcards3.web.controllers.slideshow :as slideshow]
     [simpleui.flashcards3.web.controllers.local :as local]
@@ -37,9 +38,10 @@
             :href (format "../../grid/%s/" slideshow_id)
             :target "_blank"}
         (components/button "Grid Printout")]
-       [:a {:href "../../white.html"
-            :target "_blank"}
-        (components/button "White Screen")]])))
+       [:div {:class "cursor-pointer"
+              :hx-post "panel:duplicate"
+              :hx-confirm "Duplicate?"}
+        (components/button "Duplicate")]])))
 
 (defn- get-src [x]
   (if (string? x)
@@ -148,6 +150,9 @@
 
 (defcomponent ^:endpoint panel [req ^:prompt slideshow-name command]
   (case command
+    "duplicate"
+    (response/hx-redirect
+     (format "../%s/" (slideshow/duplicate-slideshow query-fn slideshow_id)))
     [:div.p-2
      (name-editor req)
      [:hr.border-top]
