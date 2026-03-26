@@ -8,11 +8,18 @@
              :name k
              :value v}]))
 
-(defn button [label]
-  [:span.p-1
-   [:button {:type "button"
-             :class "bg-clj-blue py-1.5 px-3 rounded-lg text-white"}
-    label]])
+(defn button
+  ([label]
+   [:span.p-1
+    [:button {:type "button"
+              :class "bg-clj-blue py-1.5 px-3 rounded-lg text-white"}
+     label]])
+  ([label id]
+   [:span.p-1
+    [:button {:type "button"
+              :id id
+              :class "bg-clj-blue py-1.5 px-3 rounded-lg text-white"}
+     label]]))
 
 (defn submit [label]
   [:span.p-1

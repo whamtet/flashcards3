@@ -68,6 +68,13 @@
     nil)
   [:div#images
    [:div.flex.m-2
+    [:form {:hx-post "image-order:concat"
+            :class "mr-2"
+            :hx-encoding "multipart/form-data"
+            :hx-target "#images"}
+     (components/button "Paste" "pasteClipboard")
+     [:input#clipboard.hidden {:type "file" :name "images"}]
+     [:input#clipboardSubmit.hidden {:type "submit"}]]
     [:form {:hx-post "image-order:conj"
             :hx-target "#images"}
      [:input {:class "p-2 rounded-md border mr-2 w-96"
@@ -166,5 +173,6 @@
    [query-fn]
    (fn [req]
      (page-htmx
-      {:css ["../../output.css"]}
+      {:css ["../../output.css"]
+       :js ["../../edit.js"]}
       (-> req (assoc :query-fn query-fn) panel)))))

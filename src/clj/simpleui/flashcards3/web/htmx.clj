@@ -40,11 +40,11 @@
     (for [sheet css]
       [:link {:rel "stylesheet" :href (resource-cache/cache-suffix sheet)}])]
    [:body
+    (render/walk-attrs body)
     (map
      (fn [src]
        [:script {:src src}])
      (scripts js hyperscript? stripe?))
-    (render/walk-attrs body)
     [:script {:src
               (unminify "https://unpkg.com/htmx.org@1.9.5/dist/htmx.min.js")}]
     [:script "htmx.config.defaultSwapStyle = 'outerHTML';"]]))
