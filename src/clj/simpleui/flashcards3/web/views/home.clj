@@ -51,6 +51,10 @@
       [:a {:class "my-1 mr-2"
            :href "../phonics.png"
            :target "_blank"}
+       (components/button "Phonics")]
+      [:a {:class "my-1 mr-2"
+           :href "../abc.jpg"
+           :target "_blank"}
        (components/button "ABC")]
       [:a {:href "../upbeat.mp3"
            :target "_blank"}

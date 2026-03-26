@@ -13,6 +13,9 @@
      "Gap Fill"]]
    [:div.text-blue-500.p-4
     [:a {:href "phonics.png" :target "_blank"}
+     "Phonics"]]
+   [:div.text-blue-500.p-4
+    [:a {:href "abc.jpg" :target "_blank"}
      "ABC"]]
    [:div.text-blue-500.p-4
     [:a {:href "upbeat.mp3" :target "_blank"}
