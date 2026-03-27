@@ -26,6 +26,9 @@
 (defn get-slideshow-slides [query-fn slideshow_id]
   (:slides
     (get-slideshow-details query-fn slideshow_id)))
+(defn get-slideshow-notes [query-fn slideshow_id]
+  (:notes
+    (get-slideshow-details query-fn slideshow_id)))
 (defn get-slideshow-slides-edit [query-fn slideshow_id]
   (let [{:keys [slides notes]} (get-slideshow-details query-fn slideshow_id)]
     (map (fn [[medium] note] [medium note]) slides notes)))
@@ -49,6 +52,8 @@
       slideshow_id)))
 
 (defn delete-slideshow [query-fn slideshow_id]
+  ;; TODO - check all references before deleting
+  #_
   (doseq [[slide] (get-slideshow-slides query-fn slideshow_id)]
     (when (number? slide)
       (local/delete slide)))
