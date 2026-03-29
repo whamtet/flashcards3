@@ -2,6 +2,7 @@
   (:require
     [java-time.api :as jt])
   (:import
+    java.util.Date
     java.io.File))
 
 (def f (File. "students.edn"))
@@ -36,13 +37,15 @@
     (str (course-name s) " " (local-date-time s))))
 
 (defn assoc-students [url students]
-  (update-students assoc (disp url) students))
+  (update-students assoc (disp url) {:students students :updated (Date.)}))
 
 (defn get-classes []
   (keys (slurp-students)))
 
 (defn get-students [class]
-  ((slurp-students) class))
+  (get-in (slurp-students) [class :students]))
+(defn get-updated [class]
+  (get-in (slurp-students) [class :updated]))
 
 (defn delete-class [class]
   (update-students dissoc class))

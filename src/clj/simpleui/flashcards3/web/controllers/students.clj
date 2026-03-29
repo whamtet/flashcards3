@@ -34,26 +34,29 @@
      [:td {:class "border border-gray-300 px-4 py-2"}
       [:div.flex (star-disp stars)]])])
 
-(defn- disp2 [questions students stars]
-  [:table {:class "table-fixed min-w-full border border-gray-300"}
-   [:colgroup
-    [:col {:class "w-12"}]
-    [:col {:class "w-auto" :span (count questions)}]]
+(defn- disp2 [updated questions students stars]
+  [:div
+   (when updated
+     [:div {:class "print:hidden"} [:b.bold.mr-2 "Last updated:"] updated])
+   [:table {:class "table-fixed min-w-full border border-gray-300"}
+    [:colgroup
+     [:col {:class "w-12"}]
+     [:col {:class "w-auto" :span (count questions)}]]
 
-   [:thead {:class "bg-gray-100"}
-    [:tr
-     [:th {:class "border border-gray-300 px-2 py-2 text-left font-semibold"}]
-     (map q-header questions)]]
+    [:thead {:class "bg-gray-100"}
+     [:tr
+      [:th {:class "border border-gray-300 px-2 py-2 text-left font-semibold"}]
+      (map q-header questions)]]
 
-   [:tbody
-    (map
-     (if stars #(s-row2 % (count questions) stars) #(s-row % (count questions)))
-     students)]])
+    [:tbody
+     (map
+      (if stars #(s-row2 % (count questions) stars) #(s-row % (count questions)))
+      students)]]])
 
-(defn- disp [questions students stars]
+(defn- disp [updated questions students stars]
   (page-htmx
    {:css ["../output.css"]}
-   (disp2 questions students stars)))
+   (disp2 updated questions students stars)))
 
 (defn- parse-questions [questions]
   (-> questions .trim (.split "\n")))
@@ -73,6 +76,7 @@
     (when (and auth? (not-empty url))
       (students-persist/assoc-students url students))
     (disp
+     (when class (students-persist/get-updated class))
      (parse-questions questions)
      (concat students ["&nbsp;" "&nbsp;" "&nbsp;" "&nbsp;"])
      stars)))
