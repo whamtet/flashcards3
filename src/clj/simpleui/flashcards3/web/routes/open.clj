@@ -5,6 +5,8 @@
     [simpleui.flashcards3.web.views.fill :as fill]
     [simpleui.flashcards3.web.views.students :as students]
     [simpleui.flashcards3.web.views.intro :as intro]
+    [simpleui.flashcards3.web.views.snl :as snl]
+    [simpleui.flashcards3.web.controllers.snl :as controllers.snl]
     [simpleui.flashcards3.web.controllers.students :as controllers.students]
     [integrant.core :as ig]
     [reitit.ring.middleware.muuntaja :as muuntaja]
@@ -29,4 +31,6 @@
   [["" (route-data opts) (intro/ui-routes opts)]
    ["/fill" (route-data opts) (fill/ui-routes opts)]
    ["/api/students" controllers.students/parse]
+   ["/api/snl" controllers.snl/parse]
+   ["/snl" (route-data opts) (snl/ui-routes opts)]
    ["/students" (route-data opts) (students/ui-routes opts)]])

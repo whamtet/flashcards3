@@ -41,6 +41,10 @@
            :target "_blank"}
        (components/button "Students")]
       [:a {:class "my-1 mr-2"
+           :href "../snl/"
+           :target "_blank"}
+       (components/button "SNL")]
+      [:a {:class "my-1 mr-2"
            :href "../fill/"
            :target "_blank"}
        (components/button "Fill")]
