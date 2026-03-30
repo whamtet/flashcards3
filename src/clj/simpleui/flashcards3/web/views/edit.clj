@@ -38,6 +38,10 @@
             :href (format "../../grid/%s/" slideshow_id)
             :target "_blank"}
         (components/button "Grid Printout")]
+       [:a {:class "mr-2"
+            :href (format "../../play-guess/%s/" slideshow_id)
+            :target "_blank"}
+        (components/button "Guess")]
        [:div {:class "cursor-pointer"
               :hx-post "panel:duplicate"
               :hx-confirm "Duplicate?"}

@@ -10,6 +10,7 @@
     [simpleui.flashcards3.web.views.hours-total :as hours-total]
     [simpleui.flashcards3.web.views.play :as play]
     [simpleui.flashcards3.web.views.play-drop :as play-drop]
+    [simpleui.flashcards3.web.views.play-guess :as play-guess]
     [simpleui.flashcards3.web.views.play-write :as play-write]
     [simpleui.flashcards3.web.views.students :as students]
     [integrant.core :as ig]
@@ -41,4 +42,5 @@
    ["/play/:slideshow_id/:step" (route-data opts) (play/ui-routes opts)]
    ["/play-drop/:slideshow_id" (route-data opts) (play-drop/ui-routes opts)]
    ["/play-write/:slideshow_id" (route-data opts) (play-write/ui-routes opts)]
+   ["/play-guess/:slideshow_id" (route-data opts) (play-guess/ui-routes opts)]
    ["/studentss" (route-data opts) (students/ui-routes opts)]])
