@@ -5,7 +5,7 @@
     [simpleui.flashcards3.web.controllers.slideshow :as slideshow]
     [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]]))
 
-(def ten (-> "ten.txt" io/resource slurp (.split "\n") seq))
+(def ten (-> "ten.txt" io/resource slurp .trim (.split "\n") seq))
 
 (defn- get-src [x]
   (if (string? x)
@@ -34,13 +34,12 @@
   (let [slides (slideshow/get-slideshow-slides query-fn slideshow_id)
         cols (-> slides count (/ 2) Math/ceil long)
         nils (map (constantly nil) slides)
-        [names1 names2] (when names
-                          [(shuffle ten) (shuffle ten)])]
+        [names1 names2] (when names [(shuffle ten) (shuffle ten)])]
     [:div
      (page cols (shuffle slides) names1)
-     (page cols nils names1)
-     (page cols (shuffle slides) names2)
      (page cols nils names2)
+     (page cols (shuffle slides) names2)
+     (page cols nils names1)
      ]))
 
 (defn ui-routes [{:keys [query-fn]}]
@@ -49,6 +48,5 @@
    [query-fn]
    (fn [req]
      (page-htmx
-      {:css ["../../output.css"]
-       :js ["../../play-write.js"]}
+      {:css ["../../output.css"]}
       (-> req (assoc :query-fn query-fn) pages)))))
