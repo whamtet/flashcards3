@@ -60,7 +60,7 @@
 (defcomponent ^:endpoint move-modal [req ^:long i ^:long to-move]
   (if post?
     (do
-      (prn 'fuck i to-move)
+      (slideshow/copy-slide query-fn slideshow_id i to-move)
       [:div#modal])
     (components/modal-scroll
      "w-2/3"

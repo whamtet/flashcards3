@@ -74,6 +74,11 @@
         (update $ :slides conj x)
         (update $ :notes conj "")
         (slideshow-details query-fn slideshow_id $)))
+(defn- conj-slideshow-note [query-fn slideshow_id slide note]
+  (as-> (get-slideshow-details query-fn slideshow_id) $
+        (update $ :slides conj slide)
+        (update $ :notes conj note)
+        (slideshow-details query-fn slideshow_id $)))
 
 (defn concat-slideshow [query-fn slideshow_id images]
   (as-> (get-slideshow-details query-fn slideshow_id) $
@@ -112,3 +117,9 @@
   (update-slides query-fn slideshow_id move-down-v i))
 (defn delete-slide [query-fn slideshow_id i]
   (update-slides query-fn slideshow_id del-v i))
+
+(defn copy-slide [query-fn slideshow_id i to-move]
+  (let [{:keys [slides notes]} (get-slideshow-details query-fn slideshow_id)]
+    (conj-slideshow-note query-fn to-move
+                         (slides i)
+                         (notes i))))
