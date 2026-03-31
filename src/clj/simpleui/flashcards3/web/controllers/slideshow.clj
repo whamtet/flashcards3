@@ -1,6 +1,8 @@
 (ns simpleui.flashcards3.web.controllers.slideshow
   (:require
-    [simpleui.flashcards3.web.controllers.local :as local]))
+    [simpleui.flashcards3.web.controllers.local :as local])
+  (:import
+    java.util.Date))
 
 (defn add-slideshow [query-fn slideshow_name]
   (when-not (query-fn :get-slideshow-name {:slideshow_name slideshow_name})
@@ -8,9 +10,10 @@
 
 (defn- read-details [s]
   (if s
-    (let [{:keys [slides notes]} (read-string s)]
+    (let [{:keys [slides notes updated]} (read-string s)]
       {:slides slides
-       :notes (if (vector? notes) notes (mapv (constantly "") slides))})
+       :notes (if (vector? notes) notes (mapv (constantly "") slides))
+       :updated updated})
     {:slides []
      :notes []}))
 
@@ -20,8 +23,9 @@
        (map #(update % :details read-details))))
 
 (defn get-slideshows-summary [query-fn]
-  (->> (query-fn :get-slideshows-summary {})
-       (sort-by :slideshow_name)))
+  (->> (query-fn :get-slideshows {})
+       (map #(update % :details read-details))
+       (sort-by #(-> % :details :updated) #(compare %2 %1))))
 
 (defn get-slideshow-details [query-fn slideshow_id]
   (-> (query-fn :get-slideshow {:slideshow_id slideshow_id})
@@ -78,6 +82,7 @@
   (as-> (get-slideshow-details query-fn slideshow_id) $
         (update $ :slides conj slide)
         (update $ :notes conj note)
+        (assoc $ :updated (Date.))
         (slideshow-details query-fn slideshow_id $)))
 
 (defn concat-slideshow [query-fn slideshow_id images]

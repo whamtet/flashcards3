@@ -6,8 +6,6 @@ returning slideshow_id;
 
 -- :name get-slideshows :query
 select * from slideshow;
--- :name get-slideshows-summary :query
-select slideshow_id, slideshow_name from slideshow;
 -- :name get-slideshow :query :one
 select * from slideshow where slideshow_id = :slideshow_id
 -- :name get-slideshow-name :query :one
