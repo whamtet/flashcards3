@@ -71,8 +71,7 @@
           {:hx-post "move-modal"
            :hx-target "#modal"
            :hx-vals {:i i :to-move slideshow_id}}
-          slideshow_name]])]
-     (pr-str (slideshow/get-slideshows-summary query-fn)))))
+          slideshow_name]])])))
 
 (defcomponent ^:endpoint image-order [req
                                       command
