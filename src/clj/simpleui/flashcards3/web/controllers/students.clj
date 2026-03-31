@@ -21,20 +21,27 @@
    [:td {:class "border border-gray-300 px-4 py-2"
          :colspan colspan}]])
 
-(defn- star-disp [stars]
-  (if (= 2 stars)
-    (list icons/check "&nbsp;&nbsp;" icons/x-mark)
+(def space "&nbsp;&nbsp;")
+(defn- smilies [stars]
+  (if (= 3 stars)
+    [icons/sad icons/neutral-face icons/smile]
+    [icons/sad icons/smile]))
+
+(defn- star-disp [stars icon]
+  (case icon
+    "tick" (list icons/check space icons/x-mark)
+    "smiley" (interpose space (smilies stars))
     (interpose " " (repeat stars icons/star))))
 
-(defn s-row2 [student colspan stars]
+(defn s-row2 [student colspan stars icon]
   [:tr
    [:td {:class "border border-gray-300 px-2 py-2 whitespace-nowrap"}
     student]
    (for [i (range colspan)]
      [:td {:class "border border-gray-300 px-4 py-2"}
-      [:div.flex (star-disp stars)]])])
+      [:div.flex (star-disp stars icon)]])])
 
-(defn- disp2 [updated questions students stars]
+(defn- disp2 [updated questions students stars icon]
   [:div
    (when updated
      [:div {:class "print:hidden"} [:b.bold.mr-2 "Last updated:"] updated])
@@ -50,25 +57,32 @@
 
     [:tbody
      (map
-      (if stars #(s-row2 % (count questions) stars) #(s-row % (count questions)))
+      (if (or stars (not= "stars" icon))
+        #(s-row2 % (count questions) stars icon)
+        #(s-row % (count questions)))
       students)]]])
 
-(defn- disp [updated questions students stars]
+(defn- disp [updated questions students stars icon]
   (page-htmx
    {:css ["../output.css"]}
-   (disp2 updated questions students stars)))
+   (disp2 updated questions students stars icon)))
 
 (defn- parse-questions [questions]
   (-> questions .trim (.split "\n")))
 
+(defn- get-student [[_ student]]
+  (let [student (.trim student)]
+    (if (.startsWith student "New")
+      (.substring student 4)
+      student)))
 (defn- get-students [auth? students class]
   (if (and auth? (not-empty class))
     (students-persist/get-students class)
     (->> (after students "Note")
          (re-seq r)
-         (map #(-> % second .trim)))))
+         (map get-student))))
 
-(defn parse [{{:keys [questions students stars url class]} :params
+(defn parse [{{:keys [questions students stars icon url class]} :params
               auth? :basic-authentication}]
   (let [students (get-students auth? students class)
         stars (when (not-empty stars) (Long/parseLong stars))
@@ -79,5 +93,6 @@
      (when class (students-persist/get-updated class))
      (parse-questions questions)
      (concat students ["&nbsp;" "&nbsp;" "&nbsp;" "&nbsp;"])
-     stars)))
+     stars
+     icon)))
 

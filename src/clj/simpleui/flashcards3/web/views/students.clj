@@ -9,6 +9,30 @@
   (format "on click set #class.value to '%s' then call #my-form.submit()
   on contextmenu halt the event then set #class.value to '%s' then call #del.click()" class class))
 
+(def radio
+  [:div {:class "flex flex-row items-center gap-6"}
+   [:label {:class "inline-flex items-center gap-2 cursor-pointer"}
+    [:input {:type "radio"
+             :name "icon"
+             :value "stars"
+             :checked true
+             :class "h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"}]
+    [:span {:class "text-gray-700"} "Stars"]]
+
+   [:label {:class "inline-flex items-center gap-2 cursor-pointer"}
+    [:input {:type "radio"
+             :name "icon"
+             :value "tick"
+             :class "h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"}]
+    [:span {:class "text-gray-700"} "Tick"]]
+
+   [:label {:class "inline-flex items-center gap-2 cursor-pointer"}
+    [:input {:type "radio"
+             :name "icon"
+             :value "smiley"
+             :class "h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"}]
+    [:span {:class "text-gray-700"} "Smiley"]]])
+
 (defcomponent ^:endpoint form [req command class]
   (when (:basic-authentication req)
     (case command
@@ -19,14 +43,15 @@
     :action (if (:basic-authentication req) "../api/studentss" "../api/students")
     :method "POST"
     :hx-target "this"}
-   [:span.p-1
+   [:div.flex.items-center.p-2
     [:input {:type "submit"
              :id "parse"
              :value "Parse"
-             :class "bg-clj-blue py-1.5 px-3 rounded-lg text-white"}]]
-   [:input {:class "rounded-md border mt-2 p-2"
-            :name "stars"
-            :placeholder "Stars (optional)"}]
+             :class "bg-clj-blue py-1.5 px-3 rounded-lg text-white mr-2"}]
+    [:input {:class "rounded-md border p-2 mr-4"
+             :name "stars"
+             :placeholder "Quantity (optional)"}]
+    radio]
    [:textarea {:class "w-full rounded-md border mt-2 p-2"
                :style {:height "30vh"}
                :placeholder "Questions - one per line"
