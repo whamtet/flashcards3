@@ -19,6 +19,10 @@
        (sort-by :slideshow_name)
        (map #(update % :details read-details))))
 
+(defn get-slideshows-summary [query-fn]
+  (->> (query-fn :get-slideshows-summary {})
+       (sort-by :slideshow_name)))
+
 (defn get-slideshow-details [query-fn slideshow_id]
   (-> (query-fn :get-slideshow {:slideshow_id slideshow_id})
       :details

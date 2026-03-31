@@ -40,6 +40,7 @@
     (for [sheet css]
       [:link {:rel "stylesheet" :href (resource-cache/cache-suffix sheet)}])]
    [:body
+    [:div#modal.hidden]
     (render/walk-attrs body)
     (map
      (fn [src]
@@ -59,7 +60,8 @@
 
 (def optionals
   '{slideshow_id [slideshow_id (Long/parseLong (:slideshow_id params))]
-    step [step (Long/parseLong (:step params))]})
+    step [step (Long/parseLong (:step params))]
+    post? [post? (simpleui/post? req)]})
 
 (defmacro defcomponent
   [name [req :as args] & body]

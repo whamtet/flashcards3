@@ -47,3 +47,14 @@
 
 (defn h3 [& contents]
   [:h3.text-xl contents])
+
+(defn modal-scroll [width & contents]
+  [:div#modal {:class "fixed left-0 top-0 w-full h-full
+  z-10"
+               :style {:background-color "rgba(0,0,0,0.4)"}
+               :_ "on click if target.id === 'modal' add .hidden"}
+   [:div {:class (str "mx-auto border rounded-lg bg-white overflow-y-auto overflow-x-clip " width)
+          :style {:max-height "94vh"
+                  :margin-top "3vh"
+                  :margin-bottom "3vh"}}
+    contents]])

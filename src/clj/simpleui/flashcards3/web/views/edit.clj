@@ -56,6 +56,24 @@
   (slideshow/slideshow-note query-fn slideshow_id i note)
   nil)
 
+[:div {:class "w-2/3"}]
+(defcomponent ^:endpoint move-modal [req ^:long i ^:long to-move]
+  (if post?
+    (do
+      (prn 'fuck i to-move)
+      [:div#modal])
+    (components/modal-scroll
+     "w-2/3"
+     [:div.p-2
+      (for [{:keys [slideshow_id slideshow_name]} (slideshow/get-slideshows-summary query-fn)]
+        [:div.p-2
+         [:span.cursor-pointer.text-blue-500
+          {:hx-post "move-modal"
+           :hx-target "#modal"
+           :hx-vals {:i i :to-move slideshow_id}}
+          slideshow_name]])]
+     (pr-str (slideshow/get-slideshows-summary query-fn)))))
+
 (defcomponent ^:endpoint image-order [req
                                       command
                                       medium
@@ -63,6 +81,7 @@
                                       ^:long i
                                       ^:array images]
   image-note
+  move-modal
   (case command
     "concat" (slideshow/concat-slideshow query-fn slideshow_id images)
     "conj" (slideshow/conj-slideshow query-fn slideshow_id [(or medium large) large])
@@ -111,12 +130,17 @@
              :href (format "../../play/%s/%s/" slideshow_id i)}
          [:img {:class "max-h-96"
                 :src (get-src medium)}]]
-        [:div {:class "cursor-pointer border rounded-md p-2"
+        [:div {:class "cursor-pointer border rounded-md p-2 mr-2"
                :hx-post "image-order:del"
                :hx-target "#images"
                :hx-confirm "Delete pic?"
                :hx-vals {:i i}}
-         icons/trash]]
+         icons/trash]
+        [:div {:class "cursor-pointer border rounded-md p-2"
+               :hx-get "move-modal"
+               :hx-vals {:i i}
+               :hx-target "#modal"}
+         icons/arrow-right]]
        [:input {:class "border rounded-md p-2 mt-1 mb-4 ml-20"
                 :style {:width "500px"}
                 :hx-post "image-note"
