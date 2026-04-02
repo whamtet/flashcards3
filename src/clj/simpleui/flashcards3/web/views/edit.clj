@@ -42,6 +42,10 @@
             :href (format "../../play-guess/%s/" slideshow_id)
             :target "_blank"}
         (components/button "Guess")]
+       [:a {:class "mr-2"
+            :href (format "../../word-search/%s/" slideshow_id)
+            :target "_blank"}
+        (components/button "Word Search")]
        [:div {:class "cursor-pointer"
               :hx-post "panel:duplicate"
               :hx-confirm "Duplicate?"}

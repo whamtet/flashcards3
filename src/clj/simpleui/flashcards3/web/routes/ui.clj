@@ -13,6 +13,7 @@
     [simpleui.flashcards3.web.views.play-guess :as play-guess]
     [simpleui.flashcards3.web.views.play-write :as play-write]
     [simpleui.flashcards3.web.views.students :as students]
+    [simpleui.flashcards3.web.views.word-search :as word-search]
     [integrant.core :as ig]
     [reitit.ring.middleware.muuntaja :as muuntaja]
     [reitit.ring.middleware.parameters :as parameters]))
@@ -43,4 +44,5 @@
    ["/play-drop/:slideshow_id" (route-data opts) (play-drop/ui-routes opts)]
    ["/play-write/:slideshow_id" (route-data opts) (play-write/ui-routes opts)]
    ["/play-guess/:slideshow_id" (route-data opts) (play-guess/ui-routes opts)]
+   ["/word-search/:slideshow_id" (route-data opts) (word-search/ui-routes opts)]
    ["/studentss" (route-data opts) (students/ui-routes opts)]])
