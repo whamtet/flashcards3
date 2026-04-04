@@ -1,3 +1,5 @@
+const $ = x => document.querySelector(x);
+
 document.getElementById("pasteClipboard").addEventListener("click", async () => {
     try {
         const items = await navigator.clipboard.read();
@@ -29,5 +31,11 @@ document.getElementById("pasteClipboard").addEventListener("click", async () => 
         console.log("No image found in clipboard");
     } catch (err) {
         console.error("Failed to read clipboard:", err);
+    }
+});
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+        $('#modal').classList.add('hidden');
     }
 });
