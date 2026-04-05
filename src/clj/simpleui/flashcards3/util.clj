@@ -20,3 +20,17 @@
      (fn [i x]
        (f i (zero? i) (= i j) x))
      s)))
+
+(defn- gt [a b]
+  (pos? (compare a b)))
+
+(defn max-by [f [a & rest]]
+  (first
+   (reduce
+    (fn [[x1 y1] x2]
+      (let [y2 (f x2)]
+        (if (gt y1 y2)
+          [x1 y1]
+          [x2 y2])))
+    [a (f a)]
+    rest)))

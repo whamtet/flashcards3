@@ -1,11 +1,14 @@
 (ns simpleui.flashcards3.web.controllers.word-search
   (:require
-    [simpleui.flashcards3.web.controllers.slideshow :as slideshow]))
+    [simpleui.flashcards3.web.controllers.slideshow :as slideshow]
+    [simpleui.flashcards3.util :as util]))
 
 (def grid-size 10)
 
+(defn- longest-word [s]
+  (util/max-by count (.split s " ")))
 (defn- trim-note [^String note]
-  (let [note (.trim note)]
+  (let [note (-> note .trim longest-word)]
     (when (< 0 (count note) (dec grid-size))
       (.toUpperCase note))))
 
@@ -69,6 +72,7 @@
   (let [{placed :grid words :words}
         (->> (slideshow/get-slideshow-notes query-fn slideshow_id)
              (keep trim-note)
+             distinct
              attempt-to-place-words)]
     {:grid (fill-remainder placed)
      :words words}))
