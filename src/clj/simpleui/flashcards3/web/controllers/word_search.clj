@@ -3,17 +3,15 @@
     [simpleui.flashcards3.web.controllers.slideshow :as slideshow]
     [simpleui.flashcards3.util :as util]))
 
-(def grid-size 10)
-
 (defn- longest-word [s]
   (util/max-by count (.split s " ")))
-(defn- trim-note [^String note]
+(defn- trim-note [^String note grid-size]
   (let [note (-> note .trim longest-word)]
     (when (< 0 (count note) (dec grid-size))
       (.toUpperCase note))))
 
-(def nil-row (vec (repeat grid-size nil)))
-(def nil-grid (vec (repeat grid-size nil-row)))
+(defn- nil-row [grid-size] (vec (repeat grid-size nil)))
+(defn- nil-grid [grid-size] (vec (repeat grid-size (nil-row grid-size))))
 
 (defn- rand-char []
   (rand-nth "ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
@@ -22,7 +20,7 @@
              [0 1]
              [1 1]
              [1 0]]))
-(defn- rand-start [id wc]
+(defn- rand-start [id wc grid-size]
   (rand-nth
    (case id
      -1 (range (dec wc) grid-size)
@@ -40,27 +38,27 @@
           (recur todo (+ i id) (+ j jd) (assoc-in grid [i j] c))))
       grid)))
 
-(defn- place-word-randomly [grid word]
+(defn- place-word-randomly [grid word grid-size]
   (let [[id jd] (rand-direction)]
     (place-word
      grid
      word
-     (rand-start id (count word))
-     (rand-start jd (count word))
+     (rand-start id (count word) grid-size)
+     (rand-start jd (count word) grid-size)
      id
      jd)))
 
-(defn- attempt-to-place-word [grid word]
-  (some (fn [_] (place-word-randomly grid word)) (range 10)))
+(defn- attempt-to-place-word [grid word grid-size]
+  (some (fn [_] (place-word-randomly grid word grid-size)) (range 10)))
 
-(defn- attempt-to-place-words [words]
+(defn- attempt-to-place-words [grid-size words]
   (reduce
    (fn [{:keys [grid words] :as unchanged} word]
-     (if-let [new-grid (attempt-to-place-word grid word)]
+     (if-let [new-grid (attempt-to-place-word grid word grid-size)]
        {:grid new-grid
         :words (conj words word)}
        unchanged))
-   {:grid nil-grid
+   {:grid (nil-grid grid-size)
     :words ()}
    words))
 
@@ -68,11 +66,11 @@
   (for [row grid]
     (map #(or % (rand-char)) row)))
 
-(defn ws-grid [query-fn slideshow_id]
+(defn ws-grid [query-fn slideshow_id grid-size]
   (let [{placed :grid words :words}
         (->> (slideshow/get-slideshow-notes query-fn slideshow_id)
-             (keep trim-note)
+             (keep #(trim-note % grid-size))
              distinct
-             attempt-to-place-words)]
+             (attempt-to-place-words grid-size))]
     {:grid (fill-remainder placed)
      :words words}))

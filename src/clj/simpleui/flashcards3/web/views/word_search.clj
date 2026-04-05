@@ -5,8 +5,11 @@
     [simpleui.flashcards3.web.views.components :as components]
     [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]]))
 
-(defcomponent panel [req]
-  (let [{:keys [grid words]} (word-search/ws-grid query-fn slideshow_id)]
+(defcomponent panel [req ^:long grid-size]
+  (let [{:keys [grid words]} (word-search/ws-grid
+                              query-fn
+                              slideshow_id
+                              (or grid-size 10))]
     [:div
      [:div {:class "grid grid-rows-10 grid-cols-10 border"}
       (for [row grid col row]

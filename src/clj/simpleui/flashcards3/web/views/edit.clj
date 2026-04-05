@@ -55,6 +55,10 @@
   (if (string? x)
     (str "../../api/cache?src=" x)
     (format "../../api/local/%s" x)))
+(defn- get-src-simple [x]
+  (if (string? x)
+    x
+    (format "../../api/local/%s" x)))
 
 (defcomponent ^:endpoint image-note [req ^:long i note]
   (slideshow/slideshow-note query-fn slideshow_id i note)
@@ -159,7 +163,7 @@
      [:div.flex.overflow-x-auto.mb-2
       (for [[medium large] (img-search/get-pics q)]
         [:img {:class "mr-1 cursor-pointer w-96"
-               :src (get-src medium)
+               :src (get-src-simple medium)
                :hx-post "image-order:conj"
                :hx-target "#images"
                :hx-vals {:medium medium :large large}
@@ -176,7 +180,7 @@
      [:div.flex.overflow-x-auto.mb-2
       (for [[medium large] (img-search/get-icons q)]
         [:img {:class "mr-1 cursor-pointer"
-               :src (get-src medium)
+               :src (get-src-simple medium)
                :hx-post "image-order:conj"
                :hx-target "#images"
                :hx-vals {:medium medium :large large}
