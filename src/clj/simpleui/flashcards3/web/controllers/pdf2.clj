@@ -30,6 +30,12 @@
      (svg x (+ y (* i 40)) img))
    imgs))
 
+(defn- svgs-horizontal [imgs]
+  (keep-indexed
+   (fn [i img]
+     (svg (+ 13 (* i 240)) 14 img))
+   imgs))
+
 (defn svg->pdf [images]
   (let [out (ByteArrayOutputStream.)]
     ;; produce PDF in another thread
@@ -40,6 +46,9 @@
            :right-margin  margin
            :top-margin    margin
            :bottom-margin margin}
+
+          ;; key
+          (svgs-horizontal (distinct images))
 
           (svgs 50 80 images)
           (svgs 50 317 images)
