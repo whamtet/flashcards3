@@ -2,6 +2,7 @@
   (:require
     [clojure.tools.logging :as log]
     [integrant.core :as ig]
+    [simpleui.config]
     [simpleui.flashcards3.config :as config]
     [simpleui.flashcards3.env :refer [defaults]]
 
@@ -41,3 +42,5 @@
 (defn -main [& _]
   (start-app)
   (.addShutdownHook (Runtime/getRuntime) (Thread. (fn [] (stop-app) (shutdown-agents)))))
+
+(simpleui.config/set-render-safe false)

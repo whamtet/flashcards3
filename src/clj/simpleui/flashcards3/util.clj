@@ -34,3 +34,6 @@
           [x2 y2])))
     [a (f a)]
     rest)))
+
+(defn zipmap-by [f s]
+  (zipmap (map f s) s))

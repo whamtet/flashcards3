@@ -3,9 +3,11 @@
     [simpleui.flashcards3.web.middleware.exception :as exception]
     [simpleui.flashcards3.web.middleware.formats :as formats]
     [simpleui.flashcards3.web.views.fill :as fill]
+    [simpleui.flashcards3.web.views.icon-search :as icon-search]
     [simpleui.flashcards3.web.views.students :as students]
     [simpleui.flashcards3.web.views.intro :as intro]
     [simpleui.flashcards3.web.views.snl :as snl]
+    [simpleui.flashcards3.web.controllers.pdf2 :as controllers.pdf2]
     [simpleui.flashcards3.web.controllers.snl :as controllers.snl]
     [simpleui.flashcards3.web.controllers.students :as controllers.students]
     [integrant.core :as ig]
@@ -26,10 +28,22 @@
 
 (derive :reitit.routes/open :reitit/routes)
 
+(defn- pdf [images]
+  (controllers.pdf2/svg->pdf
+   (if (string? images)
+     [images]
+     images)))
+
 (defmethod ig/init-key :reitit.routes/open
   [_ opts]
   [["" (route-data opts) (intro/ui-routes opts)]
    ["/fill" (route-data opts) (fill/ui-routes opts)]
+   ["/icon-search" (route-data opts) (icon-search/ui-routes opts)]
+   ["/pdf-icon"
+    (fn [req]
+      {:status 200
+       :headers {"Content-Type" "application/pdf"}
+       :body (-> req :params :images pdf)})]
    ["/api/students" controllers.students/parse]
    ["/api/snl" controllers.snl/parse]
    ["/snl" (route-data opts) (snl/ui-routes opts)]
