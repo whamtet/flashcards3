@@ -2,6 +2,7 @@
   (:require
     [simpleui.flashcards3.web.middleware.exception :as exception]
     [simpleui.flashcards3.web.middleware.formats :as formats]
+    [simpleui.flashcards3.web.views.dominos :as dominos]
     [simpleui.flashcards3.web.views.fill :as fill]
     [simpleui.flashcards3.web.views.icon-search :as icon-search]
     [simpleui.flashcards3.web.views.students :as students]
@@ -46,5 +47,6 @@
        :body (-> req :params :images pdf)})]
    ["/api/students" controllers.students/parse]
    ["/api/snl" controllers.snl/parse]
+   ["/dominos" (route-data opts) (dominos/ui-routes opts)]
    ["/snl" (route-data opts) (snl/ui-routes opts)]
    ["/students" (route-data opts) (students/ui-routes opts)]])

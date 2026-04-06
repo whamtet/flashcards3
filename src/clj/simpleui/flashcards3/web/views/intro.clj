@@ -9,6 +9,9 @@
     [:a {:href "students/" :target "_blank"}
      "Student Questionnaire"]]
    [:div.text-blue-500.p-4
+    [:a {:href "dominos/" :target "_blank"}
+     "Dominos"]]
+   [:div.text-blue-500.p-4
     [:a {:href "snl/" :target "_blank"}
      "SNL"]]
    [:div.text-blue-500.p-4
