@@ -16,7 +16,8 @@
   [:div.relative.border
    [:div.absolute.left-2.top-2.text-2xl title]
    (when src
-     [:img {:src (get-src src)}])])
+     [:a {:href (if (number? title) ".?names=true" ".?names=false")}
+      [:img {:src (get-src src)}]])])
 
 [:div.grid.grid-rows-2]
 [:div.grid-cols-1]
