@@ -11,18 +11,20 @@
     (butlast s)
     s))
 
+(defn- shuffle-pairs* [phrases]
+  (loop [done (->> phrases (take-nth 2) (mapv list))
+         todo (->> phrases rest (take-nth 2) (zipmap (range)))
+         i 0]
+    (if (not-empty todo)
+      (let [[j tail] (-> todo (dissoc i) seq rand-nth)]
+        (recur
+          (update done i conj tail)
+          (dissoc todo j)
+          (inc i)))
+      done)))
+
 (defn- shuffle-pairs [phrases]
-  (let [phrases (->> phrases (map #(.trim %)) (take-while not-empty) truncate)]
-    (loop [done (->> phrases (take-nth 2) (mapv list))
-           todo (->> phrases rest (take-nth 2) (zipmap (range)))
-           i 0]
-      (if (not-empty todo)
-        (let [[j tail] (-> todo (dissoc i) seq rand-nth)]
-          (recur
-            (update done i conj tail)
-            (dissoc todo j)
-            (inc i)))
-        done))))
+  (->> phrases (map #(.trim %)) (take-while not-empty) truncate shuffle-pairs*))
 
 (defn- td [x] [:td [:div.mt-8.border-2.p-2.border-black x]])
 
