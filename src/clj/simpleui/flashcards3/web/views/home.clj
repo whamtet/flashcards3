@@ -12,18 +12,30 @@
     {:href href :target "_blank"}
     {:href href}))
 
-(defn- slideshow-disp [{:keys [slideshow_id slideshow_name]}]
-  [:div.p-2.text-2xl.flex.items-center
-   [:a.text-clj-blue.mr-2 {:href (format "../edit/%s/" slideshow_id)}
-    slideshow_name]
-   [:a.mr-2 (href (format "../play/%s/0/" slideshow_id))
-    icons/play-circle]
-   [:a.mr-2.text-green-500 (href (format "../play/%s/0/?grid=3" slideshow_id))
-    icons/play-circle]
-   [:a.mr-2.text-yellow-500 (href (format "../play-drop/%s/?grid=3" slideshow_id))
-    icons/play-circle]
-   [:a.text-red-500 (href (format "../play-write/%s/" slideshow_id))
-    icons/play-circle]])
+(defn- get-src [x]
+  (if (string? x)
+    (str "../../api/cache?src=" x)
+    (format "../../api/local/%s" x)))
+
+(defn- slideshow-disp [{:keys [slideshow_id slideshow_name]
+                        {[[src]] :slides} :details}]
+  [:div
+   [:div.relative.group.inline-flex.items-center
+    [:div.p-2.text-2xl.flex.items-center
+     [:a.text-clj-blue.mr-2 {:href (format "../edit/%s/" slideshow_id)}
+      slideshow_name]
+     [:a.mr-2 (href (format "../play/%s/0/" slideshow_id))
+      icons/play-circle]
+     [:a.mr-2.text-green-500 (href (format "../play/%s/0/?grid=3" slideshow_id))
+      icons/play-circle]
+     [:a.mr-2.text-yellow-500 (href (format "../play-drop/%s/?grid=3" slideshow_id))
+      icons/play-circle]
+     [:a.text-red-500 (href (format "../play-write/%s/" slideshow_id))
+      icons/play-circle]]
+
+    [:img.absolute.w-20.hidden.group-hover:block
+     {:style {:left "110%"}
+      :src (get-src src)}]]])
 
 (defcomponent ^:endpoint panel [req ^:prompt slideshow-name command]
   (case command
@@ -31,7 +43,7 @@
             (slideshow/add-slideshow query-fn slideshow-name)
             :refresh)
     [:div.p-2
-     [:div.flex.items-center
+     [:div.flex.items-center.mb-1
       [:div {:class "my-1 mr-2"
              :hx-post "panel:new"
              :hx-prompt "New Slideshow Name"}
