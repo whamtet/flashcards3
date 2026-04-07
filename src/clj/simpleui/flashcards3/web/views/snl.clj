@@ -10,14 +10,17 @@
    {:class "p-2"
     :action "../api/snl"
     :method "POST"}
-   [:span.p-1
+   [:div.flex.items-center.py-2
     [:input {:type "submit"
              :value "Create"
-             :class "bg-clj-blue py-1.5 px-3 rounded-lg text-white"}]]
-   [:input {:class "rounded-md border mt-2 p-2"
-            :name "limit"
-            :placeholder "Limit (optional)"}]
-   [:textarea {:class "w-full rounded-md border mt-2 p-2"
+             :class "bg-clj-blue py-1.5 px-3 rounded-lg text-white mr-2"}]
+    [:input {:class "rounded-md border p-2 mr-2"
+             :name "limit"
+             :placeholder "Limit (optional)"}]
+    [:div.p-2.cursor-pointer.mr-2 {:onclick "addTick('✅')"} "✅"]
+    [:div.p-2.cursor-pointer.mr-2 {:onclick "addTick('❌')"} "❌"]]
+   [:textarea {:id "phrases"
+               :class "w-full rounded-md border mt-2 p-2"
                :style {:height "30vh"}
                :placeholder "Phrases - one per line"
                :name "phrases"}]])
@@ -28,5 +31,6 @@
    [query-fn]
    (fn [req]
      (page-htmx
-      {:css ["../output.css"]}
+      {:css ["../output.css"]
+       :js ["../snl.js"]}
       form))))
