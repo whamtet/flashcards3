@@ -5,7 +5,7 @@
     [simpleui.flashcards3.web.views.components :as components]
     [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]]))
 
-(def form
+(defcomponent form [req init]
   [:form#my-form
    {:class "p-2"
     :action "../api/snl"
@@ -23,7 +23,8 @@
                :class "w-full rounded-md border mt-2 p-2"
                :style {:height "30vh"}
                :placeholder "Phrases - one per line"
-               :name "phrases"}]])
+               :name "phrases"}
+    init]])
 
 (defn ui-routes [{:keys [query-fn]}]
   (simpleui/make-routes
@@ -33,4 +34,4 @@
      (page-htmx
       {:css ["../output.css"]
        :js ["../snl.js"]}
-      form))))
+      (form req)))))

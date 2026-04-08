@@ -56,9 +56,10 @@
   [:div.absolute {:style (style pair)} phrase])
 
 (defn- disp2 [to-disp]
-  [:div.relative {:style {:width "903px"}}
-   [:img {:src "../snl.png"}]
-   (map text-div to-disp)])
+  [:div {:style {:transform "rotate(90deg);"}}
+   [:div.relative {:style {:width "903px"}}
+    [:img {:src "../snl.png"}]
+    (map text-div to-disp)]])
 
 (defn- disp [to-disp]
   (page-htmx
@@ -67,7 +68,7 @@
 
 (defn parse [{{:keys [phrases limit]} :params}]
   (let [phrases (-> phrases .trim (.split "\n"))
-        limit (if (not-empty limit) (Long/parseLong (.trim limit)) (count phrases))
+        limit (if (not-empty limit) (Long/parseLong (.trim limit)) 25)
         actual-phrases (->> phrases cycle (take limit))]
     (disp
      (map list (shuffle pairs) actual-phrases))))

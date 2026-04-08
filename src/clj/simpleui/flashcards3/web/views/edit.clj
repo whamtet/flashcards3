@@ -19,7 +19,9 @@
     "delete" (do
                (slideshow/delete-slideshow query-fn slideshow_id)
                {:hx-redirect "../../home/"})
-    (let [slideshow-name (slideshow/get-slideshow-name query-fn slideshow_id)]
+    (let [slideshow-name (slideshow/get-slideshow-name query-fn slideshow_id)
+          notes (slideshow/get-slideshow-notes query-fn slideshow_id)
+          phrases (string/join "%0A" notes)]
       [:div.p-2.flex.items-center
        [:a.mr-2 {:href "../../home/"} icons/home]
        [:input {:class "p-2 rounded-md border mr-2"
@@ -42,6 +44,10 @@
             :href (format "../../play-guess/%s/" slideshow_id)
             :target "_blank"}
         (components/button "Guess")]
+       [:a {:class "mr-2"
+            :href (str "../../snl/?init=" phrases)
+            :target "_blank"}
+        (components/button "SNL")]
        [:a {:class "mr-2"
             :href (format "../../word-search/%s/" slideshow_id)
             :target "_blank"}
