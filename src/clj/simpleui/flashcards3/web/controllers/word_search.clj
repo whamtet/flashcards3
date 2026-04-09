@@ -17,7 +17,9 @@
   (rand-nth "ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
 (defn- rand-direction []
   (rand-nth [[-1 1]
+             [-1 1]
              [0 1]
+             [1 1]
              [1 1]
              [1 0]]))
 (defn- rand-start [id wc grid-size]

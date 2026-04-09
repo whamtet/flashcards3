@@ -49,6 +49,10 @@
             :target "_blank"}
         (components/button "SNL")]
        [:a {:class "mr-2"
+            :href (str "../../battleships/?init=" phrases)
+            :target "_blank"}
+        (components/button "Battleships")]
+       [:a {:class "mr-2"
             :href (format "../../word-search/%s/" slideshow_id)
             :target "_blank"}
         (components/button "Word Search")]
