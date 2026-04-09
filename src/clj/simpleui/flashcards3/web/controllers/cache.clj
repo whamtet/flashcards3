@@ -2,7 +2,8 @@
   (:require
     [clojure.java.io :as io]
     [clojure.string :as string]
-    [clj-http.lite.client :as client])
+    [clj-http.lite.client :as client]
+    [simpleui.response :as response])
   (:import
     java.io.File
     java.net.URL))
@@ -34,8 +35,8 @@
 (defn cache [src]
   (let [f (cache-file src)]
     (if (.exists f)
-      (io/input-stream f)
+      (->> f .getName (str "/ncache/") response/redirect)
       (do
         (with-open [in (web-stream src)]
           (io/copy in f))
-        (io/input-stream f)))))
+        (->> f .getName (str "/ncache/") response/redirect)))))

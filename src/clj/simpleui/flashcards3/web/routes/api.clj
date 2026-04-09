@@ -54,12 +54,10 @@
                   (pdf/get-pdf query-fn))})]
    ["/cache"
     (fn [req]
-      {:status 200
-       :headers {}
-       :body (-> req
-                 :params
-                 :src
-                 cache/cache)})]
+      (-> req
+          :params
+          :src
+          cache/cache))]
    ["/studentss" students/parse]
    ["/local/:local_id"
     (fn [req]
