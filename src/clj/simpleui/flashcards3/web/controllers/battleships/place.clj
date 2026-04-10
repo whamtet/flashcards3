@@ -26,18 +26,16 @@
       grid)))
 
 (defn- place-randomly [m n grid [id jd :as battleship]]
-  (place-once
-   grid
-   (rand-start m id)
-   (rand-start n jd)
-   battleship))
+  (fn [_]
+    (place-once
+     grid
+     (rand-start m id)
+     (rand-start n jd)
+     battleship)))
 
 (defn- place-battleship [m n]
   (fn [{:keys [grid battleships] :as unchanged} battleship]
-    (if-let [placed (->> #(place-randomly m n grid battleship)
-                         repeatedly
-                         (take 10)
-                         (some identity))]
+    (if-let [placed (some (place-randomly m n grid battleship) (range 10))]
       {:grid placed
        :battleships (conj battleships (sort battleship))}
       unchanged)))
@@ -51,6 +49,3 @@
 
 (defn placement [m n]
   (update (placement* m n) :battleships frequencies))
-
-(use 'clojure.pprint)
-(pprint (placement 10 10))

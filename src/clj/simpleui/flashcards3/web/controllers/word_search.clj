@@ -41,22 +41,20 @@
       grid)))
 
 (defn- place-word-randomly [grid word grid-size]
-  (let [[id jd] (rand-direction)]
-    (place-word
-     grid
-     word
-     (rand-start id (count word) grid-size)
-     (rand-start jd (count word) grid-size)
-     id
-     jd)))
-
-(defn- attempt-to-place-word [grid word grid-size]
-  (some (fn [_] (place-word-randomly grid word grid-size)) (range 10)))
+  (fn [_]
+    (let [[id jd] (rand-direction)]
+      (place-word
+       grid
+       word
+       (rand-start id (count word) grid-size)
+       (rand-start jd (count word) grid-size)
+       id
+       jd))))
 
 (defn- attempt-to-place-words [grid-size words]
   (reduce
    (fn [{:keys [grid words] :as unchanged} word]
-     (if-let [new-grid (attempt-to-place-word grid word grid-size)]
+     (if-let [new-grid (some (place-word-randomly grid word grid-size) (range 10))]
        {:grid new-grid
         :words (conj words word)}
        unchanged))
