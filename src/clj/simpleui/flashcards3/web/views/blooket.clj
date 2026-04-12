@@ -1,4 +1,4 @@
-(ns simpleui.flashcards3.web.views.battleships
+(ns simpleui.flashcards3.web.views.blooket
   (:require
     [simpleui.core :as simpleui]
     [simpleui.flashcards3.web.views.components :as components]
@@ -7,7 +7,7 @@
 (defcomponent form [req init]
   [:form#my-form
    {:class "p-2"
-    :action "../pdf-battleships"
+    :action "../blooket-csv"
     :method "POST"}
    [:div.flex.items-center.py-2
     [:input {:type "submit"
@@ -15,16 +15,16 @@
              :class "bg-clj-blue py-1.5 px-3 rounded-lg text-white mr-2"}]]
    [:div.flex
     [:div.w-80.p-2
-     [:div.text-xl.mb-2 "Left"]
+     [:div.text-xl.mb-2 "Questions (one per line)"]
      [:textarea {:class "border rounded-md p-2 w-full"
                  :rows 20
-                 :name "left"}
-      init]]
+                 :name "questions"}]]
     [:div.w-80.p-2
-     [:div.text-xl.mb-2 "Top"]
+     [:div.text-xl.mb-2 "Answers (one per line)"]
      [:textarea {:class "border rounded-md p-2 w-full"
                  :rows 20
-                 :name "top"}]]]
+                 :name "answers"}
+      init]]]
    ])
 
 (defn ui-routes [{:keys [query-fn]}]

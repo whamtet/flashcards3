@@ -15,6 +15,12 @@
     [:a {:href "snl/" :target "_blank"}
      "SNL"]]
    [:div.text-blue-500.p-4
+    [:a {:href "battleships/" :target "_blank"}
+     "Battleships"]]
+   [:div.text-blue-500.p-4
+    [:a {:href "blooket/" :target "_blank"}
+     "Blooket"]]
+   [:div.text-blue-500.p-4
     [:a {:href "icon-search/" :target "_blank"}
      "Icons PDF"]]
    [:div.text-blue-500.p-4

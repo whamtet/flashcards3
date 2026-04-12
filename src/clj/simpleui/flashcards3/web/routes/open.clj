@@ -3,12 +3,14 @@
     [simpleui.flashcards3.web.middleware.exception :as exception]
     [simpleui.flashcards3.web.middleware.formats :as formats]
     [simpleui.flashcards3.web.views.battleships :as battleships]
+    [simpleui.flashcards3.web.views.blooket :as blooket]
     [simpleui.flashcards3.web.views.dominos :as dominos]
     [simpleui.flashcards3.web.views.fill :as fill]
     [simpleui.flashcards3.web.views.icon-search :as icon-search]
     [simpleui.flashcards3.web.views.students :as students]
     [simpleui.flashcards3.web.views.intro :as intro]
     [simpleui.flashcards3.web.views.snl :as snl]
+    [simpleui.flashcards3.web.controllers.blooket :as controllers.blooket]
     [simpleui.flashcards3.web.controllers.pdf2 :as controllers.pdf2]
     [simpleui.flashcards3.web.controllers.pdf-battleships :as pdf-battleships]
     [simpleui.flashcards3.web.controllers.pdf-snl :as pdf-snl]
@@ -53,6 +55,12 @@
        :headers {"Content-Type" "application/pdf"}
        :body (pdf-battleships/pdf nil nil)})]
    ["/battleships" (route-data opts) (battleships/ui-routes opts)]
+   ["/blooket" (route-data opts) (blooket/ui-routes opts)]
+   ["/blooket-csv"
+    (fn [req]
+      {:status 200
+       :headers {"Content-Type" "text/csv"}
+       :body (-> req :params controllers.blooket/csv)})]
    ["/api/students" controllers.students/parse]
    ["/api/snl"
     (fn [req]

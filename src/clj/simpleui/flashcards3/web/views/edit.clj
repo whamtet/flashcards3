@@ -49,6 +49,10 @@
             :target "_blank"}
         (components/button "SNL")]
        [:a {:class "mr-2"
+            :href (str "../../blooket/?init=" phrases)
+            :target "_blank"}
+        (components/button "Blooklet")]
+       [:a {:class "mr-2"
             :href (str "../../battleships/?init=" phrases)
             :target "_blank"}
         (components/button "Battleships")]
