@@ -32,10 +32,10 @@
       icons/play-circle]
      [:a.text-red-500 (href (format "../play-write/%s/" slideshow_id))
       icons/play-circle]]
-
-    [:img.absolute.w-20.hidden.group-hover:block
-     {:style {:left "110%"}
-      :src (get-src src)}]]])
+    (when src
+      [:img.absolute.w-20.hidden.group-hover:block
+       {:style {:left "110%"}
+        :src (get-src src)}])]])
 
 (defcomponent ^:endpoint panel [req ^:prompt slideshow-name command]
   (case command

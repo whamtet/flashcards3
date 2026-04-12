@@ -11,7 +11,7 @@
     [simpleui.flashcards3.web.views.snl :as snl]
     [simpleui.flashcards3.web.controllers.pdf2 :as controllers.pdf2]
     [simpleui.flashcards3.web.controllers.pdf-battleships :as pdf-battleships]
-    [simpleui.flashcards3.web.controllers.snl :as controllers.snl]
+    [simpleui.flashcards3.web.controllers.pdf-snl :as pdf-snl]
     [simpleui.flashcards3.web.controllers.students :as controllers.students]
     [integrant.core :as ig]
     [reitit.ring.middleware.muuntaja :as muuntaja]
@@ -54,7 +54,11 @@
        :body (pdf-battleships/pdf nil nil)})]
    ["/battleships" (route-data opts) (battleships/ui-routes opts)]
    ["/api/students" controllers.students/parse]
-   ["/api/snl" controllers.snl/parse]
+   ["/api/snl"
+    (fn [req]
+      {:status 200
+       :headers {"Content-Type" "application/pdf"}
+       :body (pdf-snl/pdf req)})]
    ["/dominos" (route-data opts) (dominos/ui-routes opts)]
    ["/snl" (route-data opts) (snl/ui-routes opts)]
    ["/students" (route-data opts) (students/ui-routes opts)]])
