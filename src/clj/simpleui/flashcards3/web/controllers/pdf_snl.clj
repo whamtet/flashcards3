@@ -80,7 +80,8 @@
       [:image
        {:xscale 0.95
         :yscale 0.95}
-       (-> "public/snl.png" io/resource io/file ImageIO/read)]
+       (with-open [in (-> "public/snl.png" io/resource io/input-stream)]
+         (ImageIO/read in))]
 
       ]
      out)
