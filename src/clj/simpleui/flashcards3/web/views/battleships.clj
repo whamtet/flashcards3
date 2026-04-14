@@ -24,7 +24,8 @@
      [:div.text-xl.mb-2 "Top"]
      [:textarea {:class "border rounded-md p-2 w-full"
                  :rows 20
-                 :name "top"}]]]
+                 :name "top"}
+      init]]]
    ])
 
 (defn ui-routes [{:keys [query-fn]}]
