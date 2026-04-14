@@ -12,14 +12,7 @@
    [:div.flex.items-center.py-2
     [:input {:type "submit"
              :value "Create"
-             :class "bg-clj-blue py-1.5 px-3 rounded-lg text-white mr-2"}]
-    [:span.mr-2 "Number of Pages"]
-    [:input {:class "border rounded-md p-2"
-             :type "number"
-             :name "pages"
-             :value 1
-             :min 1
-             :max 30}]]
+             :class "bg-clj-blue py-1.5 px-3 rounded-lg text-white mr-2"}]]
    [:div.flex
     [:div.w-80.p-2
      [:div.text-xl.mb-2 "Left"]

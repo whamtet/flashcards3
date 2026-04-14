@@ -39,25 +39,38 @@
      (some (place-randomly m n grid battleship) (range 10))
      grid)))
 
-(defn- placement** [m n]
+(defn- get-grid [m n]
   (reduce
    (place-battleship m n)
    (v m (v n nil))
    (shuffle battleships)))
 
-(defn placement* [m n]
-  (->> (placement** m n)
-       (mapcat
-        (fn [i row]
-          (map-indexed
-           (fn [j battleship]
-             (when (vector? battleship)
-               [[i j] battleship]))
-           row))
-        (range))
-       (into {})))
+(defn full-placement [m n]
+  (mapcat
+   (fn [i row]
+     (keep-indexed
+      (fn [j battleship]
+        (when (vector? battleship)
+          {:position [i j]
+           :battleship battleship
+           :length (apply max battleship)}))
+      row))
+   (range)
+   (get-grid m n)))
+
+(defn placement-by-length [m n]
+  (group-by :length (full-placement m n)))
+
+(defn limit-lengths [x other]
+  (mapcat
+   (fn [[length items]]
+     (take (count (other length [])) items))
+   x))
 
 (defn placement [m n]
-  (let [placement (placement* m n)]
-    {:placement placement
-     :battleships (->> placement vals (map sort) frequencies)}))
+  (let [pl1 (placement-by-length m n)
+        pl2 (placement-by-length m n)
+        placement1 (limit-lengths pl1 pl2)]
+    {:placement1 placement1
+     :placement2 (limit-lengths pl2 pl1)
+     :freqs (->> placement1 (map :length) frequencies (sort-by first))}))
