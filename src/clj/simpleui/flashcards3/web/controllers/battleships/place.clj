@@ -39,14 +39,14 @@
      (some (place-randomly m n grid battleship) (range 10))
      grid)))
 
-(defn- placement* [m n]
+(defn- placement** [m n]
   (reduce
    (place-battleship m n)
    (v m (v n nil))
    (shuffle battleships)))
 
-(defn placement [m n]
-  (->> (placement* m n)
+(defn placement* [m n]
+  (->> (placement** m n)
        (mapcat
         (fn [i row]
           (map-indexed
@@ -56,3 +56,8 @@
            row))
         (range))
        (into {})))
+
+(defn placement [m n]
+  (let [placement (placement* m n)]
+    {:placement placement
+     :battleships (->> placement vals (map sort) frequencies)}))

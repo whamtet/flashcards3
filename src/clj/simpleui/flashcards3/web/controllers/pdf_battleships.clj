@@ -55,10 +55,11 @@
             (repeat (count top) "")
             word))))))
 
-(defn pdf [{:keys [left top]}]
+(defn pdf [{:keys [left top pages]}]
   (let [out (ByteArrayOutputStream.)
         left (split-lines left)
         top (split-lines top)
+        pages (Long/parseLong pages)
         m (count left)
         n (count top)
         placements (place/placement m n)
@@ -73,12 +74,14 @@
        :header false
        :footer false}
 
-      (list (svg [1 5]))
-
-      [:paragraph {:spacing-after 8 :size 14} "My Friend"]
-      table
-      [:paragraph {:spacing-after 8 :size 14} "Me (SECRET!!!)"]
-      table
+      (repeatedly
+       pages
+       #(list
+         [:paragraph {:spacing-after 8 :size 14} "My Friend"]
+         table
+         [:paragraph {:spacing-after 8 :size 14} "Me (SECRET!!!)"]
+         table
+         [:pagebreak]))
 
       ]
      out)
