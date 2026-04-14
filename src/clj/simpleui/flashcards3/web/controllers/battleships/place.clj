@@ -3,10 +3,10 @@
 (def battleships
   [[1 2]
    [1 3]
-   [1 5]
+   [1 4]
    [2 1]
    [3 1]
-   [5 1]])
+   [4 1]])
 
 (defn- v [i x]
   (vec (repeat i x)))
@@ -33,11 +33,16 @@
      (rand-start n jd)
      battleship)))
 
+(defn- fits? [m n [i j]]
+  (and (<= i m) (<= j n)))
+
 (defn- place-battleship [m n]
   (fn [grid battleship]
-    (or
-     (some (place-randomly m n grid battleship) (range 10))
-     grid)))
+    (if (fits? m n battleship)
+      (or
+       (some (place-randomly m n grid battleship) (range 10))
+       grid)
+      grid)))
 
 (defn- get-grid [m n]
   (reduce

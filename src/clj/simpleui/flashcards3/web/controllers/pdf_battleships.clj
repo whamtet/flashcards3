@@ -13,8 +13,34 @@
       io/resource
       slurp))
 
+(defn x-scale [n b]
+  (* 6 (/ 1 n)
+     (case b
+       [1 2] 1.5
+       [1 3] 1.5
+       [1 4] 1.3
+       1)))
+
+(defn- y-scale [b]
+  (case b
+    [1 4] 0.8
+    [1 3] 0.85
+    [2 1] 0.8
+    [3 1] 0.85
+    [4 1] 0.7
+    1))
+
+(defn- svg-battleship [m n]
+  (let [x-gap (* 78 6 (/ 1 n))]
+    (fn [{[i j] :position b :battleship}]
+      [:svg {:translate [(+ 130 (* x-gap j)) (+ 392 (* 38 i))] :scale [(x-scale n b) (y-scale b)]}
+       (battleship b)])))
+
+(def key-scales {2 0.7
+                 3 0.6
+                 4 0.5})
 (defn- svg-key [i length]
-  [:svg {:translate [(+ 45 (* i 140)) 65] :scale (- 0.7 (* i 0.1))}
+  [:svg {:translate [(+ 45 (* i 140)) 65] :scale (key-scales length)}
    (battleship [1 length])])
 
 (defn- pdf-cells [items]
@@ -33,7 +59,6 @@
       battleships))]))
 
 (def margin 10)
-(def table-width 100)
 (def left-col-width 20)
 
 (defn- split-lines [^String s]
@@ -66,7 +91,10 @@
   (let [out (ByteArrayOutputStream.)
         left (split-lines left)
         top (split-lines top)
-        {:keys [placement1 placement2 freqs]} (place/placement (count left) (count top))
+        m (count left)
+        n (count top)
+        {:keys [placement1 placement2 freqs]} (place/placement m n)
+        img (svg-battleship m n)
         legend (legend freqs)
         table (pdf-table left top)]
     ;; produce PDF in another thread
@@ -79,19 +107,20 @@
        :header false
        :footer false}
 
-      [:paragraph {:spacing-after 8 :size 14} "My Friend (A)"]
-      legend
-      table
-      [:paragraph {:spacing-after 8 :size 14} "Me (SECRET!!!)"]
-      table
-      [:pagebreak]
-
       [:paragraph {:spacing-after 8 :size 14} "My Friend (B)"]
       legend
       table
       [:paragraph {:spacing-after 8 :size 14} "Me (SECRET!!!)"]
       table
+      (map img placement1)
       [:pagebreak]
+
+      [:paragraph {:spacing-after 8 :size 14} "My Friend (A)"]
+      legend
+      table
+      [:paragraph {:spacing-after 8 :size 14} "Me (SECRET!!!)"]
+      table
+      (map img placement2)
 
       ]
      out)
