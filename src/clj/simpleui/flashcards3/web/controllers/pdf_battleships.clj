@@ -33,7 +33,7 @@
 (defn- svg-battleship [m n]
   (let [x-gap (* 78 6 (/ 1 n))]
     (fn [{[i j] :position b :battleship}]
-      [:svg {:translate [(+ 130 (* x-gap j)) (+ 392 (* 38 i))] :scale [(x-scale n b) (y-scale b)]}
+      [:svg {:translate [(+ 130 (* x-gap j)) (+ 392 (* 38 (+ i m -5)))] :scale [(x-scale n b) (y-scale b)]}
        (battleship b)])))
 
 (def key-scales {2 0.7
