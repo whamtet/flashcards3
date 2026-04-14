@@ -1,7 +1,7 @@
 (ns simpleui.flashcards3.web.views.icon-search
   (:require
     [simpleui.core :as simpleui]
-    [simpleui.flashcards3.web.controllers.pdf2 :as pdf2]
+    [simpleui.flashcards3.web.controllers.pdf-icons :as pdf-icons]
     [simpleui.flashcards3.web.views.components :as components]
     [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]])
   (:import
@@ -9,8 +9,8 @@
 
 (def name->slurped
   (zipmap
-   (map pdf2/short-name pdf2/icon-files)
-   (map slurp pdf2/icon-files)))
+   (map pdf-icons/short-name pdf-icons/icon-files)
+   (map slurp pdf-icons/icon-files)))
 
 (defcomponent ^:endpoint icons [req ^:trim s]
   (let [s (if s (.toLowerCase s) "")]

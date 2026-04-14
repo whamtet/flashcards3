@@ -1,4 +1,4 @@
-(ns simpleui.flashcards3.web.controllers.pdf2
+(ns simpleui.flashcards3.web.controllers.pdf-icons
   (:require
     [clj-pdf.core :as pdf]
     [simpleui.flashcards3.util :as util])

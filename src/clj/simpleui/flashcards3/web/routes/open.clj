@@ -11,7 +11,7 @@
     [simpleui.flashcards3.web.views.intro :as intro]
     [simpleui.flashcards3.web.views.snl :as snl]
     [simpleui.flashcards3.web.controllers.blooket :as controllers.blooket]
-    [simpleui.flashcards3.web.controllers.pdf2 :as controllers.pdf2]
+    [simpleui.flashcards3.web.controllers.pdf-icons :as controllers.pdf-icons]
     [simpleui.flashcards3.web.controllers.pdf-battleships :as pdf-battleships]
     [simpleui.flashcards3.web.controllers.pdf-snl :as pdf-snl]
     [simpleui.flashcards3.web.controllers.students :as controllers.students]
@@ -34,7 +34,7 @@
 (derive :reitit.routes/open :reitit/routes)
 
 (defn- pdf [images]
-  (controllers.pdf2/svg->pdf
+  (controllers.pdf-icons/svg->pdf
    (if (string? images)
      [images]
      images)))
