@@ -34,18 +34,25 @@
      battleship)))
 
 (defn- place-battleship [m n]
-  (fn [{:keys [grid battleships] :as unchanged} battleship]
-    (if-let [placed (some (place-randomly m n grid battleship) (range 10))]
-      {:grid placed
-       :battleships (conj battleships (sort battleship))}
-      unchanged)))
+  (fn [grid battleship]
+    (or
+     (some (place-randomly m n grid battleship) (range 10))
+     grid)))
 
 (defn- placement* [m n]
   (reduce
    (place-battleship m n)
-   {:grid (v m (v n nil))
-    :battleships ()}
+   (v m (v n nil))
    (shuffle battleships)))
 
 (defn placement [m n]
-  (update (placement* m n) :battleships frequencies))
+  (->> (placement* m n)
+       (mapcat
+        (fn [i row]
+          (map-indexed
+           (fn [j battleship]
+             (when (vector? battleship)
+               [[i j] battleship]))
+           row))
+        (range))
+       (into {})))

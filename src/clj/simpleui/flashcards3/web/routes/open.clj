@@ -53,7 +53,7 @@
     (fn [req]
       {:status 200
        :headers {"Content-Type" "application/pdf"}
-       :body (pdf-battleships/pdf nil nil)})]
+       :body (-> req :params pdf-battleships/pdf)})]
    ["/battleships" (route-data opts) (battleships/ui-routes opts)]
    ["/blooket" (route-data opts) (blooket/ui-routes opts)]
    ["/blooket-csv"
