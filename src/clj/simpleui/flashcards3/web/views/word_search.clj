@@ -17,10 +17,11 @@
 [:div.grid-rows-19.grid-cols-19]
 [:div.grid-rows-20.grid-cols-20]
 (defcomponent panel [req ^:long grid-size]
-  (let [{:keys [grid words]} (word-search/ws-grid
+  (let [grid-size (or grid-size 10)
+        {:keys [grid words]} (word-search/ws-grid
                               query-fn
                               slideshow_id
-                              (or grid-size 10))]
+                              grid-size)]
     [:div
      [:div {:class (format "grid grid-rows-%s grid-cols-%s border" grid-size grid-size)}
       (for [row grid col row]
