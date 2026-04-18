@@ -28,7 +28,7 @@
       icons/play-circle]
      [:a.mr-2.text-green-500 (href (format "../play/%s/0/?grid=3" slideshow_id))
       icons/play-circle]
-     [:a.mr-2.text-yellow-500 (href (format "../play-drop/%s/?grid=3" slideshow_id))
+     [:a.mr-2.text-yellow-500 (href (format "../play-double/%s/" slideshow_id))
       icons/play-circle]
      [:a.text-red-500 (href (format "../play-write/%s/" slideshow_id))
       icons/play-circle]]
