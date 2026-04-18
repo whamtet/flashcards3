@@ -11,51 +11,41 @@
     (str "../../api/cache?src=" x)
     (format "../../api/local/%s" x)))
 
-(defn- pluralize* [s]
-  (let [n (-> s count (* 0.5))]
-    (->> s
-         (map
-          (fn [i x]
-            (if (< i n) [x] [x x]))
-          (range))
-         shuffle)))
+(defn- pluralize [[a b c]]
+  (shuffle
+   (if (zero? (rand-int 2))
+     [[a a] [b] [c]]
+     [[a a] [b b] [c]])))
 
-(defn- pluralize [s]
-  (let [s (take 6 (shuffle s))
-        n (-> s count (* 0.5) Math/ceil long)]
-    [(pluralize* (take n s))
-     (pluralize* (drop n s))]))
+(defn- img-div [i [[src2 src] x]]
+  (if x
+    [:div {:class "flex border-4 border-black w-1/3"}
+     (repeat 2
+             [:img {:class "max-h-full w-1/2 object-contain"
+                    :src (get-src src)
+                    :src2 (get-src src2)
+                    :onerror "fixSrc(event.target)"}])]
+    [:img {:class "max-h-full object-contain w-1/3"
+           :src (get-src src)
+           :src2 (get-src src2)
+           :onerror "fixSrc(event.target)"}]))
 
-[:div.grid.grid-rows-1.flex-1.min-h-0]
-[:div.grid-cols-1]
-[:div.grid-cols-2]
-[:div.grid-cols-3]
-[:div.grid-cols-4]
-[:div.grid-cols-5]
+(defn- text-div [inc]
+  (fn [i _]
+    [:div {:class "text-center tracking-wider text-3xl w-1/3"} (+ inc i)]))
+
 (defn- half-column [inc slides]
-  (let [s2 (apply concat slides)]
-    [:div.flex.flex-col {:style {:height "50vh"}}
-     [:div {:class (format "grid grid-rows-1 grid-cols-%s flex-1 min-h-0" (count s2))}
-      (for [[src2 src] s2]
-        [:img {:class "max-h-full w-full object-contain"
-               :src (get-src src)
-               :src2 (get-src src2)
-               :onerror "fixSrc(event.target)"}])]
-     [:div {:class (format "grid grid-rows-1 grid-cols-%s" (count slides))}
-      (map-indexed
-       (fn [i slide]
-         (if (= 2 (count slide))
-           [:div.text-center.tracking-wider.text-4xl.col-span-2.text-white (+ i inc)]
-           [:div.text-center.tracking-wider.text-4xl.text-white (+ i inc)]))
-       slides)]]))
+  [:div.flex.flex-col {:style {:height "50vh"}}
+   [:div.flex.flex-1.min-h-0 (map-indexed img-div slides)]
+   [:div.flex (map-indexed (text-div inc) slides)]])
 
-(defcomponent ^:endpoint panel [req ^:long enlargement ^:boolean shuff]
-  (let [[s1 s2] (pluralize (slideshow/get-slideshow-slides query-fn slideshow_id))]
-    (if (empty? s1)
+(defcomponent ^:endpoint panel [req]
+  (let [slides (shuffle (slideshow/get-slideshow-slides query-fn slideshow_id))]
+    (if (empty? slides)
       [:div.p-6.text-xl "Empty"]
       [:div
-       (half-column 1 s1)
-       (half-column (inc (count s1)) s2)
+       (->> slides (take 3) pluralize (half-column 1))
+       (->> slides (drop 3) pluralize (half-column 4))
        [:div {:style {:height "500px"}}]])))
 
 (defn ui-routes [{:keys [query-fn]}]

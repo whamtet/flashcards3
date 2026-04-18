@@ -14,7 +14,7 @@
 (defn- inc-mod [x]
   (mod (inc x) 4))
 (defn- font-size [x]
-  (str (max 0.5 (dec x)) "em"))
+  (str (max 0.6 (dec x)) "em"))
 
 [:div.grid.grid-rows-1.flex-1.min-h-0]
 [:div.grid-cols-1]
@@ -25,7 +25,7 @@
 [:div.grid-cols-6]
 [:div.grid-cols-7]
 (defn- half-column [enlargement slides]
-  [:div.flex.flex-col {:style {:height "50vh"}}
+  [:div.flex.flex-col {:style {:height "48vh"}}
    [:div {:class (format "grid grid-rows-1 grid-cols-%s flex-1 min-h-0" (count slides))}
     (for [[src2 src] (map first slides)]
       [:img {:class "max-h-full w-full object-contain"
