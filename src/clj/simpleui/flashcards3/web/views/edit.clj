@@ -6,7 +6,7 @@
     [simpleui.flashcards3.web.controllers.img-search :as img-search]
     [simpleui.flashcards3.web.controllers.slideshow :as slideshow]
     [simpleui.flashcards3.web.controllers.local :as local]
-    [simpleui.flashcards3.web.views.components :as components]
+    [simpleui.flashcards3.web.views.components :refer [get-src] :as components]
     [simpleui.flashcards3.web.views.icons :as icons]
     [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]]
     [simpleui.flashcards3.util :as util]))
@@ -65,10 +65,6 @@
               :hx-confirm "Duplicate?"}
         (components/button "Duplicate")]])))
 
-(defn- get-src [x]
-  (if (string? x)
-    (str "../../api/cache?src=" x)
-    (format "../../api/local/%s" x)))
 (defn- get-src-simple [x]
   (if (string? x)
     x

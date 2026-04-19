@@ -2,15 +2,11 @@
   (:require
     [clojure.java.io :as io]
     [simpleui.core :as simpleui]
+    [simpleui.flashcards3.web.views.components :refer [get-src]]
     [simpleui.flashcards3.web.controllers.slideshow :as slideshow]
     [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]]))
 
 (def ten (-> "ten.txt" io/resource slurp .trim (.split "\n") seq))
-
-(defn- get-src [x]
-  (if (string? x)
-    (str "../../api/cache?src=" x)
-    (format "../../api/local/%s" x)))
 
 (defn- square [title [src2 src]]
   [:div.relative.border

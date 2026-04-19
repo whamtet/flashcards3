@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Simple Button Trigger",
+  "name": "Powerpoint Copier",
   "version": "1.0",
-  "description": "Toolbar button triggers event in current tab",
+  "description": "Sends screenshots to flashcards server",
   "permissions": ["tabs"],
   "background": {
     "service_worker": "background.js"

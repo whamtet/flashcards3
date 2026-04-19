@@ -2,14 +2,9 @@
   (:require
     [simpleui.core :as simpleui]
     [simpleui.flashcards3.web.controllers.slideshow :as slideshow]
-    [simpleui.flashcards3.web.views.components :as components]
+    [simpleui.flashcards3.web.views.components :refer [get-src] :as components]
     [simpleui.flashcards3.web.views.icons :as icons]
     [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]]))
-
-(defn- get-src [x]
-  (if (string? x)
-    (str "../../api/cache?src=" x)
-    (format "../../api/local/%s" x)))
 
 (defn- pluralize [[a b c]]
   (shuffle

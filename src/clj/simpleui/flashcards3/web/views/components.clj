@@ -58,3 +58,10 @@
                   :margin-top "3vh"
                   :margin-bottom "3vh"}}
     contents]])
+
+(defn get-src [x]
+  (if (string? x)
+    (if (.startsWith x "http")
+      (str "../../api/cache?src=" x)
+      x)
+    (format "../../api/local/%s" x)))
