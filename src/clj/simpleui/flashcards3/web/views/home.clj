@@ -44,7 +44,7 @@
              :hx-prompt "New Slideshow Name"}
        (components/button "New Slideshow")]
       [:a {:class "my-1 mr-2"
-           :href "../students/"
+           :href "../studentss/"
            :target "_blank"}
        (components/button "Students")]
       [:a {:class "my-1 mr-2"
