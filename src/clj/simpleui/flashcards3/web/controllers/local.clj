@@ -10,11 +10,22 @@
 (def local-dir (File. "local"))
 (.mkdir local-dir)
 
+(defn- format-img [x]
+  (if (< x 1000)
+    (format "%03d.jpg" x)
+    (str x ".jpg")))
+
+(defn- new-integer []
+  (let [x (rand-int Integer/MAX_VALUE)]
+    (if (->> x format-img (File. local-dir) .exists)
+      (recur)
+      x)))
+
 (defn- png->jpg
   "Convert a PNG file to JPG.
    Transparent areas are filled with white."
   [file]
-  (let [local-count (-> local-dir .listFiles count)
+  (let [local-count (new-integer)
         jpg-file (->> local-count (format "%03d.jpg") (File. local-dir))
         png-img  (-> file :tempfile ImageIO/read)
         jpg-img  (BufferedImage.
@@ -33,7 +44,7 @@
 
 (defn delete [index]
   (->> index
-       (format "%03d.jpg")
+       format-img
        (File. local-dir)
        .delete))
 
@@ -41,6 +52,6 @@
   (map png->jpg files))
 
 (defn input-stream [local_id]
-  (io/input-stream (format "local/%03d.jpg" local_id)))
+  (io/input-stream (format-img local_id)))
 
 (def supported-types (ImageIO/getReaderMIMETypes))
