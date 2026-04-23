@@ -65,3 +65,10 @@
       (str "../../api/cache?src=" x)
       x)
     (format "../../api/local/%s" x)))
+
+(defn get-src2 [x]
+  (if (string? x)
+    (if (.startsWith x "http")
+      (str "../../../api/cache?src=" x)
+      x)
+    (format "../../../api/local/%s" x)))

@@ -2,7 +2,7 @@
   (:require
     [simpleui.core :as simpleui]
     [simpleui.flashcards3.web.controllers.slideshow :as slideshow]
-    [simpleui.flashcards3.web.views.components :refer [get-src] :as components]
+    [simpleui.flashcards3.web.views.components :refer [get-src2] :as components]
     [simpleui.flashcards3.web.views.icons :as icons]
     [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]]))
 
@@ -17,8 +17,8 @@
   [:div
    [:div.flex.justify-center
     [:a {:href next-href}
-     [:img {:src (get-src src)
-            :src2 (get-src src2)
+     [:img {:src (get-src2 src)
+            :src2 (get-src2 src2)
             :style {:height "80vh"}
             :onerror "fixSrc(event.target)"}]]]
    [:div.text-center.pt-8.opacity-0.transition-opacity.duration-500.text-xl
@@ -69,8 +69,8 @@
        [:a {:href next-href}
         [:div {:class (format "grid grid-rows-%s grid-cols-%s" grid grid)}
          (for [[src2 src] (nth slides step)]
-           [:img {:src (get-src src)
-                  :src2 (get-src src2)
+           [:img {:src (get-src2 src)
+                  :src2 (get-src2 src2)
                   :onerror "fixSrc(event.target)"}])]]
        :else
        (let [[src2 src] (nth slides step)
@@ -79,8 +79,8 @@
            (reveal-disp next-href src2 src note)
            [:a {:href next-href}
             [:div.flex.justify-center
-             [:img {:src (get-src src)
-                    :src2 (get-src src2)
+             [:img {:src (get-src2 src)
+                    :src2 (get-src2 src2)
                     :style {:max-width "1000px"}
                     :onerror "fixSrc(event.target)"}]]])))]))
 
