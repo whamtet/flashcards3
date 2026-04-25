@@ -52,6 +52,6 @@
   (map png->jpg files))
 
 (defn input-stream [local_id]
-  (io/input-stream (format-img local_id)))
+  (->> local_id format-img (str "local/") io/input-stream))
 
 (def supported-types (ImageIO/getReaderMIMETypes))
