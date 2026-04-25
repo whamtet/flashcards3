@@ -9,7 +9,7 @@
 (defn- inc-mod [x]
   (mod (inc x) 4))
 (defn- font-size [x]
-  (str (max 0.6 (dec x)) "em"))
+  (str (max 0.7 (dec x)) "em"))
 
 [:div.grid.grid-rows-1.flex-1.min-h-0]
 [:div.grid-cols-1]

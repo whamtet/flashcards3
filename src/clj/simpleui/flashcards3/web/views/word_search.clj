@@ -6,7 +6,7 @@
     [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]]))
 
 (defcomponent panel [req ^:long grid-size]
-  (let [grid-size (or grid-size 10)
+  (let [grid-size (or grid-size 12)
         {:keys [grid words]} (word-search/ws-grid
                               query-fn
                               slideshow_id
