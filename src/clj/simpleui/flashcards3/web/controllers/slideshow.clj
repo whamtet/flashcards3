@@ -122,8 +122,7 @@
   (->> (get-slideshow-slides query-fn slideshow_id)
        count
        range
-       shuffle
-       (take 4)))
+       shuffle))
 
 (defn jtd [query-fn slideshow_id images]
   (map (get-slideshow-slides query-fn slideshow_id) images))

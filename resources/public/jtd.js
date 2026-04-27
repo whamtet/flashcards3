@@ -1,26 +1,23 @@
 const $ = x => document.querySelector(x);
 
-const listen = () => {
-    $('#screen').addEventListener('click', function (e) {
-        e.preventDefault();
-        const vw = window.innerWidth;
-        const vh = window.innerHeight;
+const click = (j, e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
 
-        const x = e.clientX; // distance from left edge of viewport
-        const y = e.clientY; // distance from top edge of viewport
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
 
-        const xPercent = (x / vw) * 100;
-        const yPercent = (y / vh) * 100;
-        console.log('aa', xPercent, yPercent);
+    const xPercent = (x / rect.width) * 100;
+    const yPercent = (y / rect.height) * 100;
 
-        $('#x').value = xPercent;
-        $('#y').value = yPercent;
-        $('#push').click();
-    });
+    $('#i').value = j;
+    $('#x').value = xPercent;
+    $('#y').value = yPercent;
+    $('#push').click();
 
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'z') {
-            $('#pop').click();
-        }
-    });
 }
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'z') {
+        $('#pop').click();
+    }
+});
