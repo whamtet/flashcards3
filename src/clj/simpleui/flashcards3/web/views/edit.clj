@@ -60,6 +60,10 @@
             :href (format "../../word-search/%s/" slideshow_id)
             :target "_blank"}
         (components/button "Word Search")]
+       [:a {:class "mr-2"
+            :href (format "../../jtd/%s/" slideshow_id)
+            :target "_blank"}
+        (components/button "JTD")]
        [:div {:class "cursor-pointer"
               :hx-post "panel:duplicate"
               :hx-confirm "Duplicate?"}

@@ -117,3 +117,7 @@
     (conj-slideshow-note query-fn to-move
                          (slides i)
                          (notes i))))
+
+(defn jtd [query-fn slideshow_id images]
+  (let [slides (get-slideshow-slides query-fn slideshow_id)]
+    (prn 'slides slides)))
