@@ -64,14 +64,15 @@
         xs (push-pop (vec xs) x command)
         ys (push-pop (vec ys) y command)]
     [:div {:hx-target "this"}
-     (for [image images]
-       [:input.preview.hidden {:name "images" :value image}])
-     (for [i is]
-       [:input.preview.hidden {:name "is" :value i}])
-     (for [x xs]
-       [:input.preview.hidden {:name "xs" :value x}])
-     (for [y ys]
-       [:input.preview.hidden {:name "ys" :value y}])
+     [:div.hidden
+      (for [image images]
+        [:input.preview {:name "images" :value image}])
+      (for [i is]
+        [:input.preview {:name "is" :value i}])
+      (for [x xs]
+        [:input.preview {:name "xs" :value x}])
+      (for [y ys]
+        [:input.preview {:name "ys" :value y}])]
      [:form.hidden {:hx-post "preview:push"
                     :hx-include ".preview"}
       [:input#i {:name "i"}]
