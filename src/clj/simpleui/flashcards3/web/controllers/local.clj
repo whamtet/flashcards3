@@ -55,3 +55,11 @@
   (->> local_id format-img (str "local/") io/input-stream))
 
 (def supported-types (ImageIO/getReaderMIMETypes))
+
+(defn all-locals []
+  (->> local-dir
+       .listFiles
+       (keep (fn [f]
+               (when-let [n (->> f .getName (re-find #"\d+"))]
+                 (Long/parseLong n))))
+       set))

@@ -1,6 +1,7 @@
 (ns simpleui.flashcards3.web.controllers.slideshow
   (:require
-    [simpleui.flashcards3.web.controllers.local :as local])
+    [simpleui.flashcards3.web.controllers.local :as local]
+    [simpleui.flashcards3.web.controllers.slideshow.delete :as delete])
   (:import
     java.util.Date))
 
@@ -8,29 +9,20 @@
   (when-not (query-fn :get-slideshow-name {:slideshow_name slideshow_name})
     (query-fn :insert-slideshow {:slideshow_name slideshow_name})))
 
-(defn- read-details [s]
-  (if s
-    (let [{:keys [slides notes updated]} (read-string s)]
-      {:slides slides
-       :notes (if (vector? notes) notes (mapv (constantly "") slides))
-       :updated updated})
-    {:slides []
-     :notes []}))
-
 (defn get-slideshows [query-fn]
   (->> (query-fn :get-slideshows {})
        (sort-by :slideshow_name)
-       (map #(update % :details read-details))))
+       (map #(update % :details delete/read-details))))
 
 (defn get-slideshows-summary [query-fn]
   (->> (query-fn :get-slideshows {})
-       (map #(update % :details read-details))
+       (map #(update % :details delete/read-details))
        (sort-by #(-> % :details :updated) #(compare %2 %1))))
 
 (defn get-slideshow-details [query-fn slideshow_id]
   (-> (query-fn :get-slideshow {:slideshow_id slideshow_id})
       :details
-      read-details))
+      delete/read-details))
 (defn get-slideshow-slides [query-fn slideshow_id]
   (:slides
     (get-slideshow-details query-fn slideshow_id)))
@@ -60,12 +52,8 @@
       slideshow_id)))
 
 (defn delete-slideshow [query-fn slideshow_id]
-  ;; TODO - check all references before deleting
-  #_
-  (doseq [[slide] (get-slideshow-slides query-fn slideshow_id)]
-    (when (number? slide)
-      (local/delete slide)))
-  (query-fn :slideshow-delete {:slideshow_id slideshow_id}))
+  (query-fn :slideshow-delete {:slideshow_id slideshow_id})
+  (delete/clean-files query-fn))
 
 (defn- update-slides [query-fn slideshow_id f & args]
   (as-> (get-slideshow-details query-fn slideshow_id) $
@@ -121,7 +109,8 @@
 (defn down-slideshow [query-fn slideshow_id i]
   (update-slides query-fn slideshow_id move-down-v i))
 (defn delete-slide [query-fn slideshow_id i]
-  (update-slides query-fn slideshow_id del-v i))
+  (update-slides query-fn slideshow_id del-v i)
+  (delete/clean-files query-fn))
 
 (defn copy-slide [query-fn slideshow_id i to-move]
   (let [{:keys [slides notes]} (get-slideshow-details query-fn slideshow_id)]
