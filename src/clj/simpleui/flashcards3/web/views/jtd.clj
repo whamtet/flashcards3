@@ -11,6 +11,24 @@
     "pop" (if (empty? xs) xs (pop xs))
     xs))
 
+(defn- skip-images [images skip-i]
+  (if skip-i
+    (concat (take skip-i images) (drop (inc skip-i) images))
+    images))
+
+(defn update-i [skip-i]
+  (fn [i x y]
+    (cond
+      (< i skip-i) [i x y]
+      (< skip-i i) [(dec i) x y])))
+(defn- third [x]
+  (x 2))
+(defn- update-preview [is xs ys skip-i]
+  (if skip-i
+    (let [joined (filter identity (map (update-i skip-i) is xs ys))]
+      [(map first joined) (map second joined) (map third joined)])
+    [is xs ys]))
+
 (def width "500px")
 (def height "400px")
 (def height2 "500px")
@@ -42,27 +60,32 @@
      [:svg {:width width
             :height height
             :style "position:absolute;top:0;left:0;"
+            :oncontextmenu (format "rightclick(%s, event)" j)
             :onclick (format "click(%s, event)" j)}
       (->> (map
             (fn [i x y]
               (when (= i j) [x y])) is xs ys)
            (filter identity)
-           (map-indexed point))]]))
+           (map-indexed point))]
+     [:div.absolute.left-2.top-2.text-2xl (inc j)]]))
 
 (defcomponent ^:endpoint preview [req
                                   ^:longs images
                                   ^:longs is
                                   ^:doubles xs
                                   ^:doubles ys
+                                  ^:long skip-i
                                   ^:long i
                                   ^:double x
                                   ^:double y
                                   command]
   (let [images (or (not-empty images) (slideshow/jtd-images query-fn slideshow_id))
+        images (skip-images images skip-i)
         srcs (slideshow/jtd query-fn slideshow_id images)
         is (push-pop (vec is) i command)
         xs (push-pop (vec xs) x command)
-        ys (push-pop (vec ys) y command)]
+        ys (push-pop (vec ys) y command)
+        [is xs ys] (update-preview is xs ys skip-i)]
     [:div {:hx-target "this"}
      [:div.hidden
       (for [image images]
@@ -82,6 +105,10 @@
      [:form.hidden {:hx-post "preview:pop"
                     :hx-include ".preview"}
       [:input#pop {:type "submit"}]]
+     [:form.hidden {:hx-delete "preview:skip"
+                    :hx-include ".preview"}
+      [:input#skip-i {:name "skip-i"}]
+      [:input#skip {:type "submit"}]]
      [:div.flex.flex-wrap {:style {:width full-width}}
       (map-indexed (flex-item is xs ys) srcs)]]))
 

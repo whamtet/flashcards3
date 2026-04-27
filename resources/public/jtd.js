@@ -14,7 +14,15 @@ const click = (j, e) => {
     $('#y').value = yPercent;
     $('#push').click();
 
-}
+};
+
+const rightclick = (j, e) => {
+    e.preventDefault();
+    if (confirm('Skip image?')) {
+        $('#skip-i').value = j;
+        $('#skip').click();
+    }
+};
 
 document.addEventListener('keydown', (event) => {
     if (event.key === 'z') {
