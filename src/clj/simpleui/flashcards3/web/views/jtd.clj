@@ -9,22 +9,43 @@
 (defn- push-pop [xs x command]
   (case command
     "push" (conj xs x)
-    "pop" (pop xs)
+    "pop" (if (empty? xs) xs (pop xs))
     xs))
+
+(defn- img [[_ src]]
+  [:img {:class "w-1/2"
+         :style {:height "50vh"}
+         :src (components/get-src src)}])
 
 (defcomponent ^:endpoint preview [req
                                   ^:longs images
-                                  ^:floats xs
-                                  ^:floats ys
-                                  ^:float x
-                                  ^:float y
+                                  ^:doubles xs
+                                  ^:doubles ys
+                                  ^:double x
+                                  ^:double y
                                   command]
-  (let [images (slideshow/jtd query-fn slideshow_id images)
-        xs (push-pop (or xs []) x command)
-        ys (push-pop (or ys []) y command)]
+  (let [images (or (not-empty images) (slideshow/jtd-images query-fn slideshow_id))
+        srcs (slideshow/jtd query-fn slideshow_id images)
+        xs (push-pop (vec xs) x command)
+        ys (push-pop (vec ys) y command)]
     [:div {:hx-target "this"}
-     [:form.hidden {:hx-post "preview:push"}
-      [:input#x ]]]))
+     (for [image images]
+       [:input.hidden.preview {:name "images" :value image}])
+     (for [x xs]
+       [:input.hidden.preview {:name "xs" :value x}])
+     (for [y ys]
+       [:input.hidden.preview {:name "ys" :value y}])
+     [:form.hidden {:hx-post "preview:push"
+                    :hx-include ".preview"}
+      [:input#x {:name "x"}]
+      [:input#y {:name "y"}]
+      [:input#push {:type "submit"}]]
+     [:form.hidden {:hx-post "preview:pop"
+                    :hx-include ".preview"}
+      [:input#pop {:type "submit"}]]
+     [:div#screen.flex.flex-wrap
+      (map img srcs)]
+     [:script "setTimeout(() => listen(), 100)"]]))
 
 (defn ui-routes [{:keys [query-fn]}]
   (simpleui/make-routes

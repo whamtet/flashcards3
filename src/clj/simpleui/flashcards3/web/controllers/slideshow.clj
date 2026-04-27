@@ -118,6 +118,12 @@
                          (slides i)
                          (notes i))))
 
+(defn jtd-images [query-fn slideshow_id]
+  (->> (get-slideshow-slides query-fn slideshow_id)
+       count
+       range
+       shuffle
+       (take 4)))
+
 (defn jtd [query-fn slideshow_id images]
-  (let [slides (get-slideshow-slides query-fn slideshow_id)]
-    (prn 'slides slides)))
+  (map (get-slideshow-slides query-fn slideshow_id) images))
