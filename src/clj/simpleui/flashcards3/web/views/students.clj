@@ -64,6 +64,9 @@
          (for [class classes]
            [:div {:_ (quick-submit class)} (components/button class)])]
         [:input {:class "rounded-md border mt-2 p-2 w-full"
+                 :name "extra"
+                 :placeholder "Extra Class Info"}]
+        [:input {:class "rounded-md border mt-2 p-2 w-full"
                  :name "url"
                  :placeholder "URL"}]
         [:input#class {:type "hidden" :name "class"}]]))

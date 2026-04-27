@@ -32,12 +32,12 @@
          (jt/local-date-time "ddMMyyyyHHmm")
          (jt/format "EEE HH:mm"))))
 
-(defn- disp [s]
+(defn- disp [extra s]
   (.trim
-    (str (course-name s) " " (local-date-time s))))
+    (str extra " " (course-name s) " " (local-date-time s))))
 
-(defn assoc-students [url students]
-  (update-students assoc (disp url) {:students students :updated (Date.)}))
+(defn assoc-students [extra url students]
+  (update-students assoc (disp extra url) {:students students :updated (Date.)}))
 
 (defn get-classes []
   (keys (slurp-students)))

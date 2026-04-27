@@ -82,13 +82,13 @@
          (re-seq r)
          (map get-student))))
 
-(defn parse [{{:keys [questions students stars icon url class]} :params
+(defn parse [{{:keys [questions students stars icon url class extra]} :params
               auth? :basic-authentication}]
   (let [students (get-students auth? students class)
         stars (when (not-empty stars) (Long/parseLong stars))
         url (when url (.trim url))]
     (when (and auth? (not-empty url))
-      (students-persist/assoc-students url students))
+      (students-persist/assoc-students extra url students))
     (disp
      (when class (students-persist/get-updated class))
      (parse-questions questions)
