@@ -12,8 +12,10 @@
     1))
 
 (defn- get-default [query-fn slideshow_id]
-  (+ 10
-     (* 2 (parse-level (slideshow/get-slideshow-name query-fn slideshow_id)))))
+  (-> (slideshow/get-slideshow-name query-fn slideshow_id)
+      parse-level
+      (* 2)
+      (+ 10)))
 
 (defcomponent panel [req ^:long grid-size]
   (let [grid-size (or grid-size (get-default query-fn slideshow_id))
