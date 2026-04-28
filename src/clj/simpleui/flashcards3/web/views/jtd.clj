@@ -29,10 +29,10 @@
       [(map first joined) (map second joined) (map third joined)])
     [is xs ys]))
 
-(def width "500px")
-(def height "400px")
-(def height2 "500px")
-(def full-width "1000px")
+(def width "350px")
+(def height "300px")
+(def height2 "350px")
+(def full-width "700px")
 
 (defn- img-disp [[_ src]]
   [:img {:class "print:hidden absolute"
@@ -87,7 +87,8 @@
         ys (push-pop (vec ys) y command)
         [is xs ys] (update-preview is xs ys skip-i)]
     [:div {:hx-target "this"}
-     [:div.hidden
+     [:form.hidden {:method "POST"
+                    :action "../../api/pdf-jtd"}
       (for [image images]
         [:input.preview {:name "images" :value image}])
       (for [i is]
@@ -95,7 +96,8 @@
       (for [x xs]
         [:input.preview {:name "xs" :value x}])
       (for [y ys]
-        [:input.preview {:name "ys" :value y}])]
+        [:input.preview {:name "ys" :value y}])
+      [:input#pdf {:type "submit"}]]
      [:form.hidden {:hx-post "preview:push"
                     :hx-include ".preview"}
       [:input#i {:name "i"}]

@@ -4,6 +4,7 @@
     [simpleui.flashcards3.web.controllers.health :as health]
     [simpleui.flashcards3.web.controllers.local :as local]
     [simpleui.flashcards3.web.controllers.pdf :as pdf]
+    [simpleui.flashcards3.web.controllers.pdf-jtd :as pdf-jtd]
     [simpleui.flashcards3.web.controllers.students :as students]
     [simpleui.flashcards3.web.middleware.auth :as auth]
     [simpleui.flashcards3.web.middleware.exception :as exception]
@@ -52,6 +53,13 @@
                   :slideshow_id
                   Long/parseLong
                   (pdf/get-pdf query-fn))})]
+   ["/pdf-jtd"
+    (fn [req]
+      {:status 200
+       :headers {"Content-Type" "application/pdf"}
+       :body (->> req
+                  :params
+                  pdf-jtd/pdf)})]
    ["/cache"
     (fn [req]
       (-> req

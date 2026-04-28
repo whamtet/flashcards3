@@ -28,4 +28,7 @@ document.addEventListener('keydown', (event) => {
     if (event.key === 'z') {
         $('#pop').click();
     }
+    if (event.key === 'p') {
+        $('#pdf').click();
+    }
 });
