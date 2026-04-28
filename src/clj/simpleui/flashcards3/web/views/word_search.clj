@@ -1,12 +1,22 @@
 (ns simpleui.flashcards3.web.views.word-search
   (:require
     [simpleui.core :as simpleui]
+    [simpleui.flashcards3.web.controllers.slideshow :as slideshow]
     [simpleui.flashcards3.web.controllers.word-search :as word-search]
     [simpleui.flashcards3.web.views.components :as components]
     [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]]))
 
+(defn- parse-level [s]
+  (if-let [[_ match] (re-find #"(\d)\." s)]
+    (Long/parseLong match)
+    1))
+
+(defn- get-default [query-fn slideshow_id]
+  (+ 10
+     (* 2 (parse-level (slideshow/get-slideshow-name query-fn slideshow_id)))))
+
 (defcomponent panel [req ^:long grid-size]
-  (let [grid-size (or grid-size 12)
+  (let [grid-size (or grid-size (get-default query-fn slideshow_id))
         {:keys [grid words]} (word-search/ws-grid
                               query-fn
                               slideshow_id
