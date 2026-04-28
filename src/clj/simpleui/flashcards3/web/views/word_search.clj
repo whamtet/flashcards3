@@ -8,7 +8,7 @@
 
 (defn- parse-level [s]
   (if-let [[_ match] (re-find #"(\d)\." s)]
-    (Long/parseLong match)
+    (min (Long/parseLong match) 30)
     1))
 
 (defn- get-default [query-fn slideshow_id]
