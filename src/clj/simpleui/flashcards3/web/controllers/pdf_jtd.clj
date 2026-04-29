@@ -34,10 +34,13 @@
           :fill "black"}
    (str (inc i))])
 
-(def x-inc [2 52 2 52 2 52])
-(def x-scale 0.46)
-(def y-inc [5/300 5/300 35 35 70 70])
-(def y-scale 0.3)
+(def margin 2)
+(def x-inc [margin (+ 50 margin) margin (+ 50 margin) margin (+ 50 margin)])
+(def x-scale (* (- 50 (* 2 margin)) 0.01))
+(def y-inc [(* margin 2/3) (* margin 2/3)
+            (+ 100/3 (* margin 2/3)) (+ 100/3 (* margin 2/3))
+            (+ 200/3 (* margin 2/3)) (+ 200/3 (* margin 2/3))])
+(def y-scale (* (- 100/3 (* 2 margin)) 0.01))
 
 (defn- points [[i points]]
   (list
