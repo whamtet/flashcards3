@@ -26,14 +26,23 @@
            :fill "black"}
     (str (inc i))]])
 
+(defn- picture-label [i x y]
+  [:text {:x (str (double x) "%")
+          :y (str (double y) "%")
+          :font-size 5
+          :fill "black"}
+   (str (inc i))])
+
 (def x-inc [0 50 0 50 0 50])
 (def y-inc [0 0 100/3 100/3 200/3 200/3])
 
 (defn- points [[i points]]
-  (map-indexed
-   (fn [j [_ x y]]
-     (point j (+ (* 0.5 x) (x-inc i)) (+ (/ y 3) (y-inc i))))
-   points))
+  (list
+   (picture-label i (+ (x-inc i) 1) (+ 4.5 (y-inc i)))
+   (map-indexed
+    (fn [j [_ x y]]
+      (point j (+ (* 0.5 x) (x-inc i)) (+ (/ y 3) (y-inc i))))
+    points)))
 
 (def margin 10)
 (def cell-height 240)
