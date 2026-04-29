@@ -82,6 +82,7 @@
   (let [images (or (not-empty images) (slideshow/jtd-images query-fn slideshow_id))
         images (skip-images images skip-i)
         srcs (slideshow/jtd query-fn slideshow_id images)
+        words (slideshow/jtd-words query-fn slideshow_id images)
         is (push-pop (vec is) i command)
         xs (push-pop (vec xs) x command)
         ys (push-pop (vec ys) y command)
@@ -90,6 +91,7 @@
      [:form.hidden {:method "POST"
                     :target "_blank"
                     :action "../../api/pdf-jtd"}
+      [:input {:name "words" :value (->> words (take 6) vec pr-str)}]
       (for [image images]
         [:input.preview {:name "images" :value image}])
       (for [i is]

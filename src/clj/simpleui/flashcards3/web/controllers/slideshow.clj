@@ -126,3 +126,5 @@
 
 (defn jtd [query-fn slideshow_id images]
   (map (get-slideshow-slides query-fn slideshow_id) images))
+(defn jtd-words [query-fn slideshow_id images]
+  (map (get-slideshow-notes query-fn slideshow_id) images))

@@ -1,5 +1,6 @@
 (ns simpleui.flashcards3.web.controllers.pdf-jtd
   (:require
+    [clojure.string :as string]
     [hiccup.core :as h]
     [clj-pdf.core :as pdf]
     [simpleui.flashcards3.util :as util])
@@ -33,15 +34,17 @@
           :fill "black"}
    (str (inc i))])
 
-(def x-inc [0 50 0 50 0 50])
-(def y-inc [0 0 100/3 100/3 200/3 200/3])
+(def x-inc [2 52 2 52 2 52])
+(def x-scale 0.46)
+(def y-inc [5/300 5/300 35 35 70 70])
+(def y-scale 0.3)
 
 (defn- points [[i points]]
   (list
    (picture-label i (+ (x-inc i) 1) (+ 4.5 (y-inc i)))
    (map-indexed
     (fn [j [_ x y]]
-      (point j (+ (* 0.5 x) (x-inc i)) (+ (/ y 3) (y-inc i))))
+      (point j (+ (* x-scale x) (x-inc i)) (+ (* y-scale y) (y-inc i))))
     points)))
 
 (def margin 10)
@@ -56,18 +59,20 @@
    [(Double/parseDouble s)]
    (map #(Double/parseDouble %) s)))
 
-(defn pdf [{:keys [is xs ys]}]
+(defn pdf [{:keys [is xs ys words]}]
  (let [out (ByteArrayOutputStream.)
        is (parse-longs is)
        xs (parse-doubles xs)
-       ys (parse-doubles ys)]
+       ys (parse-doubles ys)
+       words (->> is distinct (map (read-string words)) shuffle (string/join ", "))]
    ;; produce PDF in another thread
    (pdf/pdf
         [{:size :a4
           :left-margin   margin
           :right-margin  margin
           :top-margin    margin
-          :bottom-margin margin}
+          :bottom-margin margin
+          :footer {:text words :page-numbers false}}
 
          [:pdf-table {:width-percent 100}
           [50 50]
