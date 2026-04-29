@@ -88,6 +88,7 @@
         [is xs ys] (update-preview is xs ys skip-i)]
     [:div {:hx-target "this"}
      [:form.hidden {:method "POST"
+                    :target "_blank"
                     :action "../../api/pdf-jtd"}
       (for [image images]
         [:input.preview {:name "images" :value image}])
