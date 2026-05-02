@@ -9,3 +9,11 @@
 (defn get-readings [query-fn]
   (->> (query-fn :get-readings {})
        (sort-by :reading_name util/compare-names)))
+
+(defn reading-name [query-fn reading_id reading_name]
+  (query-fn :reading-name {:reading_id reading_id :reading_name reading_name}))
+(defn reading-details [query-fn reading_id details]
+  (query-fn :reading-details {:reading_id reading_id :details details}))
+
+(defn get-reading [query-fn reading_id]
+  (query-fn :get-reading {:reading_id reading_id}))

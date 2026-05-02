@@ -15,6 +15,8 @@ select * from slideshow;
 select * from reading;
 -- :name get-slideshow :query :one
 select * from slideshow where slideshow_id = :slideshow_id
+-- :name get-reading :query :one
+select * from reading where reading_id = :reading_id
 -- :name get-slideshow-name :query :one
 select * from slideshow where slideshow_name = :slideshow_name
 -- :name get-reading-name :query :one
