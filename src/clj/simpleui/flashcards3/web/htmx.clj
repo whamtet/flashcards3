@@ -57,7 +57,7 @@
 
 (def optionals
   '{slideshow_id [slideshow_id (Long/parseLong (:slideshow_id params))]
-    reading_id [reading_id (Long/parseLong (:reading_id params))]
+    reading_id [reading_id (some-> params :reading_id Long/parseLong)]
     step [step (Long/parseLong (:step params))]
     post? [post? (simpleui/post? req)]})
 

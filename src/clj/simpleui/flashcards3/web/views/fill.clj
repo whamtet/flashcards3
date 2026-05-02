@@ -110,7 +110,7 @@
                :required true
                :name "text"}
     (or text
-        (when (:basic-authentication req)
+        (when (and (:basic-authentication req) reading_id)
           (reading/get-details query-fn reading_id)))]])
 
 (defn ui-routes [{:keys [query-fn]}]
