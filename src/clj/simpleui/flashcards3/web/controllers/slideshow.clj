@@ -9,9 +9,22 @@
   (when-not (query-fn :get-slideshow-name {:slideshow_name slideshow_name})
     (query-fn :insert-slideshow {:slideshow_name slideshow_name})))
 
+(defn- compare-possible-nums [a b]
+  (if (and a b (re-find #"^\d+$" a) (re-find #"^\d+$" b))
+    (- (Long/parseLong a) (Long/parseLong b))
+    (compare a b)))
+(defn- compare-bits [[a & as] [b & bs]]
+  (let [c (compare-possible-nums a b)]
+    (if (= 0 c)
+      (compare-bits as bs)
+      c)))
+(defn- compare-names [a b]
+  (compare-bits
+   (->> a .toLowerCase (re-seq #"\d+|\D+"))
+   (->> b .toLowerCase (re-seq #"\d+|\D+"))))
 (defn get-slideshows [query-fn]
   (->> (query-fn :get-slideshows {})
-       (sort-by :slideshow_name)
+       (sort-by :slideshow_name compare-names)
        (map #(update % :details delete/read-details))))
 
 (defn get-slideshows-summary [query-fn]
