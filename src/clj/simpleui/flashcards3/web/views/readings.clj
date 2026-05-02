@@ -26,7 +26,11 @@
      (reading-button reading_id reading_name)
      [:div.mr-2 ": "]
      [:a.text-clj-blue.mr-2 (href (format "../fills/%s/" reading_id))
-      "Fill"]]]])
+      "Fill"]
+     [:div.mr-2 ": "]
+     [:a.text-clj-blue.mr-2 (href (format "../scramble/%s/" reading_id))
+      "Scramble"]
+     ]]])
 
 (defcomponent ^:endpoint editor [req reading-name details command]
   (case command

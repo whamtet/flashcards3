@@ -23,20 +23,17 @@
     (.replace s ".min" "")
     s))
 
-(defn- scripts [js hyperscript? stripe?]
+(defn- scripts [js {:keys [hyperscript? fitty?]}]
   (cond-> (map resource-cache/cache-suffix js)
           hyperscript? (conj (unminify "https://unpkg.com/hyperscript.org@0.9.12/dist/_hyperscript.min.js"))
-          stripe? (conj (resource-cache/cache-suffix "/checkout.js")
-                        "https://js.stripe.com/v3/")))
+          fitty? (conj "https://cdn.jsdelivr.net/npm/fitty@2.3.6/dist/fitty.min.js")))
 
-(defn page-htmx [{:keys [css js hyperscript? stripe?]} & body]
+(defn page-htmx [{:keys [css js] :as opts} & body]
   (page
    [:head
     [:meta {:charset "UTF-8"}]
     [:title "SimpleUI Flashcards"]
     [:link {:rel "icon" :href "/logo_dark.svg"}]
-    (when stripe?
-          [:link {:rel "stylesheet" :href "/checkout.css"}])
     (for [sheet css]
       [:link {:rel "stylesheet" :href (resource-cache/cache-suffix sheet)}])]
    [:body
@@ -45,7 +42,7 @@
     (map
      (fn [src]
        [:script {:src src}])
-     (scripts js hyperscript? stripe?))
+     (scripts js opts))
     [:script {:src
               (unminify "https://unpkg.com/htmx.org@1.9.5/dist/htmx.min.js")}]
     [:script "htmx.config.defaultSwapStyle = 'outerHTML';"]]))

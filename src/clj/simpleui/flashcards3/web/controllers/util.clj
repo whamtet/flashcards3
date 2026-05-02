@@ -6,7 +6,7 @@
     (compare a b)))
 (defn- compare-bits [[a & as] [b & bs]]
   (let [c (compare-possible-nums a b)]
-    (if (= 0 c)
+    (if (and a (= 0 c))
       (compare-bits as bs)
       c)))
 (defn compare-names [a b]

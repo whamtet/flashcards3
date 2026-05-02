@@ -20,3 +20,9 @@
 (defn get-details [query-fn reading_id]
   (:details
     (get-reading query-fn reading_id)))
+(defn get-paragraphs [query-fn reading_id]
+  (-> (get-details query-fn reading_id)
+      .trim
+      (.split "\n\n")
+      seq
+      shuffle))
