@@ -4,6 +4,7 @@
     [simpleui.core :as simpleui]
     [simpleui.flashcards3.env :refer [prod?]]
     [simpleui.flashcards3.web.views.components :as components]
+    [simpleui.flashcards3.web.controllers.reading :as reading]
     [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]]))
 
 (def extension 2)
@@ -108,14 +109,17 @@
                :style {:height "80vh"}
                :required true
                :name "text"}
-    text]])
+    (or text
+        (when (:basic-authentication req)
+          (reading/get-details query-fn reading_id)))]])
 
 (defn ui-routes [{:keys [query-fn]}]
   (simpleui/make-routes
    ""
    [query-fn]
    (fn [req]
-     (page-htmx
-      {:css ["../output.css"]
-       :js ["../fill.js"]}
-      (edit req)))))
+     (let [prefix (when (:basic-authentication req) "../")]
+       (page-htmx
+        {:css [(str prefix "../output.css")]
+         :js [(str prefix "../fill.js")]}
+        (-> req (assoc :query-fn query-fn) edit))))))

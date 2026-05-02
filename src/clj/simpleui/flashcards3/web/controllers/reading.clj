@@ -17,3 +17,6 @@
 
 (defn get-reading [query-fn reading_id]
   (query-fn :get-reading {:reading_id reading_id}))
+(defn get-details [query-fn reading_id]
+  (:details
+    (get-reading query-fn reading_id)))

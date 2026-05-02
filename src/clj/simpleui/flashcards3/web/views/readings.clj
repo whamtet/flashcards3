@@ -24,9 +24,9 @@
    [:div.relative.group.inline-flex.items-center
     [:div.p-2.text-2xl.flex.items-center
      (reading-button reading_id reading_name)
-     (for [i (range 4)]
-       [:div.text-clj-blue.mr-2.cursor-pointer {:onclick "alert('ok')"}
-        i])]]])
+     [:div.mr-2 ": "]
+     [:a.text-clj-blue.mr-2 (href (format "../fills/%s/" reading_id))
+      "Fill"]]]])
 
 (defcomponent ^:endpoint editor [req reading-name details command]
   (case command
