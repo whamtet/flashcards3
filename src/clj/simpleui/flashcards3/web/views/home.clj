@@ -75,9 +75,14 @@
            :href "../abc.jpg"
            :target "_blank"}
        (components/button "ABC")]
-      [:a {:href "../upbeat.mp3"
+      [:a {:class "my-1 mr-2"
+           :href "../upbeat.mp3"
            :target "_blank"}
-       (components/button "Music")]]
+       (components/button "Music")]
+      [:a {:class "my-1 mr-2"
+           :href "../readings"
+           :target "_blank"}
+       (components/button "Readings")]]
      [:div {:class "right-2 top-2 absolute"}
       [:a {:href "../white.html" :target "_blank"}
        (components/button "White Screen")]]
