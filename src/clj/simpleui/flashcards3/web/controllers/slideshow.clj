@@ -15,10 +15,27 @@
        (sort-by :slideshow_name util/compare-names)
        (map #(update % :details delete/read-details))))
 
+(defn- recent? [x]
+  (and x
+       (<
+        (.getTime (java.util.Date.))
+        (+ (.getTime x)
+           (* 1000 60 60 24 2)))))
+(defn- compare-updated-name
+  [{n1 :slideshow_name {u1 :updated} :details}
+   {n2 :slideshow_name {u2 :updated} :details}]
+  (cond
+    ;; recent decending
+    (and (recent? u1) (recent? u2)) (compare u2 u1)
+    (recent? u1) -1
+    (recent? u2) 1
+    :else ;; name ascending
+    (compare n1 n2)))
+
 (defn get-slideshows-summary [query-fn]
   (->> (query-fn :get-slideshows {})
        (map #(update % :details delete/read-details))
-       (sort-by #(-> % :details :updated) #(compare %2 %1))))
+       (sort-by identity compare-updated-name)))
 
 (defn get-slideshow-details [query-fn slideshow_id]
   (-> (query-fn :get-slideshow {:slideshow_id slideshow_id})
