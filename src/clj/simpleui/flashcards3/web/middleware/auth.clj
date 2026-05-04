@@ -10,4 +10,4 @@
 
 (defn wrap-auth [handler]
   (cond-> handler
-    true (wrap-basic-authentication authenticated?)))
+    prod? (wrap-basic-authentication authenticated?)))

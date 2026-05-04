@@ -1,12 +1,20 @@
 (ns simpleui.flashcards3.web.views.play-guess
   (:require
     [clojure.java.io :as io]
+    [clojure.set :as set]
     [simpleui.core :as simpleui]
     [simpleui.flashcards3.web.views.components :refer [get-src]]
     [simpleui.flashcards3.web.controllers.slideshow :as slideshow]
     [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]]))
 
 (def ten (-> "ten.txt" io/resource slurp .trim (.split "\n") seq))
+
+(defn get-names [n exclusions]
+  (->> exclusions
+       set
+       (set/difference (set ten))
+       shuffle
+       (take n)))
 
 (defn- square [title [src2 src]]
   [:div.relative.border

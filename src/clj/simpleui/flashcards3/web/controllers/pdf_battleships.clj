@@ -87,16 +87,25 @@
             (repeat (count top) "")
             word))))))
 
-(defn pdf [{:keys [left top]}]
+(defn- shorter [a b]
+  (let [c (min (count a) (count b))]
+    [(take c a) (take c b)]))
+
+(defn pdf [{:keys [left1 top1 left2 top2]}]
   (let [out (ByteArrayOutputStream.)
-        left (split-lines left)
-        top (split-lines top)
-        m (count left)
-        n (count top)
+        left1 (split-lines left1)
+        left2 (split-lines left2)
+        top1 (split-lines top1)
+        top2 (split-lines top2)
+        [left1 left2] (shorter left1 left2)
+        [top1 top2] (shorter top1 top2)
+        m (count left1)
+        n (count top1)
         {:keys [placement1 placement2 freqs]} (place/placement m n)
         img (svg-battleship m n)
         legend (legend freqs)
-        table (pdf-table left top)]
+        table1 (pdf-table left1 top1)
+        table2 (pdf-table left2 top2)]
     ;; produce PDF in another thread
     (pdf/pdf
      [{:size :a4
@@ -109,17 +118,17 @@
 
       [:paragraph {:spacing-after 8 :size 14} "My Friend (B)"]
       legend
-      table
+      table1
       [:paragraph {:spacing-after 8 :size 14} "Me (SECRET!!!)"]
-      table
+      table2
       (map img placement1)
       [:pagebreak]
 
       [:paragraph {:spacing-after 8 :size 14} "My Friend (A)"]
       legend
-      table
+      table1
       [:paragraph {:spacing-after 8 :size 14} "Me (SECRET!!!)"]
-      table
+      table2
       (map img placement2)
 
       ]
