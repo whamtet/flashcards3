@@ -1,81 +1,57 @@
 (ns simpleui.flashcards3.web.controllers.battleships.place)
 
-(def battleships
-  [[1 2]
-   [1 3]
-   [1 4]
-   [2 1]
-   [3 1]
-   [4 1]])
-
-(defn- v [i x]
-  (vec (repeat i x)))
-(defn- range2 [i1 i2 j1 j2]
-  (for [i (range i1 i2) j (range j1 j2)]
+(defn- range-restricted [i1 i2 m]
+  (range (max i1 0) (min i2 m)))
+(defn- range2 [i1 i2 j1 j2 m n]
+  (for [i (range-restricted i1 i2 m)
+        j (range-restricted j1 j2 n)]
     [i j]))
-(defn- rand-start [m id]
-  (rand-int (- (inc m) id)))
 
-(defn- place-once [grid i1 j1 [id jd :as battleship]]
-  (loop [grid grid
-         [coord & coords] (range2 i1 (+ i1 id) j1 (+ j1 jd))
-         [placement & placements] (conj (range 1 (* id jd)) battleship)]
-    (if coord
-      (when-not (get-in grid coord)
-        (recur (assoc-in grid coord placement) coords placements))
+(defn- place-once [grid i j horizontal? m n]
+  (let [i2 (if horizontal? (+ i 2) (+ i 3))
+        j2 (if horizontal? (+ j 3) (+ j 2))
+        perimeter (range2 (dec i) i2 (dec j) j2 m n)
+        available? #(nil? (get-in grid %))
+        fill #(assoc-in %1 %2 true)
+        battleship (if horizontal? [1 2] [2 1])]
+    (if (every? available? perimeter)
+      (assoc-in (reduce fill grid perimeter) [i j] battleship)
       grid)))
 
-(defn- place-randomly [m n grid [id jd :as battleship]]
-  (fn [_]
-    (place-once
-     grid
-     (rand-start m id)
-     (rand-start n jd)
-     battleship)))
+(defn- place-randomly [grid horizontal? m n]
+  (place-once
+   grid
+   (rand-int (dec m))
+   (rand-int (dec n))
+   horizontal?
+   m
+   n))
 
-(defn- fits? [m n [i j]]
-  (and (<= i m) (<= j n)))
-
-(defn- place-battleship [m n]
-  (fn [grid battleship]
-    (if (fits? m n battleship)
-      (or
-       (some (place-randomly m n grid battleship) (range 10))
-       grid)
-      grid)))
-
-(defn- get-grid [m n]
+(defn- place-battleships [m n]
   (reduce
-   (place-battleship m n)
-   (v m (v n nil))
-   (shuffle battleships)))
+    #(place-randomly %1 (odd? %2) m n)
+   (->> nil (repeat n) vec (repeat m) vec)
+   (range 30)))
 
-(defn full-placement [m n]
+(defn- placement-coords [grid]
   (mapcat
    (fn [i row]
      (keep-indexed
-      (fn [j battleship]
-        (when (vector? battleship)
-          {:position [i j]
-           :battleship battleship
-           :length (apply max battleship)}))
+      (fn [j x]
+        (when (vector? x) [i j]))
       row))
    (range)
-   (get-grid m n)))
+   grid))
 
-(defn placement-by-length [m n]
-  (group-by :length (full-placement m n)))
-
-(defn limit-lengths [x other]
-  (mapcat
-   (fn [[length items]]
-     (take (count (other length [])) items))
-   x))
+(defn- clear-excess [grid coords]
+  (reduce #(assoc-in %1 %2 nil) grid coords))
 
 (defn placement [m n]
-  (let [pl1 (placement-by-length m n)
-        pl2 (placement-by-length m n)
-        placement1 (limit-lengths pl1 pl2)]
-    {:placement1 placement1
-     :placement2 (limit-lengths pl2 pl1)
-     :freqs (->> placement1 (map :length) frequencies (sort-by first))}))
+  (let [placement1 (place-battleships m n)
+        coords1 (placement-coords placement1)
+        placement2 (place-battleships m n)
+        coords2 (placement-coords placement2)
+        n (min (count coords1) (count coords2))]
+    [(->> coords1 shuffle (drop n) (clear-excess placement1))
+     (->> coords2 shuffle (drop n) (clear-excess placement2))
+     n]))
