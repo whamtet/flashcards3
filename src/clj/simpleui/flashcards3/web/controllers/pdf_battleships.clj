@@ -8,58 +8,34 @@
   (:import [java.io File
             ByteArrayOutputStream ByteArrayInputStream]))
 
-(util/defm-prod battleship [[i j]]
-  (-> (format "ships/s%s%s.svg" i j)
-      io/resource
-      slurp))
+(util/defm-prod battleship [horizontal?]
+  (->> (if horizontal? "12" "21")
+       (format "public/ships/s%s.svg")
+       io/resource
+       slurp))
 
-(defn x-scale [n b]
-  (* 6 (/ 1 n)
-     (case b
-       [1 2] 1.5
-       [1 3] 1.5
-       [1 4] 1.3
-       1)))
+(defn- x-scale [n horizontal?]
+  (/ (if horizontal? 9 6) n))
 
-(defn- y-scale [b]
-  (case b
-    [1 4] 0.8
-    [1 3] 0.85
-    [2 1] 0.8
-    [3 1] 0.85
-    [4 1] 0.7
-    1))
+(defn- y-scale [horizontal?]
+  (if horizontal? 1 0.8))
 
 (defn- svg-battleship [m n]
-  (let [x-gap (* 78 6 (/ 1 n))]
-    (fn [{[i j] :position b :battleship}]
-      [:svg {:translate [(+ 130 (* x-gap j)) (+ 392 (* 38 (+ i m -5)))] :scale [(x-scale n b) (y-scale b)]}
-       (battleship b)])))
+  (let [x-gap (* 77 6 (/ 1 n))]
+    (fn [[i j horizontal?]]
+      [:svg {:translate [(+ 130 (* x-gap j)) (+ 392 (* 38 (+ i m -5)))] :scale [(x-scale n horizontal?) (y-scale horizontal?)]}
+       (battleship horizontal?)])))
 
-(def key-scales {2 0.7
-                 3 0.6
-                 4 0.5})
-(defn- svg-key [i length]
-  [:svg {:translate [(+ 45 (* i 140)) 65] :scale (key-scales length)}
-   (battleship [1 length])])
+(defn- svg-key [i]
+  [:svg {:translate [(+ 45 (* i 80)) 68] :scale 0.5}
+   (battleship true)])
 
-(defn- pdf-cells [items]
-  (map #(vector :pdf-cell {} %) items))
-
-(defn- legend [battleships]
+(defn- legend [n]
   (list
-   (map-indexed svg-key (keys battleships))
+   (map svg-key (range n))
    [:pdf-table {:width-percent 85 :spacing-after 6 :cell-border false}
-    (apply concat (repeat (count battleships) [200/9 100/9]))
-    (pdf-cells
-     (mapcat
-      (fn [[_b frequency]]
-        [""
-         (str "x" frequency)])
-      battleships))]))
-
-(def margin 10)
-(def left-col-width 20)
+    [100]
+    [[:pdf-cell {} " "]]]))
 
 (defn- split-lines [^String s]
   (map #(.trim %) (.split (.trim s) "\n")))
@@ -67,6 +43,7 @@
 (defn- pdf-cell [x]
   [:pdf-cell {:height 38} x])
 
+(def left-col-width 20)
 (defn- proportions-row [n]
   (conj
    (repeat n (/ (- 100 left-col-width) n))
@@ -101,16 +78,16 @@
         [top1 top2] (shorter top1 top2)
         m (count left1)
         n (count top1)
-        {:keys [placement1 placement2 freqs]} (place/placement m n)
+        [placement1 placement2 num-ships] (place/placement m n)
         img (svg-battleship m n)
-        legend (legend freqs)
+        legend (legend num-ships)
         table1 (pdf-table left1 top1)
         table2 (pdf-table left2 top2)]
     ;; produce PDF in another thread
     (pdf/pdf
      [{:size :a4
-       :left-margin   margin
-       :right-margin  margin
+       :left-margin   15
+       :right-margin  15
        :top-margin    0
        :bottom-margin 0
        :header false
