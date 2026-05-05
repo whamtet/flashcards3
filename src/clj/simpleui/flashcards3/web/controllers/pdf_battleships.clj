@@ -38,7 +38,9 @@
     [[:pdf-cell {} " "]]]))
 
 (defn- split-lines [^String s]
-  (map #(.trim %) (.split (.trim s) "\n")))
+  (if s
+    (map #(.trim %) (.split (.trim s) "\n"))
+    ()))
 
 (defn- pdf-cell [x]
   [:pdf-cell {:height 38} x])
@@ -67,15 +69,34 @@
 (defn- shorter [a b]
   (let [c (min (count a) (count b))]
     [(take c a) (take c b)]))
+(defn- or-empty [a b]
+  (if (empty? (first a)) b a))
 
-(defn pdf [{:keys [left1 top1 left2 top2]}]
+(defn- left-default [demo]
+  (if demo
+    (repeat 3 "")
+    (map str (range 1 7))))
+(defn- top-default [demo]
+  (if demo
+    (repeat 4 "")
+    (list "A" "B" "C" "D" "E" "F" "G")))
+
+(defn pdf [{:keys [left1 top1 left2 top2 demo]}]
   (let [out (ByteArrayOutputStream.)
+
         left1 (split-lines left1)
         left2 (split-lines left2)
         top1 (split-lines top1)
         top2 (split-lines top2)
+
         [left1 left2] (shorter left1 left2)
         [top1 top2] (shorter top1 top2)
+
+        left1 (or-empty left1 (left-default demo))
+        left2 (or-empty left2 (left-default demo))
+        top1 (or-empty top1 (top-default demo))
+        top2 (or-empty top2 (top-default demo))
+
         m (count left1)
         n (count top1)
         [placement1 placement2 num-ships] (place/placement m n)
@@ -90,23 +111,25 @@
        :right-margin  15
        :top-margin    0
        :bottom-margin 0
-       :header false
-       :footer false}
+       :header false}
 
-      [:paragraph {:spacing-after 8 :size 14} "My Friend (B)"]
+      [:paragraph {:spacing-after 8 :size 14} "My Friend"]
       legend
       table1
       [:paragraph {:spacing-after 8 :size 14} "Me (SECRET!!!)"]
       table2
       (map img placement1)
-      [:pagebreak]
 
-      [:paragraph {:spacing-after 8 :size 14} "My Friend (A)"]
-      legend
-      table1
-      [:paragraph {:spacing-after 8 :size 14} "Me (SECRET!!!)"]
-      table2
-      (map img placement2)
+      (when-not demo
+        (list
+         [:pagebreak]
+
+         [:paragraph {:spacing-after 8 :size 14} "My Friend"]
+         legend
+         table1
+         [:paragraph {:spacing-after 8 :size 14} "Me (SECRET!!!)"]
+         table2
+         (map img placement2)))
 
       ]
      out)

@@ -55,6 +55,7 @@
        :headers {"Content-Type" "application/pdf"}
        :body (-> req :params pdf-battleships/pdf)})]
    ["/battleships" (route-data opts) (battleships/ui-routes opts)]
+   ["/battleships-demo" (constantly battleships/demo)]
    ["/blooket" (route-data opts) (blooket/ui-routes opts)]
    ["/blooket-csv"
     (fn [req]

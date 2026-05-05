@@ -4,7 +4,8 @@
     [simpleui.core :as simpleui]
     [simpleui.flashcards3.web.views.components :as components]
     [simpleui.flashcards3.web.views.play-guess :as play-guess]
-    [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]]))
+    [simpleui.flashcards3.web.controllers.pdf-battleships :as pdf-battleships]
+    [simpleui.flashcards3.web.htmx :refer [page-htmx page-simple defcomponent]]))
 
 (defn- parse-exclusions [x]
   (-> x .trim (.split "\n")))
@@ -25,7 +26,9 @@
    [:div.flex.items-center.py-2
     [:input {:type "submit"
              :value "Create"
-             :class "bg-clj-blue py-1.5 px-3 rounded-lg text-white mr-2"}]]
+             :class "bg-clj-blue py-1.5 px-3 rounded-lg text-white mr-2"}]
+    [:a {:href "../battleships-demo" :target "_blank"}
+     (components/button "Demo")]]
    [:div.flex
     [:div.w-80.p-2
      [:div.text-xl.mb-2 "Left 1"]
@@ -76,3 +79,25 @@
      (page-htmx
       {:css ["../output.css"]}
       (form req)))))
+
+(defn- cell [x]
+  [:div.border.text-center.text-2xl {:style {:height "22vh"}} x])
+(def demo
+  (page-simple
+   {:css ["../output.css"]}
+   [:div
+    [:div.grid.grid-cols-5.grid-rows-4.m-8
+     (cell "")
+     (for [letter ["A" "B" "C" "D"]]
+       (cell letter))
+     (for [row [1 2 3]]
+       (list*
+        (cell row)
+        (repeat 4 (cell ""))))]
+    [:div.flex
+     [:iframe {:class "w-1/2"
+               :style {:height "1000px"}
+               :src "pdf-battleships?demo=true"}]
+     [:iframe {:class "w-1/2"
+               :style {:height "1000px"}
+               :src "pdf-battleships?demo=true2"}]]]))

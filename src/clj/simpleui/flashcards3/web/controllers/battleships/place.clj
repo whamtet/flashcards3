@@ -28,7 +28,7 @@
   (place-once data (rand-int (dec m)) (rand-int (dec n)) horizontal? m n))
 
 (defn- place-battleships [m n]
-  (->> 40
+  (->> 50
        range
        (reduce
         #(place-randomly %1 (odd? %2) m n)
