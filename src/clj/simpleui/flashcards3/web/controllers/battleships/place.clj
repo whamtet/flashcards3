@@ -36,8 +36,15 @@
          :battleships ()})
        :battleships))
 
+(defn- place-battleships-well [m n i]
+  (let [a (place-battleships m n)
+        b (place-battleships m n)]
+    (if (and (not= (set a) (set b)) (= (count a) (count b)))
+      [a b (count a)]
+      (if (pos? i)
+        (recur m n (dec i))
+        (let [n (min (count a) (count b))]
+          [(take n a) (take n b) n])))))
+
 (defn placement [m n]
-  (let [placement1 (place-battleships m n)
-        placement2 (place-battleships m n)
-        n (min (count placement1) (count placement2))]
-    [(take n placement1) (take n placement2) n]))
+  (place-battleships-well m n 5))

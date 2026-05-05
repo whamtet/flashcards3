@@ -27,8 +27,12 @@
     [:input {:type "submit"
              :value "Create"
              :class "bg-clj-blue py-1.5 px-3 rounded-lg text-white mr-2"}]
-    [:a {:href "../battleships-demo" :target "_blank"}
-     (components/button "Demo")]]
+    ;; alternate submit
+    [:input {:type "submit"
+             :formaction "../battleships-demo"
+             :formmethod "GET"
+             :value "Demo"
+             :class "bg-clj-blue py-1.5 px-3 rounded-lg text-white mr-2"}]]
    [:div.flex
     [:div.w-80.p-2
      [:div.text-xl.mb-2 "Left 1"]
@@ -82,22 +86,21 @@
 
 (defn- cell [x]
   [:div.border.text-center.text-2xl {:style {:height "22vh"}} x])
-(def demo
-  (page-simple
-   {:css ["../output.css"]}
-   [:div
-    [:div.grid.grid-cols-5.grid-rows-4.m-8
-     (cell "")
-     (for [letter ["A" "B" "C" "D"]]
-       (cell letter))
-     (for [row [1 2 3]]
-       (list*
-        (cell row)
-        (repeat 4 (cell ""))))]
-    [:div.flex
-     [:iframe {:class "w-1/2"
-               :style {:height "1000px"}
-               :src "pdf-battleships?demo=true"}]
-     [:iframe {:class "w-1/2"
-               :style {:height "1000px"}
-               :src "pdf-battleships?demo=true2"}]]]))
+
+(defn demo [{:keys [query-string params]}]
+  (let [[left top] (pdf-battleships/parse-demo params)
+        src (format "pdf-battleships?%s&demo=true" query-string)]
+    (page-simple
+     {:css ["../output.css"]}
+     [:div
+      [:div.grid.grid-cols-5.grid-rows-4.m-8
+       ;; top
+       (cell "") (->> top (take 4) (map cell))
+       (->> left (take 3) (map (fn [left] (list (cell left) (repeat 4 (cell ""))))))]
+      [:div.flex
+       [:iframe {:class "w-1/2"
+                 :style {:height "1000px"}
+                 :src src}]
+       [:iframe {:class "w-1/2"
+                 :style {:height "1000px"}
+                 :src (str src 2)}]]])))

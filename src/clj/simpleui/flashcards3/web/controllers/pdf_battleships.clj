@@ -74,12 +74,19 @@
 
 (defn- left-default [demo]
   (if demo
-    (repeat 3 "")
+    (map str (range 1 4))
     (map str (range 1 7))))
 (defn- top-default [demo]
   (if demo
-    (repeat 4 "")
+    (list "A" "B" "C" "D")
     (list "A" "B" "C" "D" "E" "F" "G")))
+
+(defn parse-demo [{:keys [left1 top1]}]
+  [(or-empty (split-lines left1) (left-default true))
+   (or-empty (split-lines top1) (top-default true))])
+
+(def show-p1? #(contains? #{"true" nil} %))
+(def show-p2? #(contains? #{"true2" nil} %))
 
 (defn pdf [{:keys [left1 top1 left2 top2 demo]}]
   (let [out (ByteArrayOutputStream.)
@@ -89,13 +96,13 @@
         top1 (split-lines top1)
         top2 (split-lines top2)
 
-        [left1 left2] (shorter left1 left2)
-        [top1 top2] (shorter top1 top2)
-
         left1 (or-empty left1 (left-default demo))
         left2 (or-empty left2 (left-default demo))
         top1 (or-empty top1 (top-default demo))
         top2 (or-empty top2 (top-default demo))
+
+        [left1 left2] (shorter left1 left2)
+        [top1 top2] (shorter top1 top2)
 
         m (count left1)
         n (count top1)
@@ -113,24 +120,25 @@
        :bottom-margin 0
        :header false}
 
-      [:paragraph {:spacing-after 8 :size 14} "My Friend"]
-      legend
-      table2
-      [:paragraph {:spacing-after 8 :size 14} "Me (SECRET!!!)"]
-      table1
-      (map img placement1)
-
-      (when-not demo
+      (when (show-p1? demo)
         (list
-         [:pagebreak]
+         [:paragraph {:spacing-after 8 :size 14} "My Friend"]
+         legend
+         table2
+         [:paragraph {:spacing-after 8 :size 14} "Me (SECRET!!!)"]
+         table1
+         (map img placement1)))
 
+      (when-not demo [:pagebreak])
+
+      (when (show-p2? demo)
+        (list
          [:paragraph {:spacing-after 8 :size 14} "My Friend"]
          legend
          table1
          [:paragraph {:spacing-after 8 :size 14} "Me (SECRET!!!)"]
          table2
          (map img placement2)))
-
       ]
      out)
     (ByteArrayInputStream. (.toByteArray out))))
