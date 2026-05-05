@@ -10,7 +10,7 @@
 
 (util/defm-prod battleship [horizontal?]
   (->> (if horizontal? "12" "21")
-       (format "public/ships/s%s.svg")
+       (format "ships/s%s.svg")
        io/resource
        slurp))
 
@@ -115,9 +115,9 @@
 
       [:paragraph {:spacing-after 8 :size 14} "My Friend"]
       legend
-      table1
-      [:paragraph {:spacing-after 8 :size 14} "Me (SECRET!!!)"]
       table2
+      [:paragraph {:spacing-after 8 :size 14} "Me (SECRET!!!)"]
+      table1
       (map img placement1)
 
       (when-not demo
