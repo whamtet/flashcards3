@@ -11,6 +11,7 @@
     [simpleui.flashcards3.web.views.intro :as intro]
     [simpleui.flashcards3.web.views.snl :as snl]
     [simpleui.flashcards3.web.controllers.blooket :as controllers.blooket]
+    [simpleui.flashcards3.web.controllers.email :as email]
     [simpleui.flashcards3.web.controllers.pdf-icons :as controllers.pdf-icons]
     [simpleui.flashcards3.web.controllers.pdf-battleships :as pdf-battleships]
     [simpleui.flashcards3.web.controllers.pdf-snl :as pdf-snl]
@@ -44,6 +45,12 @@
   [["" (route-data opts) (intro/ui-routes opts)]
    ["/fill" (route-data opts) (fill/ui-routes opts)]
    ["/icon-search" (route-data opts) (icon-search/ui-routes opts)]
+   ["/email"
+    (fn [req]
+      (email/send-params (:params req))
+      {:status 200
+       :headers {"Content-Type" "text/html"}
+       :body "ok"})]
    ["/pdf-icon"
     (fn [req]
       {:status 200
