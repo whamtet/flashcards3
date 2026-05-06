@@ -1,5 +1,6 @@
 (ns simpleui.flashcards3.web.routes.open
   (:require
+    [simpleui.response :as response]
     [simpleui.flashcards3.web.middleware.exception :as exception]
     [simpleui.flashcards3.web.middleware.formats :as formats]
     [simpleui.flashcards3.web.views.battleships :as battleships]
@@ -48,9 +49,7 @@
    ["/email"
     (fn [req]
       (email/send-params (:params req))
-      {:status 200
-       :headers {"Content-Type" "text/html"}
-       :body "ok"})]
+      (response/redirect "https://acastream.uk/reply.html"))]
    ["/pdf-icon"
     (fn [req]
       {:status 200
