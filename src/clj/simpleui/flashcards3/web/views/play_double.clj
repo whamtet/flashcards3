@@ -12,18 +12,14 @@
      [[a a] [b] [c]]
      [[a a] [b b] [c]])))
 
-(defn- img-div [i [[src2 src] x]]
+(defn- img-div [i [[_ src] x]]
   (if x
     [:div {:class "flex border-4 border-black w-1/3"}
      (repeat 2
              [:img {:class "max-h-full w-1/2 object-contain"
-                    :src (get-src src)
-                    :src2 (get-src src2)
-                    :onerror "fixSrc(event.target)"}])]
+                    :src (get-src src)}])]
     [:img {:class "max-h-full object-contain w-1/3"
-           :src (get-src src)
-           :src2 (get-src src2)
-           :onerror "fixSrc(event.target)"}]))
+           :src (get-src src)}]))
 
 (defn- text-div [inc]
   (fn [i _]

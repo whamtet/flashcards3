@@ -26,11 +26,9 @@
        [:div.p-6.text-xl "Empty"]
        [:div {:class (format "grid grid-rows-%s grid-cols-%s" grid grid)}
         (keep-indexed
-         (fn [i [src2 src]]
+         (fn [i [_ src]]
            (when-not (exclude? i)
              [:img.cursor-pointer {:src (get-src src)
-                                   :src2 (get-src src2)
-                                   :onerror "fixSrc(event.target)"
                                    :hx-post "panel"
                                    :hx-include ".exclusions"
                                    :hx-vals {"exclusion" i}}]))

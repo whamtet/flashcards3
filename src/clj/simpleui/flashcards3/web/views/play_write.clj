@@ -22,11 +22,9 @@
 (defn- half-column [enlargement slides]
   [:div.flex.flex-col {:style {:height "48vh"}}
    [:div {:class (format "grid grid-rows-1 grid-cols-%s flex-1 min-h-0" (count slides))}
-    (for [[src2 src] (map first slides)]
+    (for [[_ src] (map first slides)]
       [:img {:class "max-h-full w-full object-contain"
              :src (get-src src)
-             :src2 (get-src src2)
-             :onerror "fixSrc(event.target)"
              :hx-get "panel"
              :hx-vals {:enlargement (inc-mod enlargement)}}])]
    (when (pos? enlargement)

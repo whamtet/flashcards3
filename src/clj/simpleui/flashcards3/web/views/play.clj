@@ -13,14 +13,12 @@
       (take curr x)
       (drop (inc curr) x)))))
 
-(defn- reveal-disp [next-href src2 src note]
+(defn- reveal-disp [next-href src note]
   [:div
    [:div.flex.justify-center
     [:a {:href next-href}
      [:img {:src (get-src2 src)
-            :src2 (get-src2 src2)
-            :style {:height "80vh"}
-            :onerror "fixSrc(event.target)"}]]]
+            :style {:height "80vh"}}]]]
    [:div.text-center.pt-8.opacity-0.transition-opacity.duration-500.text-xl
     {:_ "on click remove .opacity-0"}
     note]])
@@ -68,21 +66,17 @@
        grid
        [:a {:href next-href}
         [:div {:class (format "grid grid-rows-%s grid-cols-%s" grid grid)}
-         (for [[src2 src] (nth slides step)]
-           [:img {:src (get-src2 src)
-                  :src2 (get-src2 src2)
-                  :onerror "fixSrc(event.target)"}])]]
+         (for [[_ src] (nth slides step)]
+           [:img {:src (get-src2 src)}])]]
        :else
-       (let [[src2 src] (nth slides step)
+       (let [[_ src] (nth slides step)
              note (nth (slideshow/get-slideshow-notes query-fn slideshow_id) step)]
          (if reveal
-           (reveal-disp next-href src2 src note)
+           (reveal-disp next-href src note)
            [:a {:href next-href}
             [:div.flex.justify-center
              [:img {:src (get-src2 src)
-                    :src2 (get-src2 src2)
-                    :style {:max-width "1000px"}
-                    :onerror "fixSrc(event.target)"}]]])))]))
+                    :style {:max-width "1000px"}}]]])))]))
 
 (defn ui-routes [{:keys [query-fn]}]
   (simpleui/make-routes
