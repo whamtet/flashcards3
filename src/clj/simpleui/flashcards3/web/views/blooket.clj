@@ -14,7 +14,7 @@
              :value "Create"
              :class "bg-clj-blue py-1.5 px-3 rounded-lg text-white mr-2"}]]
    [:div.flex
-    [:div.w-80.p-2
+    [:div.p-2 {:style {:width "500px"}}
      [:div.text-xl.mb-2 "Questions (one per line)"]
      [:textarea {:class "border rounded-md p-2 w-full"
                  :rows 20
