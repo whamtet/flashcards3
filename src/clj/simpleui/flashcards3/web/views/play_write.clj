@@ -7,9 +7,12 @@
     [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]]))
 
 (defn- inc-mod [x]
-  (mod (inc x) 4))
-(defn- font-size [x]
-  (str (max 0.7 (dec x)) "em"))
+  (mod (inc x) 5))
+
+(def font-size
+  ["0.7em" "1em" "2em" "3em" "2em"])
+(def color
+  ["black" "black" "black" "black" "white"])
 
 [:div.grid.grid-rows-1.flex-1.min-h-0]
 [:div.grid-cols-1]
@@ -31,7 +34,8 @@
      [:div {:class (format "grid grid-rows-1 grid-cols-%s" (count slides))}
       (for [note (map second slides)]
         [:div.text-center.tracking-wider
-         {:style {:font-size (font-size enlargement)}} note])])])
+         {:style {:font-size (font-size enlargement)
+                  :color (color enlargement)}} note])])])
 
 (defcomponent ^:endpoint panel [req ^:long enlargement ^:boolean shuff]
   (let [slides (slideshow/get-slideshow-slides-notes query-fn slideshow_id)
