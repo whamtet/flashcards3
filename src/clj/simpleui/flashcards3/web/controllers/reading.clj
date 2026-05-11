@@ -10,10 +10,9 @@
   (->> (query-fn :get-readings {})
        (sort-by :reading_name util/compare-names)))
 
-(defn reading-name [query-fn reading_id reading_name]
-  (query-fn :reading-name {:reading_id reading_id :reading_name reading_name}))
-(defn reading-details [query-fn reading_id details]
-  (query-fn :reading-details {:reading_id reading_id :details details}))
+(defn empty-s? [^String s]
+  (or (not s)
+      (-> s .trim empty?)))
 
 (defn get-reading [query-fn reading_id]
   (query-fn :get-reading {:reading_id reading_id}))
@@ -24,5 +23,14 @@
   (-> (get-details query-fn reading_id)
       .trim
       (.split "\n\n")
-      seq
-      shuffle))
+      seq))
+
+(defn reading-details [query-fn reading_id details]
+  (query-fn :reading-details {:reading_id reading_id :details details}))
+
+(defn reading-name [query-fn reading_id reading_name]
+  (if (and (empty-s? reading_name) (empty-s? (get-details query-fn reading_id)))
+    (do
+      (query-fn :reading-delete {:reading_id reading_id})
+      false)
+    (query-fn :reading-name {:reading_id reading_id :reading_name reading_name})))

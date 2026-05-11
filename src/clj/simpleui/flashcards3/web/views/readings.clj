@@ -30,14 +30,17 @@
      [:div.mr-2 ": "]
      [:a.text-clj-blue.mr-2 (href (format "../scramble-paragraph/%s/" reading_id))
       "Scramble Paragraph"]
+     [:div.mr-2 ": "]
+     [:a.text-clj-blue.mr-2 (href (format "../scramble-sentence/%s/" reading_id))
+      "Scramble Sentence"]
      ]]])
 
 (defcomponent ^:endpoint editor [req reading-name details command]
   (case command
     "reading-name"
-    (do
-      (reading/reading-name query-fn reading_id reading-name)
-      (reading-button reading_id reading-name))
+    (if (reading/reading-name query-fn reading_id reading-name)
+      (reading-button reading_id reading-name)
+      :refresh)
     "details"
     (do
       (reading/reading-details query-fn reading_id details)

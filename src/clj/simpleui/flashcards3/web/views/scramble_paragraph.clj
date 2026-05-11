@@ -8,7 +8,7 @@
       [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]]))
 
 (defn- get-paragraphs [query-fn reading_id]
-  (let [p (reading/get-paragraphs query-fn reading_id)
+  (let [p (shuffle (reading/get-paragraphs query-fn reading_id))
         n (-> p count (* 0.5) long)]
     [(take n p)
      (drop n p)]))
