@@ -28,8 +28,8 @@
      [:a.text-clj-blue.mr-2 (href (format "../fills/%s/" reading_id))
       "Fill"]
      [:div.mr-2 ": "]
-     [:a.text-clj-blue.mr-2 (href (format "../scramble/%s/" reading_id))
-      "Scramble"]
+     [:a.text-clj-blue.mr-2 (href (format "../scramble-paragraph/%s/" reading_id))
+      "Scramble Paragraph"]
      ]]])
 
 (defcomponent ^:endpoint editor [req reading-name details command]

@@ -1,4 +1,4 @@
-(ns simpleui.flashcards3.web.views.scramble
+(ns simpleui.flashcards3.web.views.scramble-paragraph
     (:require
       [simpleui.core :as simpleui]
       [simpleui.flashcards3.env :refer [prod?]]
