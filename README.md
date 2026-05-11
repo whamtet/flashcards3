@@ -1,37 +1,35 @@
-# flashcards3
+# acastream
 
-Start a [REPL](#repls) in your editor or terminal of choice.
+## Features
 
-Start the server with:
+- Battleships
+- Blooket Quiz Generation
+- Dominos
+- Gap Fill
+- Icon PDF
+- Join the Dots
+- Flashcards
+- Spelling Sheet
+- Running Dictation
+- Information Exchange
+- Quiz
+- Sentence Scramble
+- Paragraph Scramble
+- Snakes and Ladders
+- Word Search
 
-```clojure
-(go)
-```
+## Development
 
-The default API is available under http://localhost:3000/api
+    make repl
 
-System configuration is available under `resources/system.edn`.
+In a separate tab
 
-To reload changes:
+    npm run tailwind:watch
 
-```clojure
-(reset)
-```
+## Building
 
-## REPLs
+    make uberjar
 
-### Cursive
+or
 
-Configure a [REPL following the Cursive documentation](https://cursive-ide.com/userguide/repl.html). Using the default "Run with IntelliJ project classpath" option will let you select an alias from the ["Clojure deps" aliases selection](https://cursive-ide.com/userguide/deps.html#refreshing-deps-dependencies).
-
-### CIDER
-
-Use the `cider` alias for CIDER nREPL support (run `clj -M:dev:cider`). See the [CIDER docs](https://docs.cider.mx/cider/basics/up_and_running.html) for more help.
-
-Note that this alias runs nREPL during development. To run nREPL in production (typically when the system starts), use the kit-nrepl library through the +nrepl profile as described in [the documentation](https://kit-clj.github.io/docs/profiles.html#profiles).
-
-### Command Line
-
-Run `clj -M:dev:nrepl` or `make repl`.
-
-Note that, just like with [CIDER](#cider), this alias runs nREPL during development. To run nREPL in production (typically when the system starts), use the kit-nrepl library through the +nrepl profile as described in [the documentation](https://kit-clj.github.io/docs/profiles.html#profiles).
+    make uberjarlight
