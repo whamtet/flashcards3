@@ -17,6 +17,7 @@
     [simpleui.flashcards3.web.views.play-write :as play-write]
     [simpleui.flashcards3.web.views.fill :as fill]
     [simpleui.flashcards3.web.views.scramble-paragraph :as scramble-paragraph]
+    [simpleui.flashcards3.web.views.scramble-sentence :as scramble-sentence]
     [simpleui.flashcards3.web.views.students :as students]
     [simpleui.flashcards3.web.views.word-search :as word-search]
     [integrant.core :as ig]
@@ -55,4 +56,5 @@
    ["/word-search/:slideshow_id" (route-data opts) (word-search/ui-routes opts)]
    ["/fills/:reading_id" (route-data opts) (fill/ui-routes opts)]
    ["/scramble-paragraph/:reading_id" (route-data opts) (scramble-paragraph/ui-routes opts)]
+   ["/scramble-sentence/:reading_id" (route-data opts) (scramble-sentence/ui-routes opts)]
    ["/studentss" (route-data opts) (students/ui-routes opts)]])

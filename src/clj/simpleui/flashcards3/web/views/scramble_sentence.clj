@@ -1,16 +1,22 @@
-(ns simpleui.flashcards3.web.views.scramble-paragraph
+(ns simpleui.flashcards3.web.views.scramble-sentence
     (:require
+      [clojure.string :as string]
       [simpleui.core :as simpleui]
       [simpleui.flashcards3.web.controllers.reading :as reading]
       [simpleui.flashcards3.web.views.components :as components]
       [simpleui.flashcards3.web.views.icons :as icons]
       [simpleui.flashcards3.web.htmx :refer [page-htmx defcomponent]]))
 
-(defn- get-paragraphs [query-fn reading_id]
-  (let [p (shuffle (reading/get-paragraphs query-fn reading_id))
-        n (-> p count (* 0.5) long)]
-    [(take n p)
-     (drop n p)]))
+(defn- inc-i [i paragraphs]
+  (mod (inc i) (count paragraphs)))
+
+(defn- shuffle-sentence [sentence]
+  (->> sentence (re-seq #"\S+") shuffle (string/join " ")))
+(defn- shuffle-sentences [i paragraphs]
+  (-> paragraphs
+      (nth i)
+      (.split "\n")
+      (->> (map shuffle-sentence) shuffle)))
 
 [:div.grid.grid-cols-1]
 [:div.grid-cols-2]
@@ -23,16 +29,21 @@
   [:div.flex.items-center.justify-center.p-4.border
    [:p.fit.text-center.leading-tight
     x]])
-(defn- row [items]
+(defn- row [i items]
   [:div {:class (format "grid grid-cols-%s" (max (count items) 1))
          :style {:height "50vh"}}
    (map paragraph items)])
 
-(defcomponent panel [req]
-  (let [[a b] (get-paragraphs query-fn reading_id)]
-    [:div.h-screen.flex.flex-col
-     (row a)
-     (row b)]))
+(defcomponent ^:endpoint panel [req ^:long i]
+  (let [i (or i 0)
+        paragraphs (reading/get-paragraphs query-fn reading_id)]
+    [:div {:hx-post "panel"
+           :hx-vals {:i (inc-i i paragraphs)}}
+     (->> paragraphs
+          (shuffle-sentences i)
+          (row i))
+     (when post?
+       [:script "fit()"])]))
 
 (defn ui-routes [{:keys [query-fn]}]
   (simpleui/make-routes
