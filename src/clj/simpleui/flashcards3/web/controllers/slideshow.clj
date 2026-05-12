@@ -8,7 +8,9 @@
 
 (defn add-slideshow [query-fn slideshow_name]
   (when-not (query-fn :get-slideshow-name {:slideshow_name slideshow_name})
-    (query-fn :insert-slideshow {:slideshow_name slideshow_name})))
+    (-> (query-fn :insert-slideshow {:slideshow_name slideshow_name})
+        first
+        :slideshow_id)))
 
 (defn get-slideshows [query-fn]
   (->> (query-fn :get-slideshows {})

@@ -1,6 +1,7 @@
 (ns simpleui.flashcards3.web.views.home
     (:require
       [simpleui.core :as simpleui]
+      [simpleui.response :as response]
       [simpleui.flashcards3.env :refer [prod?]]
       [simpleui.flashcards3.web.controllers.slideshow :as slideshow]
       [simpleui.flashcards3.web.views.components :refer [get-src] :as components]
@@ -35,8 +36,8 @@
 (defcomponent ^:endpoint panel [req ^:prompt slideshow-name command]
   (case command
     "new" (when slideshow-name
-            (slideshow/add-slideshow query-fn slideshow-name)
-            :refresh)
+            (when-let [new-id (slideshow/add-slideshow query-fn slideshow-name)]
+              (response/hx-redirect (format "../edit/%s/" new-id))))
     [:div.p-2
      [:div.flex.items-center.mb-1
       [:div {:class "my-1 mr-2"
