@@ -22,52 +22,58 @@
     (let [slideshow-name (slideshow/get-slideshow-name query-fn slideshow_id)
           notes (slideshow/get-slideshow-notes query-fn slideshow_id)
           phrases (string/join "%0A" notes)]
-      [:div.p-2.flex.items-center
-       [:a.mr-2 {:href "../../home/"} icons/home]
-       [:input {:class "p-2 rounded-md border mr-2"
-                :hx-post "name-editor:update"
-                :name "new-name"
-                :value slideshow-name}]
-       [:div {:class "mr-2"
-              :hx-delete "name-editor:delete"
-              :hx-confirm (format "Delete %s?" slideshow-name)}
-        (components/button-warning "Delete")]
-       [:a {:class "mr-2"
-            :href (format "../../api/pdf/%s" slideshow_id)
-            :target "_blank"}
-        (components/button "Download PDF")]
-       [:a {:class "mr-2"
-            :href (format "../../grid/%s/" slideshow_id)
-            :target "_blank"}
-        (components/button "Grid Printout")]
-       [:a {:class "mr-2"
-            :href (format "../../play-guess/%s/" slideshow_id)
-            :target "_blank"}
-        (components/button "Guess")]
-       [:a {:class "mr-2"
-            :href (str "../../snl/?init=" phrases)
-            :target "_blank"}
-        (components/button "SNL")]
-       [:a {:class "mr-2"
-            :href (str "../../blooket/?init=" phrases)
-            :target "_blank"}
-        (components/button "Blooklet")]
-       [:a {:class "mr-2"
-            :href (str "../../battleships/?init=" phrases)
-            :target "_blank"}
-        (components/button "Battleships")]
-       [:a {:class "mr-2"
-            :href (format "../../word-search/%s/" slideshow_id)
-            :target "_blank"}
-        (components/button "Word Search")]
-       [:a {:class "mr-2"
-            :href (format "../../jtd/%s/" slideshow_id)
-            :target "_blank"}
-        (components/button "JTD")]
-       [:div {:class "cursor-pointer"
-              :hx-post "panel:duplicate"
-              :hx-confirm "Duplicate?"}
-        (components/button "Duplicate")]])))
+      [:div
+       [:div.p-2.flex.items-center
+        [:a.mr-2 {:href "../../home/"} icons/home]
+        [:input {:class "p-2 rounded-md border mr-2"
+                 :hx-post "name-editor:update"
+                 :name "new-name"
+                 :value slideshow-name}]
+        [:div {:class "mr-2"
+               :hx-delete "name-editor:delete"
+               :hx-confirm (format "Delete %s?" slideshow-name)}
+         (components/button-warning "Delete")]
+        [:a {:class "mr-2"
+             :href (format "../../api/pdf/%s" slideshow_id)
+             :target "_blank"}
+         (components/button "Download PDF")]
+        [:a {:class "mr-2"
+             :href (format "../../grid/%s/" slideshow_id)
+             :target "_blank"}
+         (components/button "Grid Printout")]
+        [:a {:class "mr-2"
+             :href (format "../../play-guess/%s/" slideshow_id)
+             :target "_blank"}
+         (components/button "Guess")]
+        [:a {:class "mr-2"
+             :href (str "../../snl/?init=" phrases)
+             :target "_blank"}
+         (components/button "SNL")]
+        [:a {:class "mr-2"
+             :href (str "../../blooket/?init=" phrases)
+             :target "_blank"}
+         (components/button "Blooklet")]
+        [:a {:class "mr-2"
+             :href (str "../../battleships/?init=" phrases)
+             :target "_blank"}
+         (components/button "Battleships")]
+        [:a {:class "mr-2"
+             :href (format "../../jtd/%s/" slideshow_id)
+             :target "_blank"}
+         (components/button "JTD")]
+        [:div {:class "cursor-pointer"
+               :hx-post "panel:duplicate"
+               :hx-confirm "Duplicate?"}
+         (components/button "Duplicate")]]
+       [:div.p-2.flex.items-center
+        [:a {:class "mr-2"
+             :href (format "../../word-search/%s/" slideshow_id)
+             :target "_blank"}
+         (components/button "Word Search")]
+        [:a {:class "mr-2"
+             :href (format "../../memory/%s/" slideshow_id)
+             :target "_blank"}
+         (components/button "Memory")]]])))
 
 (defn- get-src-simple [x]
   (if (string? x)

@@ -17,6 +17,7 @@
 - Paragraph Scramble
 - Snakes and Ladders
 - Word Search
+- Memory Game
 
 ## Development
 
