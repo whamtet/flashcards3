@@ -50,7 +50,7 @@
       (point j (+ (* x-scale x) (x-inc i)) (+ (* y-scale y) (y-inc i))))
     points)))
 
-(def margin 10)
+(def margin 20)
 (def cell-height 240)
 
 (defn- parse-longs [s]

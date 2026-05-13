@@ -29,7 +29,7 @@
   [:div.flex.items-center.justify-center.p-4.border
    [:p.fit.text-center.leading-tight
     x]])
-(defn- row [i items]
+(defn- row [items]
   [:div {:class (format "grid grid-cols-%s" (max (count items) 1))
          :style {:height "50vh"}}
    (map paragraph items)])
@@ -41,7 +41,7 @@
            :hx-vals {:i (inc-i i paragraphs)}}
      (->> paragraphs
           (shuffle-sentences i)
-          (row i))
+          row)
      (when post?
        [:script "fit()"])]))
 
