@@ -22,11 +22,11 @@
       slideshow_name]
      [:a.mr-2 (href (format "../play/%s/0/" slideshow_id))
       icons/play-circle]
-     [:a.mr-2.text-green-500 (href (format "../play/%s/0/?grid=3" slideshow_id))
-      icons/play-circle]
      [:a.mr-2.text-yellow-500 (href (format "../play-double/%s/" slideshow_id))
       icons/play-circle]
-     [:a.text-red-500 (href (format "../play-write/%s/" slideshow_id))
+     [:a.mr-2.text-red-500 (href (format "../play-write/%s/" slideshow_id))
+      icons/play-circle]
+     [:a.mr-2.text-purple-500 (href (format "../play-effect/%s/" slideshow_id))
       icons/play-circle]]
     (when src
       [:img.absolute.w-20.hidden.group-hover:block
@@ -41,6 +41,7 @@
     [:div.p-2
      [:div.flex.items-center.mb-1
       [:div {:class "my-1 mr-2"
+             :id "new-slideshow"
              :hx-post "panel:new"
              :hx-prompt "New Slideshow Name"}
        (components/button "New Slideshow")]
@@ -95,5 +96,6 @@
    [query-fn]
    (fn [req]
      (page-htmx
-      {:css ["../output.css"]}
+      {:css ["../output.css"]
+       :js ["../home.js"]}
       (-> req (assoc :query-fn query-fn) panel)))))
