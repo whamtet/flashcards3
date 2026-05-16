@@ -148,3 +148,8 @@
   (map (get-slideshow-slides query-fn slideshow_id) images))
 (defn jtd-words [query-fn slideshow_id images]
   (map (get-slideshow-notes query-fn slideshow_id) images))
+
+(defn get-slideshow-shuffled [query-fn slideshow_id order]
+  (when-let [slides (not-empty (get-slideshow-slides query-fn slideshow_id))]
+    (let [[i & rest] (or order (-> slides count range shuffle))]
+      [(nth slides i) rest])))
