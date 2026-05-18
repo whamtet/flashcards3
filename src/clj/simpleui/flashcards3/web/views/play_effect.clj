@@ -12,7 +12,10 @@
              :hx-post "panel"
              :hx-vals {:randoms (pr-str randoms)}}
        [:img {:src (get-src src)
-              :style {:max-width "1000px"}}]]
+              :class "hidden"
+              :style {:max-width "1000px"}}]
+       (when post?
+         [:script "newImg()"])]
       [:div.p-6.text-xl "Empty"])))
 
 (defn ui-routes [{:keys [query-fn]}]
@@ -21,7 +24,6 @@
    [query-fn]
    (fn [req]
      (page-htmx
-      {:css ["../../../output.css"]
-       :js ["../../../random.js"]
-       :hyperscript? true}
+      {:css ["../../output.css"]
+       :js ["../../effect.js"]}
       (-> req (assoc :query-fn query-fn) panel)))))

@@ -30,8 +30,13 @@
 (defn- split-lines [^String s]
   (map #(.trim %) (.split (.trim s) "\n")))
 
+(defn- shuffle-together [a b]
+  (let [x (shuffle (map list a b))]
+    [(map first x) (map second x)]))
+
 (defn csv [{:keys [questions answers]}]
   (let [questions (split-lines questions)
-        answers (split-lines answers)]
+        answers (split-lines answers)
+        [questions answers] (shuffle-together questions answers)]
     (csv-rows
      (map (phrase-row answers) (range) questions answers))))
