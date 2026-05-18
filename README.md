@@ -18,6 +18,7 @@
 - Snakes and Ladders
 - Word Search
 - Memory Game
+- Reveal Game
 
 ## Development
 
